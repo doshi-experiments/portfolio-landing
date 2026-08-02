@@ -1,0 +1,901 @@
+<!doctype html>
+<!--
+  ═══════════════════════════════════════════════════════════════════
+  BLUEPRINT.HTML — an under-construction page that is, itself,
+  the construction.
+
+  The subject: a plush scale model of the Bauhaus Dessau —
+  workshop glass wing, bridge, north wing, and studio tower —
+  assembled by a tower crane that actually tracks the work.
+
+  100% vanilla HTML, CSS and JavaScript.
+  No frameworks. No libraries. No images. No SVG. No fonts loaded.
+  Every beam you see is a <div> rotated in 3D space.
+  The "engine" is one requestAnimationFrame loop and some trig.
+
+  You're reading the source, which means you're my kind of person.
+  We should probably talk: hello@rishabhdoshi.com
+
+  Sheet A-001 · Rev 47 · Rishabh Doshi
+  ═══════════════════════════════════════════════════════════════════
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Under Construction — Rishabh Doshi</title>
+<meta name="description" content="The portfolio of Rishabh Doshi is being assembled on-site. Scroll to build it. 100% vanilla HTML, CSS &amp; JS — no libraries, no images.">
+<style>
+/* ─────────────────────────────────────────────────────────────
+   0 · Tokens  (the whole drawing is inked from these)
+   ───────────────────────────────────────────────────────────── */
+:root{
+  --paper-0:#081b30;          /* deep field                    */
+  --paper-1:#0f2c4c;          /* blueprint blue                */
+  --line-1:rgba(146,206,255,.10);  /* minor grid               */
+  --line-2:rgba(146,206,255,.20);  /* major grid               */
+  --ink:#e6f3ff;              /* drafting white                */
+  --ink-dim:#9fc3e2;          /* secondary lettering           */
+  --accent:#7fd4ff;           /* cyan pen                      */
+  --safety:#ffb277;           /* crane peach                   */
+  --go:#8fe3ae;               /* topped-out green              */
+  --redline:#ff6a5c;          /* reviewer's pencil             */
+  --card:rgba(7,22,40,.78);   /* annotation paper              */
+  --card-edge:rgba(146,206,255,.35);
+
+  --mono:ui-monospace,"SF Mono","Cascadia Mono","Segoe UI Mono",
+         Menlo,Consolas,"Liberation Mono",monospace;
+
+  --s:.8;            /* scene scale        */
+  --lift:150px;      /* scene vertical set */
+  --rx:-24;          /* camera pitch (deg, unitless nums) */
+  --ry:-34;          /* camera yaw                        */
+  --shadow:0;        /* building shadow scale 0..1        */
+}
+@media (max-width:860px){ :root{ --s:.52; --lift:110px; } }
+@media (max-width:480px){ :root{ --s:.42; --lift:100px; } }
+
+/* ─────────────────────────────────────────────────────────────
+   1 · Sheet  (page = a drawing sheet)
+   ───────────────────────────────────────────────────────────── */
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:var(--mono);
+  color:var(--ink);
+  background:
+    radial-gradient(1200px 800px at 50% 38%, var(--paper-1), var(--paper-0) 75%);
+  overflow-x:hidden;
+}
+/* drafting grid, drawn — not downloaded */
+body::before{
+  content:"";position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:
+    repeating-linear-gradient(0deg,  var(--line-1) 0 1px, transparent 1px 28px),
+    repeating-linear-gradient(90deg, var(--line-1) 0 1px, transparent 1px 28px),
+    repeating-linear-gradient(0deg,  var(--line-2) 0 1px, transparent 1px 140px),
+    repeating-linear-gradient(90deg, var(--line-2) 0 1px, transparent 1px 140px);
+}
+::selection{background:var(--safety);color:#0a2036}
+a{color:var(--accent)}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+:focus-visible{outline:2px dashed var(--accent);outline-offset:3px}
+
+#spacer{height:640vh;height:640svh}   /* the scroll runway */
+
+/* ─────────────────────────────────────────────────────────────
+   2 · Stage  (fixed 3D viewport)
+   ───────────────────────────────────────────────────────────── */
+#stage{
+  position:fixed;inset:0;z-index:1;
+  display:grid;place-items:center;
+  perspective:1500px;perspective-origin:50% 40%;
+  pointer-events:none;
+}
+#camera{
+  width:0;height:0;
+  transform-style:preserve-3d;
+  transform:
+    translateY(var(--lift))
+    rotateX(calc(var(--rx)*1deg))
+    rotateY(calc(var(--ry)*1deg))
+    scale3d(var(--s),var(--s),var(--s));
+  will-change:transform;
+}
+#world,#build,.grp{transform-style:preserve-3d;position:absolute}
+
+/* ground plane — its own finer grid, fading at the edges */
+.groundgrid{
+  position:absolute;width:1400px;height:1400px;left:-700px;top:-700px;
+  transform:rotateX(90deg);
+  background:
+    repeating-linear-gradient(0deg,  rgba(146,206,255,.12) 0 1px, transparent 1px 40px),
+    repeating-linear-gradient(90deg, rgba(146,206,255,.12) 0 1px, transparent 1px 40px);
+  -webkit-mask-image:radial-gradient(closest-side,#000 30%,transparent 78%);
+          mask-image:radial-gradient(closest-side,#000 30%,transparent 78%);
+}
+.propline{ /* dashed property line */
+  position:absolute;width:900px;height:640px;left:-450px;top:-320px;
+  transform:rotateX(90deg) translateZ(1px);
+  border:2px dashed rgba(146,206,255,.35);
+}
+/* the road the bridge spans — reason the bridge exists */
+.road{
+  position:absolute;width:48px;height:780px;left:-81px;top:-390px;
+  transform:rotateX(90deg) translateZ(2px);
+  background:rgba(220,240,255,.05);
+  border-left:1px solid rgba(180,220,255,.22);
+  border-right:1px solid rgba(180,220,255,.22);
+}
+.road::after{
+  content:"";position:absolute;left:calc(50% - 1.5px);top:0;
+  width:3px;height:100%;
+  background:repeating-linear-gradient(0deg,
+    rgba(220,240,255,.3) 0 16px, transparent 16px 42px);
+}
+.gshadow{ /* building shadow grows with progress */
+  position:absolute;width:520px;height:340px;left:-260px;top:-170px;
+  transform:rotateX(90deg) translateZ(3px)
+            scale(calc(.25 + var(--shadow)*.75));
+  background:radial-gradient(closest-side,rgba(0,8,18,.5),transparent 70%);
+  opacity:calc(.2 + var(--shadow)*.8);
+}
+
+/* ─────────────────────────────────────────────────────────────
+   3 · Pieces  (ghost plan → soft build → clean site)
+   The plan shows structure only — dashed, faint, square. What
+   gets built is a plush model of the Dessau campus: rounded
+   faces, felt shading, stitched seams. Temporary works (crane,
+   scaffold, stockpiles) carry an `off` mark and leave the site
+   before the ceremony. Dieter Rams runs the site office; the
+   materials supplier is a toy shop.
+   ───────────────────────────────────────────────────────────── */
+.piece{position:absolute;transform-style:preserve-3d}
+.drop{
+  transform-style:preserve-3d;
+  transform:translateY(-110px);
+  transition:transform .6s cubic-bezier(.32,1.6,.45,1);
+  transition-delay:var(--td,0ms);
+}
+.piece.built .drop{transform:translateY(0)}
+
+.cub{position:absolute;transform-style:preserve-3d}
+.f{
+  position:absolute;
+  transition:opacity .45s ease;
+  transition-delay:var(--td,0ms);
+}
+/* ghost = the plan */
+.g .f{
+  background:rgba(127,212,255,.03);
+  border:1px dashed rgba(146,206,255,.5);
+  opacity:.32;
+}
+.piece.built .g .f{opacity:0}
+/* solid = the plush build */
+.sd .f{
+  border:2px dashed var(--seam,rgba(60,50,30,.4));
+  box-shadow:inset 0 3px 10px rgba(255,255,255,.45),
+             inset 0 -4px 10px rgba(60,45,25,.10);
+  opacity:0;
+}
+.piece.built .sd .f{opacity:1}
+/* temporary works, dismantled: hide solid AND ghost */
+.piece.gone .f{opacity:0!important}
+.bill.gone{opacity:0!important}
+
+/* materials — low-contrast felt shading, light from the top */
+.m-conc  {--ft:#eee9dd;--ff:#ddd5c2;--fs:#cabfa6;--seam:rgba(122,104,74,.5)}
+.m-steel {--ft:#e9ecef;--ff:#d3d8dd;--fs:#bcc3ca;--seam:rgba(96,106,116,.55)}
+.m-slab  {--ft:#f6f4ee;--ff:#e6e2d6;--fs:#d3cdba;--seam:rgba(130,118,92,.5)}
+.m-stucco{--ft:#ffffff;--ff:#f2eee5;--fs:#e0dac9;--seam:rgba(140,126,96,.45)}
+.m-dark  {--ft:#5c6772;--ff:#454f59;--fs:#333b44;--seam:rgba(210,225,240,.35)}
+.m-peach {--ft:#ffd0a8;--ff:#ffb277;--fs:#f0985a;--seam:rgba(168,84,26,.55)}
+.m-mint  {--ft:#c6f2d6;--ff:#9fe6ba;--fs:#82d3a2;--seam:rgba(38,120,74,.55)}
+.m-plank {--ft:#ffe9b0;--ff:#f6d584;--fs:#e2bd62;--seam:rgba(150,110,30,.55)}
+.m-ink   {--ft:var(--ink);--ff:var(--ink);--fs:var(--ink)}
+.m-ink .sd .f{border:0;box-shadow:none}
+.sd .ft{background:var(--ft)} .sd .ff,.sd .fb{background:var(--ff)}
+.sd .fr,.sd .fl{background:var(--fs)} .sd .fu{background:var(--fs)}
+
+/* glass — mullion grids drawn with gradients, dusk-lit from within */
+.m-glass .f,.m-ribbon .f{
+  border:1px solid rgba(190,230,255,.75)!important;
+  box-shadow:inset 0 0 26px rgba(150,220,255,.22)!important;
+  transition:opacity .45s ease, box-shadow .8s ease, background-color .8s ease;
+}
+.m-glass .f{background:
+  repeating-linear-gradient(90deg,rgba(232,248,255,.8) 0 1px,transparent 1px 22px),
+  repeating-linear-gradient(0deg, rgba(232,248,255,.8) 0 1px,transparent 1px 22px),
+  rgba(140,210,250,.18)!important}
+.m-ribbon .f{background:
+  repeating-linear-gradient(90deg,rgba(232,248,255,.8) 0 1px,transparent 1px 15px),
+  rgba(90,160,210,.30)!important}
+/* topping-out: the lights come on */
+body.done .m-glass .f,body.done .m-ribbon .f{
+  background-color:rgba(170,230,255,.34)!important;
+  box-shadow:inset 0 0 34px rgba(190,240,255,.5)!important;
+}
+
+/* facade plates: signage & designation codes (paint, not mass) */
+.plate{
+  position:absolute;display:flex;flex-direction:column;
+  align-items:center;justify-content:space-between;
+  color:#fbfdff;text-shadow:0 1px 2px rgba(5,15,30,.45);
+}
+.plate span{opacity:0;transition:opacity .5s ease}
+.plate.built span{opacity:1}
+.plate.sign{font-weight:800;font-size:13px;line-height:1;letter-spacing:0}
+.plate.code{font-size:6px;letter-spacing:.12em;color:var(--ink-dim);
+  text-shadow:none;flex-direction:row;justify-content:center}
+
+/* ─────────────────────────────────────────────────────────────
+   4 · Crane  (JS-driven: slews, trolleys and lowers to the work)
+   ───────────────────────────────────────────────────────────── */
+#craneYaw,#trolley,#cableWrap{transform-style:preserve-3d;position:absolute}
+.cline{
+  position:absolute;width:2px;height:260px;left:-1px;top:0;
+  background:var(--ink);transform-origin:top center;
+  opacity:0;transition:opacity .45s ease;
+}
+#cableWrap.built .cline{opacity:1}
+#cableWrap.gone  .cline{opacity:0}
+.cline.x90{transform:rotateY(90deg)}
+
+/* ─────────────────────────────────────────────────────────────
+   5 · Billboards  (always face the camera — see inverse in JS)
+   ───────────────────────────────────────────────────────────── */
+.bill{
+  position:absolute;transform-style:preserve-3d;
+  display:grid;justify-items:center;gap:2px;
+  font-size:26px;line-height:1;
+  filter:drop-shadow(0 3px 3px rgba(0,10,20,.5));
+  opacity:0;transition:opacity .5s ease;transition-delay:var(--td,0ms);
+}
+.bill.built{opacity:1}
+.bill small{
+  font-size:8px;letter-spacing:.1em;color:var(--ink-dim);
+  background:rgba(7,22,40,.7);padding:2px 5px;
+  border:1px solid var(--card-edge);white-space:nowrap;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   6 · HUD  (sheet chrome: title block, marks, annotations)
+   ───────────────────────────────────────────────────────────── */
+#hud{position:fixed;inset:0;z-index:2;pointer-events:none}
+#hud .live{pointer-events:auto}
+
+.mark{position:fixed;width:18px;height:18px;opacity:.55}
+.mark::before,.mark::after{content:"";position:absolute;background:var(--accent)}
+.mark::before{left:8px;top:0;width:1px;height:18px}
+.mark::after{left:0;top:8px;width:18px;height:1px}
+.mark.tl{top:14px;left:14px}.mark.tr{top:14px;right:14px}
+.mark.bl{bottom:14px;left:14px}.mark.br{bottom:14px;right:14px}
+
+.microtag{
+  position:fixed;font-size:9px;letter-spacing:.14em;color:var(--ink-dim);
+}
+#survey{top:18px;left:44px}
+#north{top:16px;right:44px;font-size:11px;letter-spacing:.1em;color:var(--ink)}
+#donotscale{bottom:36px;left:44px}
+#builtwith{bottom:18px;left:44px}
+#builtwith b{color:var(--go);font-weight:400}
+
+/* title block — bottom right, like a real sheet */
+#titleblock{
+  position:fixed;right:26px;bottom:26px;width:250px;
+  border:1px solid var(--card-edge);background:var(--card);
+  -webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);
+  font-size:10px;letter-spacing:.06em;
+}
+#titleblock .row{
+  display:flex;justify-content:space-between;gap:10px;
+  padding:6px 10px;border-bottom:1px solid rgba(146,206,255,.18);
+}
+#titleblock .row span:first-child{color:var(--ink-dim)}
+#titleblock .row.keep{justify-content:center;gap:8px}
+#titleblock .pct{
+  display:flex;align-items:baseline;justify-content:center;gap:10px;
+  padding:8px 10px 4px;
+}
+#pctNum{font-size:26px;font-weight:700;font-variant-numeric:tabular-nums;color:var(--safety)}
+#bar{margin:0 10px 10px;height:6px;border:1px solid var(--card-edge);padding:1px}
+#barFill{height:100%;width:0%;background:
+  repeating-linear-gradient(45deg,var(--safety) 0 6px,#e08b4f 6px 12px)}
+
+/* progress rail — thin, full width, bottom edge */
+#rail{position:fixed;left:0;bottom:0;height:3px;width:0;
+  background:linear-gradient(90deg,var(--accent),var(--safety));z-index:3}
+
+/* ── annotation cards ─────────────────────────────────────── */
+.card{
+  position:fixed;max-width:360px;
+  background:var(--card);border:1px solid var(--card-edge);
+  -webkit-backdrop-filter:blur(7px);backdrop-filter:blur(7px);
+  padding:18px 20px 20px;
+  opacity:0;transform:translateY(14px);
+  transition:opacity .5s ease,transform .5s ease;
+}
+.card.on{opacity:1;transform:translateY(0)}
+.card .eyebrow{
+  font-size:9px;letter-spacing:.16em;color:var(--accent);
+  margin-bottom:10px;
+}
+.card h2{
+  font-size:21px;letter-spacing:.02em;margin-bottom:10px;font-weight:700;
+}
+.card h2 b{color:var(--safety);font-weight:700}
+.card p{font-size:12.5px;line-height:1.7;color:var(--ink-dim)}
+.card p+p{margin-top:8px}
+.corner{position:absolute;width:10px;height:10px;
+  border-left:1px solid var(--redline);border-top:1px solid var(--redline);
+  left:-1px;top:-1px}
+.corner.b{left:auto;top:auto;right:-1px;bottom:-1px;transform:rotate(180deg)}
+
+#calloutA,#calloutB,#calloutC{right:4vw;top:50%;transform:translateY(calc(-50% + 14px))}
+#calloutA.on,#calloutB.on,#calloutC.on{transform:translateY(-50%)}
+
+/* the spellchecker's revenge */
+.typo{
+  text-decoration:underline wavy var(--redline);
+  text-decoration-skip-ink:none;text-underline-offset:3px;
+}
+
+/* ── hero ─────────────────────────────────────────────────── */
+#hero{left:6vw;top:16vh;max-width:520px}
+#hero .eyebrow{color:var(--redline)}
+#hero h1{
+  font-size:clamp(34px,5.6vw,62px);line-height:1.02;
+  letter-spacing:-.01em;margin-bottom:14px;font-weight:800;
+}
+#hero h1 i{font-style:normal;color:var(--safety);animation:blink 1.1s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+#hero .sub{font-size:13px;color:var(--ink);margin-bottom:12px}
+#hero .sub b{color:var(--accent);font-weight:700}
+#scrollPill{
+  display:inline-block;margin-top:16px;padding:9px 14px;
+  border:1px dashed var(--accent);color:var(--accent);
+  font-size:10px;letter-spacing:.14em;
+  animation:bob 1.6s ease-in-out infinite;
+  transition:opacity .4s ease;
+}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(5px)}}
+
+/* ── final card + stamp ───────────────────────────────────── */
+#final{left:6vw;top:50%;transform:translateY(calc(-50% + 14px));max-width:430px}
+#final.on{transform:translateY(-50%)}
+#stamp{
+  display:inline-block;margin-bottom:14px;padding:8px 14px;
+  border:3px double var(--go);color:var(--go);
+  font-weight:800;letter-spacing:.12em;font-size:13px;
+}
+#final h2{font-size:26px;margin-bottom:10px}
+#links{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px}
+#links a,#rebuild{
+  pointer-events:auto;
+  padding:9px 13px;border:1px solid var(--card-edge);
+  font-size:10px;letter-spacing:.1em;
+  text-decoration:none;color:var(--ink);
+}
+#links a:hover{border-color:var(--accent);color:var(--accent)}
+#rebuild{border-style:dashed;color:var(--redline);border-color:var(--redline)}
+#rebuild:hover{background:rgba(255,106,92,.12)}
+
+/* ── confetti overlay ─────────────────────────────────────── */
+#confetti{position:fixed;inset:0;z-index:4;pointer-events:none;overflow:hidden}
+#confetti span{position:absolute;left:0;top:0;font-size:18px;will-change:transform}
+
+/* ─────────────────────────────────────────────────────────────
+   7 · Small Screens
+   ───────────────────────────────────────────────────────────── */
+@media (max-width:860px){
+  #hero{left:5vw;right:5vw;top:12vh;max-width:none}
+  #calloutA,#calloutB,#calloutC{
+    left:12px;right:12px;top:auto;bottom:18px;max-width:none;
+    transform:translateY(14px);
+  }
+  #calloutA.on,#calloutB.on,#calloutC.on{transform:translateY(0)}
+  #final{left:12px;right:12px;top:auto;bottom:18px;max-width:none;
+    transform:translateY(14px)}
+  #final.on{transform:translateY(0)}
+  #titleblock{right:12px;bottom:auto;top:40px;width:auto;left:auto;
+    display:flex}
+  #titleblock .row{display:none}
+  #titleblock .row.keep{display:flex;border:0}
+  #titleblock .pct{padding:6px 10px}
+  #pctNum{font-size:18px}
+  #bar{display:none}
+  #survey{display:none}#donotscale{display:none}
+  #builtwith{bottom:auto;top:16px;left:14px}
+  .card p{font-size:11.5px;line-height:1.6}
+}
+
+/* ─────────────────────────────────────────────────────────────
+   8 · Reduced Motion — the site respects your settings
+   ───────────────────────────────────────────────────────────── */
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  .drop{transition:none;transform:none!important}
+  .f,.bill,.card,.plate span,.cline{transition-duration:.01s}
+  #scrollPill,#hero h1 i{animation:none!important}
+}
+</style>
+</head>
+<body>
+
+<!-- ══ 3D Stage ═══════════════════════════════════════════════ -->
+<div id="stage" aria-hidden="true">
+  <div id="camera">
+    <div id="world">
+      <div class="groundgrid"></div>
+      <div class="propline"></div>
+      <div class="road"></div>
+      <div class="gshadow"></div>
+      <div id="build"><!-- the campus is drafted here by JS --></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ HUD / Sheet Chrome ═════════════════════════════════════ -->
+<div id="hud">
+  <div class="mark tl"></div><div class="mark tr"></div>
+  <div class="mark bl"></div><div class="mark br"></div>
+
+  <div class="microtag" id="survey">⌖ Site Plan · <span id="az">Az −34° · El −24°</span></div>
+  <div class="microtag" id="north">N ▲</div>
+  <div class="microtag" id="donotscale">Do Not Scale Drawing · Dimensions Are a Vibe</div>
+  <div class="microtag" id="builtwith">Built With <b>♥</b> Using Claude</div>
+
+  <!-- hero -->
+  <div class="card on" id="hero">
+    <div class="corner"></div><div class="corner b"></div>
+    <div class="eyebrow">Site Notice — Permit № 001</div>
+    <h1>Under<br>Construction<i>▌</i></h1>
+    <p class="sub">The portfolio of <b>Rishabh Doshi</b> is being assembled on-site.</p>
+    <p>Outside of work, I enjoy making and breaking things. I'm a hoarder of
+       stories, experiences, and knowledge because I believe we are a
+       reflection of our context.</p>
+    <span id="scrollPill">Scroll to Build ▼</span>
+  </div>
+
+  <!-- annotation 01 -->
+  <div class="card" id="calloutA">
+    <div class="corner"></div><div class="corner b"></div>
+    <div class="eyebrow">Annotation 01 · Site Survey</div>
+    <h2><b>01</b> Empathize</h2>
+    <p>My process starts and ends with empathy. What does empathy mean to me?
+       It means understanding your stakeholders, their journeys, frustrations,
+       and aspirations. Empathy is about the human in human-centered design.
+       If there is a secret sauce to good experiences, this is it.</p>
+  </div>
+
+  <!-- annotation 02 -->
+  <div class="card" id="calloutB">
+    <div class="corner"></div><div class="corner b"></div>
+    <div class="eyebrow">Annotation 02 · The Blueprint</div>
+    <h2><b>02</b> Design</h2>
+    <p>This is the easy part. Once you understand the user and what they're
+       doing, you just build. The project dictates the tools and this phase
+       can be anything from hi-fidelity prototypes to thumbnail sketches on
+       post-its. Agile is what I aim for here.</p>
+  </div>
+
+  <!-- annotation 03 -->
+  <div class="card" id="calloutC">
+    <div class="corner"></div><div class="corner b"></div>
+    <div class="eyebrow">Annotation 03 · Revision Block</div>
+    <h2><b>03</b> Iterate</h2>
+    <p>Nothing is <span class="typo">perfeet</span>. Nothing is perfect, at
+       first. Good design takes iteration and testing, and lots of it. The
+       important thing is to learn from one's mistakes.</p>
+    <p>(In case you're wondering, the missing period is intentional.
+       We are iterating)</p>
+  </div>
+
+  <!-- final -->
+  <div class="card" id="final">
+    <div class="corner"></div><div class="corner b"></div>
+    <div id="stamp">Topped Out</div>
+    <h2>Nothing is perfect, at first.</h2>
+    <p>The full portfolio opens after a few more revisions. Until then, the
+       inspector's office is open:</p>
+    <div id="links" class="live">
+      <a href="mailto:hello@rishabhdoshi.com">Email</a>
+      <a href="https://www.linkedin.com/in/rishabhdoshi13/" rel="noopener">LinkedIn</a>
+      <button id="rebuild" type="button">Demolish &amp; Rebuild ⟲</button>
+    </div>
+  </div>
+
+  <!-- title block -->
+  <div id="titleblock">
+    <div class="row"><span>Project</span><span>rishabhdoshi.com</span></div>
+    <div class="row"><span>Drawn By</span><span>Rishabh Doshi</span></div>
+    <div class="row"><span>Sheet</span><span>A-001</span></div>
+    <div class="row keep"><span>Rev</span><span>47</span></div>
+    <div class="row"><span>Status</span><span>Under Construction</span></div>
+    <div class="pct"><span style="color:var(--ink-dim)">Complete</span>
+      <span><span id="pctNum">0</span><span style="font-size:12px;color:var(--ink-dim)"> %</span></span>
+    </div>
+    <div id="bar"><div id="barFill"></div></div>
+  </div>
+
+  <div id="rail"></div>
+</div>
+
+<div id="confetti" aria-hidden="true"></div>
+<div id="spacer"></div>
+
+<noscript>
+  <div style="position:fixed;inset:0;z-index:9;display:grid;place-items:center;
+              background:#0f2c4c;padding:24px">
+    <div style="max-width:560px;border:1px solid #7fd4ff;padding:24px;
+                font-family:monospace;color:#e6f3ff;line-height:1.7">
+      <h1>Under Construction</h1>
+      <p>The portfolio of Rishabh Doshi is being assembled on-site — with
+         JavaScript enabled, this page builds itself as you scroll.</p>
+      <p>01 Empathize · 02 Design · 03 Iterate. Nothing is perfect, at first.</p>
+      <p><a href="mailto:hello@rishabhdoshi.com" style="color:#7fd4ff">hello@rishabhdoshi.com</a></p>
+    </div>
+  </div>
+</noscript>
+
+<script>
+/* ═══════════════════════════════════════════════════════════════
+   BLUEPRINT ENGINE — one RAF loop, zero dependencies
+   ═══════════════════════════════════════════════════════════════ */
+'use strict';
+const $=s=>document.querySelector(s);
+const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
+const isTouch=matchMedia('(pointer: coarse)').matches;
+
+/* ── piece factory ────────────────────────────────────────────
+   world coords: x → right, y → up (negated for CSS), z → viewer.
+   Permanent structure gets a ghost plan (3 dashed faces, square);
+   finishes and temporary works do not — the drawing shows bones.
+   `at` builds a piece; `off` dismantles it (temporary works).
+   Opacity animates on leaf faces only — opacity on a preserve-3d
+   parent would flatten the scene (the classic CSS-3D landmine).  */
+const build=$('#build');
+const pieces=[],targets=[];
+let idx=0;
+
+function face(w,h,tf,cls,r){
+  const f=document.createElement('div');
+  f.className='f '+cls;
+  f.style.cssText=`width:${w}px;height:${h}px;left:${-w/2}px;top:${-h/2}px;`
+                 +`transform:${tf};border-radius:${r}px`;
+  return f;
+}
+function cuboid(w,h,d,cls,ghost,r){
+  const c=document.createElement('div');c.className='cub '+cls;
+  const faces=[
+    ['ff',w,h,`translateZ(${d/2}px)`],
+    ['fr',d,h,`rotateY(90deg) translateZ(${w/2}px)`],
+    ['ft',w,d,`rotateX(90deg) translateZ(${h/2}px)`],
+  ];
+  if(!ghost)faces.push(
+    ['fb',w,h,`rotateY(180deg) translateZ(${d/2}px)`],
+    ['fl',d,h,`rotateY(-90deg) translateZ(${w/2}px)`],
+    ['fu',w,d,`rotateX(-90deg) translateZ(${h/2}px)`]);
+  for(const[k,fw,fh,tf]of faces)c.appendChild(face(fw,fh,tf,k,r));
+  return c;
+}
+function box(o){ /* {x,y,z,w,h,d,mat,at,off?,rot?,parent?,ghost?,track?} */
+  const p=document.createElement('div');p.className='piece m-'+o.mat;
+  p.style.transform=`translate3d(${o.x}px,${-o.y}px,${o.z}px)`+(o.rot?' '+o.rot:'');
+  p.style.setProperty('--td',(idx++%4)*45+'ms');
+  const r=o.mat==='ink'?1:
+          Math.max(4,Math.min(10,Math.round(Math.min(o.w,o.h,o.d)/2)));
+  const drop=document.createElement('div');drop.className='drop';
+  if(o.ghost!==false)p.appendChild(cuboid(o.w,o.h,o.d,'g',true,0));
+  drop.appendChild(cuboid(o.w,o.h,o.d,'sd',false,r));
+  p.appendChild(drop);
+  (o.parent||build).appendChild(p);
+  pieces.push({el:p,at:o.at,off:o.off});
+  if(o.track!==false&&!o.parent&&o.off===undefined)
+    targets.push({x:o.x,y:o.y+o.h/2,z:o.z,at:o.at});
+}
+function bill(o){ /* {x,y,z,emoji,label?,at,size?} */
+  const b=document.createElement('div');b.className='bill';
+  b.style.setProperty('--td',(idx++%4)*45+'ms');
+  if(o.size)b.style.fontSize=o.size+'px';
+  b.innerHTML=(o.emoji?`<span class="e">${o.emoji}</span>`:'')+
+              (o.label?`<small>${o.label}</small>`:'');
+  b.style.transform=
+    `translate3d(${o.x}px,${-o.y}px,${o.z}px)`+
+    ` rotateY(calc(var(--ry)*-1deg)) rotateX(calc(var(--rx)*-1deg))`;
+  build.appendChild(b);
+  pieces.push({el:b,at:o.at,off:o.off});
+}
+function plate(o){ /* facade paint: {x,y,z,ry,w,h,html,at,cls} */
+  const el=document.createElement('div');
+  el.className='plate '+(o.cls||'');
+  el.style.cssText=`width:${o.w}px;height:${o.h}px;left:${-o.w/2}px;top:${-o.h/2}px;`
+    +`transform:translate3d(${o.x}px,${-o.y}px,${o.z}px) rotateY(${o.ry||0}deg)`;
+  el.innerHTML=o.html;
+  el.querySelectorAll('span').forEach((s,i)=>s.style.transitionDelay=(i*90)+'ms');
+  build.appendChild(el);
+  pieces.push({el,at:o.at});
+}
+
+/* ── the campus ───────────────────────────────────────────────
+   A plush scale model of the Bauhaus Dessau. Storey = 36.
+
+              N ▲                       plan (not to scale)
+        ┌──────────┐
+        │  North   │══bridge══┐            z
+        │  Wing    │ (road ↓) │  ┌────┐    ↑
+        └──────────┘      ┌───┴──┤Link│    │
+                          │ Wksp │─┬──┘    └──→ x
+                          │ glass│ │Studio (5 st.)
+                          └──────┘ └────┘
+   Workshop: full curtain wall  ·  Bridge: 2 st. on pilotis
+   North: ribbon windows        ·  Studio: balconies, tallest  */
+
+const P=o=>box(o);
+
+/* foundation pads */
+P({x:95, y:4,z:35,  w:182,h:8,d:142,mat:'conc',at:.06});   // workshop
+P({x:-175,y:4,z:-40,w:122,h:8,d:152,mat:'conc',at:.066});  // north wing
+P({x:150,y:4,z:-115,w:72, h:8,d:92, mat:'conc',at:.072});  // studio
+P({x:130,y:4,z:-52, w:82, h:8,d:56, mat:'conc',at:.078});  // link
+
+/* ── tower crane (temporary works; tracks the build in JS) ── */
+P({x:-40,y:6,z:170,w:48,h:12,d:48,mat:'conc',at:.085,off:.85,track:false});
+P({x:-40,y:158,z:170,w:14,h:304,d:14,mat:'peach',at:.10,off:.84,track:false});
+const craneWrap=document.createElement('div');
+craneWrap.className='grp';
+craneWrap.style.transform='translate3d(-40px,-310px,170px)';
+build.appendChild(craneWrap);
+const craneYaw=document.createElement('div');craneYaw.id='craneYaw';
+craneWrap.appendChild(craneYaw);
+P({parent:craneYaw,x:100,y:6,z:0,w:200,h:9,d:9,mat:'peach',at:.115,off:.83});  // jib
+P({parent:craneYaw,x:-45,y:6,z:0,w:82,h:9,d:11,mat:'peach',at:.115,off:.83});  // counter-jib
+P({parent:craneYaw,x:0,y:26,z:0,w:9,h:40,d:9,mat:'peach',at:.118,off:.83});    // apex
+P({parent:craneYaw,x:-80,y:-4,z:0,w:22,h:18,d:18,mat:'conc',at:.12,off:.83});  // counterweight
+const trolley=document.createElement('div');trolley.id='trolley';
+craneYaw.appendChild(trolley);
+P({parent:trolley,x:0,y:-1,z:0,w:12,h:6,d:12,mat:'dark',at:.13,off:.82});      // trolley block
+const cableWrap=document.createElement('div');cableWrap.id='cableWrap';
+trolley.appendChild(cableWrap);
+cableWrap.innerHTML='<div class="cline"></div><div class="cline x90"></div>';
+pieces.push({el:cableWrap,at:.135,off:.82});
+const hookHost=document.createElement('div');
+hookHost.className='grp';cableWrap.appendChild(hookHost);
+P({parent:hookHost,x:0,y:-3,z:0,w:9,h:7,d:9,mat:'steel',at:.14,off:.82});      // hook
+
+/* ── workshop wing: the glass one (frame first, skin later) ── */
+P({x:22, y:60,z:-16,w:12,h:104,d:12,mat:'steel',at:.15});
+P({x:168,y:60,z:-16,w:12,h:104,d:12,mat:'steel',at:.165});
+P({x:22, y:60,z:86, w:12,h:104,d:12,mat:'steel',at:.18});
+P({x:168,y:60,z:86, w:12,h:104,d:12,mat:'steel',at:.195});
+P({x:95,y:44, z:35,w:166,h:8,d:126,mat:'slab',at:.22});
+P({x:95,y:80, z:35,w:166,h:8,d:126,mat:'slab',at:.25});
+P({x:95,y:116,z:35,w:176,h:8,d:136,mat:'slab',at:.28});     // roof, slight overhang
+
+/* ── bridge over the road, on dark pilotis ── */
+P({x:-25,y:20,z:-18,w:8,h:40,d:8,mat:'dark',at:.30});
+P({x:-25,y:20,z:8,  w:8,h:40,d:8,mat:'dark',at:.31});
+P({x:-90,y:20,z:-18,w:8,h:40,d:8,mat:'dark',at:.32});
+P({x:-90,y:20,z:8,  w:8,h:40,d:8,mat:'dark',at:.33});
+P({x:-55,y:44, z:-5,w:130,h:8,d:50,mat:'slab',at:.35});
+P({x:-55,y:76, z:-5,w:130,h:8,d:50,mat:'slab',at:.37});
+P({x:-55,y:108,z:-5,w:134,h:8,d:54,mat:'slab',at:.39});     // bridge roof
+
+/* ── north wing frame ── */
+P({x:-212,y:60,z:-92,w:12,h:104,d:12,mat:'steel',at:.40});
+P({x:-138,y:60,z:-92,w:12,h:104,d:12,mat:'steel',at:.415});
+P({x:-212,y:60,z:12, w:12,h:104,d:12,mat:'steel',at:.43});
+P({x:-138,y:60,z:12, w:12,h:104,d:12,mat:'steel',at:.445});
+P({x:-175,y:44, z:-40,w:106,h:8,d:136,mat:'slab',at:.47});
+P({x:-175,y:80, z:-40,w:106,h:8,d:136,mat:'slab',at:.49});
+P({x:-175,y:116,z:-40,w:116,h:8,d:146,mat:'slab',at:.51});  // roof
+
+/* ── link (canteen) + studio tower frame ── */
+P({x:100,y:22,z:-50,w:8,h:28,d:8,mat:'steel',at:.52});
+P({x:160,y:22,z:-50,w:8,h:28,d:8,mat:'steel',at:.525});
+P({x:130,y:40,z:-52,w:76,h:8,d:50,mat:'slab',at:.535});
+P({x:128,y:96,z:-147,w:10,h:176,d:10,mat:'steel',at:.55});
+P({x:172,y:96,z:-147,w:10,h:176,d:10,mat:'steel',at:.56});
+P({x:128,y:96,z:-83, w:10,h:176,d:10,mat:'steel',at:.57});
+P({x:172,y:96,z:-83, w:10,h:176,d:10,mat:'steel',at:.58});
+P({x:150,y:44, z:-115,w:56,h:8,d:76,mat:'slab',at:.60});
+P({x:150,y:80, z:-115,w:56,h:8,d:76,mat:'slab',at:.615});
+P({x:150,y:116,z:-115,w:56,h:8,d:76,mat:'slab',at:.63});
+P({x:150,y:152,z:-115,w:56,h:8,d:76,mat:'slab',at:.645});
+P({x:150,y:188,z:-115,w:62,h:8,d:82,mat:'slab',at:.66});    // studio roof
+
+/* ── skins: stucco, ribbons, balconies (no ghosts — finishes) ── */
+/* north wing */
+P({x:-175,y:60,z:31,  w:106,h:104,d:4,mat:'stucco',at:.585,ghost:false});
+P({x:-119,y:60,z:-40, w:4,h:104,d:136,mat:'stucco',at:.60,ghost:false});
+P({x:-175,y:28,z:33.5,w:94,h:12,d:3,mat:'ribbon',at:.62,ghost:false});
+P({x:-175,y:64,z:33.5,w:94,h:12,d:3,mat:'ribbon',at:.63,ghost:false});
+P({x:-175,y:100,z:33.5,w:94,h:12,d:3,mat:'ribbon',at:.64,ghost:false});
+P({x:-116.5,y:28,z:-40,w:3,h:12,d:124,mat:'ribbon',at:.625,ghost:false});
+P({x:-116.5,y:64,z:-40,w:3,h:12,d:124,mat:'ribbon',at:.635,ghost:false});
+P({x:-116.5,y:100,z:-40,w:3,h:12,d:124,mat:'ribbon',at:.645,ghost:false});
+plate({x:-215,y:14,z:33.6,w:56,h:8,at:.65,cls:'code',
+       html:'<span>N-02 · Fachschule</span>'});
+/* bridge */
+P({x:-55,y:76,z:22,w:130,h:56,d:4,mat:'stucco',at:.655,ghost:false});
+P({x:-55,y:60,z:24.5,w:118,h:12,d:3,mat:'ribbon',at:.67,ghost:false});
+P({x:-55,y:92,z:24.5,w:118,h:12,d:3,mat:'ribbon',at:.68,ghost:false});
+plate({x:-100,y:76,z:24.6,w:56,h:8,at:.685,cls:'code',
+       html:'<span>Br-03 · Brücke</span>'});
+/* studio tower */
+P({x:150,y:96,z:-73,w:56,h:176,d:4,mat:'stucco',at:.69,ghost:false});
+P({x:181,y:96,z:-115,w:4,h:176,d:76,mat:'stucco',at:.70,ghost:false});
+P({x:150,y:26,z:-70.5,w:40,h:11,d:3,mat:'ribbon',at:.705,ghost:false});
+P({x:150,y:62,z:-70.5,w:40,h:11,d:3,mat:'ribbon',at:.71,ghost:false});
+P({x:150,y:98,z:-70.5,w:40,h:11,d:3,mat:'ribbon',at:.715,ghost:false});
+P({x:150,y:134,z:-70.5,w:40,h:11,d:3,mat:'ribbon',at:.72,ghost:false});
+P({x:150,y:170,z:-70.5,w:40,h:11,d:3,mat:'ribbon',at:.725,ghost:false});
+P({x:189,y:62, z:-115,w:14,h:5,d:20,mat:'stucco',at:.715,ghost:false});
+P({x:189,y:98, z:-115,w:14,h:5,d:20,mat:'stucco',at:.72,ghost:false});
+P({x:189,y:134,z:-115,w:14,h:5,d:20,mat:'stucco',at:.725,ghost:false});
+P({x:189,y:170,z:-115,w:14,h:5,d:20,mat:'stucco',at:.73,ghost:false});
+plate({x:166,y:14,z:-70.4,w:56,h:8,at:.735,cls:'code',
+       html:'<span>St-05 · Prellerhaus</span>'});
+/* workshop curtain wall — the reveal, saved for last */
+P({x:30,y:25,z:101.5,w:26,h:34,d:3,mat:'dark',at:.70,ghost:false});   // entrance
+P({x:30,y:46,z:108,w:44,h:5,d:26,mat:'stucco',at:.705,ghost:false});  // canopy
+P({x:95,y:65,z:101,w:174,h:106,d:4,mat:'glass',at:.74,ghost:false});
+P({x:183,y:65,z:35,w:4,h:106,d:134,mat:'glass',at:.755,ghost:false});
+plate({x:165,y:14,z:103.2,w:56,h:8,at:.76,cls:'code',
+       html:'<span>W-01 · Werkstatt</span>'});
+plate({x:185.6,y:62,z:74,ry:90,w:18,h:110,at:.77,cls:'sign',
+       html:'<span>B</span><span>A</span><span>U</span><span>H</span><span>A</span><span>U</span><span>S</span>'});
+
+/* ── scaffold on the north wing (temporary works) ── */
+P({x:-205,y:65,z:42,w:5,h:130,d:5,mat:'steel',at:.42,off:.78,track:false,ghost:false});
+P({x:-205,y:65,z:56,w:5,h:130,d:5,mat:'steel',at:.43,off:.785,track:false,ghost:false});
+P({x:-145,y:65,z:42,w:5,h:130,d:5,mat:'steel',at:.44,off:.79,track:false,ghost:false});
+P({x:-145,y:65,z:56,w:5,h:130,d:5,mat:'steel',at:.45,off:.795,track:false,ghost:false});
+P({x:-175,y:46,z:49,w:70,h:5,d:24,mat:'plank',at:.47,off:.80,track:false,ghost:false});
+P({x:-175,y:90,z:49,w:70,h:5,d:24,mat:'plank',at:.55,off:.805,track:false,ghost:false});
+P({x:-175,y:65,z:56,w:5,h:120,d:5,mat:'steel',at:.57,off:.80,track:false,ghost:false,rot:'rotateZ(34deg)'});
+/* stockpiles by the crane */
+P({x:22,y:10,z:196,w:40,h:8,d:16,mat:'plank',at:.20,off:.79,track:false,ghost:false});
+P({x:-98,y:9,z:202,w:24,h:12,d:18,mat:'conc',at:.24,off:.795,track:false,ghost:false});
+
+/* ── survey dimension line, at the tallest point ── */
+P({x:205,y:94,z:-75,w:2,h:188,d:2,mat:'ink',at:.86,ghost:false,track:false});
+P({x:205,y:187,z:-75,w:16,h:2,d:2,mat:'ink',at:.87,ghost:false,track:false});
+P({x:205,y:1,z:-75,w:16,h:2,d:2,mat:'ink',at:.87,ghost:false,track:false});
+bill({x:205,y:202,z:-75,label:'Elev +26.0 m',at:.875});
+
+/* ── the topping-out beam, with the traditional tree ── */
+P({x:150,y:196,z:-115,w:70,h:8,d:12,mat:'mint',at:.88,track:false});
+bill({x:150,y:208,z:-115,emoji:'🌲',at:.88,size:18});
+
+targets.sort((a,b)=>a.at-b.at);
+
+/* ── state ──────────────────────────────────────────────────── */
+const R=document.documentElement.style;
+let ry=-34,rx=-24,ryT=-34,rxT=-24,mx=0,my=0,p=0,shownPct=-1,
+    confettiArmed=true,parts=[],
+    yaw=40,trol=60,cab=80;                 /* crane pose (lerped) */
+const CRANE={bx:-40,bz:170,topY:308,restYaw:150,minR:34,maxR:192};
+
+addEventListener('pointermove',e=>{
+  if(isTouch)return;
+  mx=(e.clientX/innerWidth)*2-1;
+  my=(e.clientY/innerHeight)*2-1;
+},{passive:true});
+
+$('#rebuild').addEventListener('click',()=>{
+  scrollTo({top:0,behavior:reduced?'auto':'smooth'});
+});
+
+/* phase visibility (annotation windows along the scroll) */
+const phases=[
+  [$('#hero'),    -1,  .09],
+  [$('#calloutA'),.15, .42],
+  [$('#calloutB'),.46, .70],
+  [$('#calloutC'),.73, .905],
+  [$('#final'),   .925,2  ],
+];
+
+/* confetti — a 20-line particle system, per the constraints.
+   Bursts from the topping-out tree, as tradition demands. */
+const conf=$('#confetti'),EMOJI=['🎉','✨','🧱','🔧','📐','🟩'];
+function popConfetti(){
+  if(reduced)return;
+  document.querySelectorAll('.bill .e').forEach(el=>{
+    if(el.textContent!=='🌲')return;
+    const r=el.getBoundingClientRect();
+    for(let i=0;i<36;i++){
+      const s=document.createElement('span');
+      s.textContent=EMOJI[(Math.random()*EMOJI.length)|0];
+      conf.appendChild(s);
+      parts.push({el:s,x:r.left+r.width/2,y:r.top,r:Math.random()*360,
+        vx:(Math.random()-.5)*9,vy:-(4+Math.random()*8),
+        vr:(Math.random()-.5)*14,life:1});
+    }
+  });
+}
+
+/* crane brain: aim at whatever was most recently placed */
+function craneGoal(){
+  if(p<.15||p>.745)return null;            /* rigging up / rigging down */
+  let t=null;
+  for(const g of targets){ if(g.at<=p+.015)t=g; else break; }
+  return t;
+}
+
+/* ── the loop ───────────────────────────────────────────────── */
+function tick(){
+  const max=document.documentElement.scrollHeight-innerHeight;
+  p=max>0?Math.min(1,Math.max(0,scrollY/max)):0;
+
+  /* camera: gentle orbit driven by scroll, seasoned by the mouse */
+  ryT=-34+p*26+(isTouch?0:mx*14);
+  rxT=-24+p*4 +(isTouch?0:my*7);
+  ry+=(ryT-ry)*.06; rx+=(rxT-rx)*.06;
+  R.setProperty('--ry',ry.toFixed(2));
+  R.setProperty('--rx',rx.toFixed(2));
+  R.setProperty('--shadow',p.toFixed(3));
+  $('#az').textContent=`Az ${Math.round(ry)}° · El ${Math.round(rx)}°`;
+
+  /* construction & dismantling */
+  for(const pc of pieces){
+    const on=p>=pc.at&&(pc.off===undefined||p<pc.off);
+    pc.el.classList.toggle('built',on);
+    if(pc.off!==undefined)pc.el.classList.toggle('gone',p>=pc.off);
+  }
+
+  /* crane mechanics: slew to the work, trolley out, lower the hook */
+  const g=craneGoal();
+  let yawT,trolT,cabT;
+  if(g){
+    const dx=g.x-CRANE.bx,dz=g.z-CRANE.bz,dist=Math.hypot(dx,dz);
+    yawT=Math.atan2(-dz,dx)*180/Math.PI;
+    trolT=Math.min(CRANE.maxR,Math.max(CRANE.minR,dist));
+    cabT=Math.min(260,Math.max(26,CRANE.topY-(g.y+30)));
+  }else{ yawT=CRANE.restYaw;trolT=50;cabT=60; }
+  let dy=((yawT-yaw+540)%360)-180;         /* shortest arc */
+  const k=reduced?1:.05;
+  yaw+=dy*k; trol+=(trolT-trol)*k; cab+=(cabT-cab)*k;
+  craneYaw.style.transform=`rotateY(${yaw}deg)`;
+  trolley.style.transform=`translate3d(${trol}px,2px,0)`;
+  cableWrap.style.transform=`scaleY(${(cab/260).toFixed(4)})`;
+  hookHost.style.transform=
+    `scaleY(${(260/cab).toFixed(4)}) translateY(${cab.toFixed(1)}px)`;
+
+  /* counters */
+  const pct=Math.round(Math.min(1,Math.max(0,(p-.06)/.82))*100);
+  if(pct!==shownPct){
+    shownPct=pct;
+    $('#pctNum').textContent=pct;
+    $('#barFill').style.width=pct+'%';
+  }
+  $('#rail').style.width=(p*100).toFixed(2)+'vw';
+
+  /* annotations */
+  for(const[el,a,b]of phases)el.classList.toggle('on',p>=a&&p<=b);
+  $('#scrollPill').style.opacity=p<.02?1:0;
+
+  /* topping-out ceremony: stamp, lights on, confetti */
+  const done=p>=.925;
+  document.body.classList.toggle('done',done);
+  if(done&&confettiArmed){confettiArmed=false;popConfetti();}
+  if(p<.85)confettiArmed=true;
+
+  /* particles */
+  for(let i=parts.length-1;i>=0;i--){
+    const q=parts[i];
+    q.vy+=.3;q.x+=q.vx;q.y+=q.vy;q.r+=q.vr;q.life-=.011;
+    q.el.style.transform=`translate(${q.x}px,${q.y}px) rotate(${q.r}deg)`;
+    q.el.style.opacity=Math.max(0,q.life);
+    if(q.life<=0||q.y>innerHeight+40){q.el.remove();parts.splice(i,1);}
+  }
+  requestAnimationFrame(tick);
+}
+requestAnimationFrame(tick);
+
+console.log('%cBlueprint v47 · Dessau Edition','font-weight:bold;font-size:14px;color:#7fd4ff',
+'\nEvery beam is a <div>. The crane does its own trigonometry.\nNo frameworks were consulted. Sheet A-001 · hello@rishabhdoshi.com');
+</script>
+</body>
+</html>
