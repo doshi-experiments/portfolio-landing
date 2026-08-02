@@ -26,11 +26,14 @@
 <title>Under Construction — Rishabh Doshi</title>
 <meta name="description" content="The portfolio of Rishabh Doshi is being assembled on-site. Scroll to build it. 100% vanilla HTML, CSS &amp; JS — no libraries, no images.">
 <!-- Theme is stamped on <html> before the first paint. Anything later
-     and the light-mode visitor gets a dark flash on every load. -->
+     and the light-mode visitor gets a dark flash on every load.
+     The choice lives in a cookie scoped to .rishabhdoshi.com so it
+     carries across the portfolio, the experiments index and the
+     calculator — localStorage can't, being per-origin. -->
 <script>
 (function(){
-  var t;
-  try{ t=localStorage.getItem('sheet-theme'); }catch(e){}
+  var m=document.cookie.match(/(?:^|;\s*)sheet-theme=(light|dark)/),t=m&&m[1];
+  if(!t){ try{ t=localStorage.getItem('sheet-theme'); }catch(e){} }
   if(t!=='light'&&t!=='dark')
     t=matchMedia('(prefers-color-scheme: light)').matches?'light':'dark';
   document.documentElement.setAttribute('data-theme',t);
@@ -63,6 +66,17 @@
   --rx:-26;          /* camera pitch — fixed, see CAM in the script */
   --ry:-29;          /* camera yaw   — fixed                        */
   --shadow:0;        /* building shadow scale 0..1        */
+
+  /* Site inks. The model itself is deliberately NOT themed — a white
+     scale model reads as a white scale model on either sheet. Only the
+     paper it sits on, and the lines drawn onto that paper, change. */
+  --plan:rgba(146,206,255,.45);   /* dashed plan line      */
+  --site:rgba(146,206,255,.12);   /* ground grid           */
+  --shade:rgba(0,8,18,.5);        /* ground shadow         */
+  --road-fill:rgba(220,240,255,.05);
+  --road-line:rgba(180,220,255,.22);
+  --road-dash:rgba(220,240,255,.3);
+  --rule:rgba(146,206,255,.18);   /* hairline in chrome    */
 }
 
 /* Light mode is not a recolour — it is a different drawing. The dark
@@ -82,6 +96,13 @@
   --redline:#c0392b;
   --card:rgba(255,255,255,.88);
   --card-edge:rgba(24,64,100,.18);
+  --plan:rgba(30,66,102,.3);
+  --site:rgba(30,66,102,.10);
+  --shade:rgba(35,70,105,.16);
+  --road-fill:rgba(30,66,102,.035);
+  --road-line:rgba(30,66,102,.14);
+  --road-dash:rgba(30,66,102,.16);
+  --rule:rgba(30,66,102,.14);
 }
 @media (max-width:860px){ :root{ --s:.52; --lift:110px; } }
 @media (max-width:480px){ :root{ --s:.42; --lift:100px; } }
@@ -140,35 +161,30 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
   position:absolute;width:1400px;height:1400px;left:-700px;top:-700px;
   transform:rotateX(90deg);
   background:
-    repeating-linear-gradient(0deg,  rgba(146,206,255,.12) 0 1px, transparent 1px 40px),
-    repeating-linear-gradient(90deg, rgba(146,206,255,.12) 0 1px, transparent 1px 40px);
+    repeating-linear-gradient(0deg,  var(--site) 0 1px, transparent 1px 40px),
+    repeating-linear-gradient(90deg, var(--site) 0 1px, transparent 1px 40px);
   -webkit-mask-image:radial-gradient(closest-side,#000 30%,transparent 78%);
           mask-image:radial-gradient(closest-side,#000 30%,transparent 78%);
-}
-.propline{ /* dashed property line */
-  position:absolute;width:900px;height:640px;left:-450px;top:-320px;
-  transform:rotateX(90deg) translateZ(1px);
-  border:2px dashed rgba(146,206,255,.35);
 }
 /* the road the bridge spans — reason the bridge exists */
 .road{
   position:absolute;width:48px;height:780px;left:-81px;top:-390px;
   transform:rotateX(90deg) translateZ(2px);
-  background:rgba(220,240,255,.05);
-  border-left:1px solid rgba(180,220,255,.22);
-  border-right:1px solid rgba(180,220,255,.22);
+  background:var(--road-fill);
+  border-left:1px solid var(--road-line);
+  border-right:1px solid var(--road-line);
 }
 .road::after{
   content:"";position:absolute;left:calc(50% - 1.5px);top:0;
   width:3px;height:100%;
   background:repeating-linear-gradient(0deg,
-    rgba(220,240,255,.3) 0 16px, transparent 16px 42px);
+    var(--road-dash) 0 16px, transparent 16px 42px);
 }
 .gshadow{ /* building shadow grows with progress */
   position:absolute;width:520px;height:340px;left:-260px;top:-170px;
   transform:rotateX(90deg) translateZ(3px)
             scale(calc(.25 + var(--shadow)*.75));
-  background:radial-gradient(closest-side,rgba(0,8,18,.5),transparent 70%);
+  background:radial-gradient(closest-side,var(--shade),transparent 70%);
   opacity:calc(.2 + var(--shadow)*.8);
 }
 
@@ -198,16 +214,16 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 }
 /* ghost = the plan */
 .g .f{
-  background:rgba(127,212,255,.03);
-  border:1px dashed rgba(146,206,255,.5);
-  opacity:.32;
+  background:transparent;
+  border:1px dashed var(--plan);
+  opacity:.5;
 }
 .piece.built .g .f{opacity:0}
-/* solid = the plush build */
+/* solid = the build. Flat fill, hairline edge, nothing else: no felt
+   shading, no stitched seams, no drop shadow. Same on both sheets. */
 .sd .f{
-  border:2px dashed var(--seam,rgba(60,50,30,.4));
-  box-shadow:inset 0 3px 10px rgba(255,255,255,.45),
-             inset 0 -4px 10px rgba(60,45,25,.10);
+  border:1px solid rgba(30,66,102,.26);
+  box-shadow:none;
   opacity:0;
 }
 .piece.built .sd .f{opacity:1}
@@ -215,44 +231,42 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 .piece.gone .f{opacity:0!important}
 .bill.gone{opacity:0!important}
 
-/* materials — low-contrast felt shading, light from the top */
-.m-conc  {--ft:#eee9dd;--ff:#ddd5c2;--fs:#cabfa6;--seam:rgba(122,104,74,.5)}
-.m-steel {--ft:#e9ecef;--ff:#d3d8dd;--fs:#bcc3ca;--seam:rgba(96,106,116,.55)}
-.m-slab  {--ft:#f6f4ee;--ff:#e6e2d6;--fs:#d3cdba;--seam:rgba(130,118,92,.5)}
-.m-stucco{--ft:#ffffff;--ff:#f2eee5;--fs:#e0dac9;--seam:rgba(140,126,96,.45)}
-.m-dark  {--ft:#5c6772;--ff:#454f59;--fs:#333b44;--seam:rgba(210,225,240,.35)}
-.m-peach {--ft:#ffd0a8;--ff:#ffb277;--fs:#f0985a;--seam:rgba(168,84,26,.55)}
-.m-mint  {--ft:#c6f2d6;--ff:#9fe6ba;--fs:#82d3a2;--seam:rgba(38,120,74,.55)}
-.m-plank {--ft:#ffe9b0;--ff:#f6d584;--fs:#e2bd62;--seam:rgba(150,110,30,.55)}
+/* materials — flat fills. Whites collapse toward white; only the crane,
+   the topping-out beam and the glass keep a hue, because those three
+   have to be told apart at a glance. Not themed: a white model reads
+   as a white model on either sheet. */
+.m-conc  {--ft:#ffffff;--ff:#f1f3f5;--fs:#e3e7eb}
+.m-slab  {--ft:#ffffff;--ff:#f1f3f5;--fs:#e3e7eb}
+.m-stucco{--ft:#ffffff;--ff:#f5f7f9;--fs:#e8ecf0}
+.m-steel {--ft:#f7f9fa;--ff:#e8ecf0;--fs:#d8dee4}
+.m-dark  {--ft:#8c98a4;--ff:#7b8794;--fs:#6b7783}
+.m-peach {--ft:#f0a763;--ff:#e2914a;--fs:#d07f38}
+.m-mint  {--ft:#7cc79c;--ff:#67b98b;--fs:#54a679}
+.m-plank {--ft:#e8c987;--ff:#dbb96f;--fs:#cba75c}
 .m-ink   {--ft:var(--ink);--ff:var(--ink);--fs:var(--ink)}
-.m-ink .sd .f{border:0;box-shadow:none}
+.m-ink .sd .f{border:0}
 .sd .ft{background:var(--ft)} .sd .ff,.sd .fb{background:var(--ff)}
 .sd .fr,.sd .fl{background:var(--fs)} .sd .fu{background:var(--fs)}
 
-/* glass — mullion grids drawn with gradients, dusk-lit from within */
+/* glass — one flat tint. No mullion grid, no light from within. */
 .m-glass .f,.m-ribbon .f{
-  border:1px solid rgba(190,230,255,.75)!important;
-  box-shadow:inset 0 0 26px rgba(150,220,255,.22)!important;
-  transition:opacity .45s ease, box-shadow .8s ease, background-color .8s ease;
+  border:1px solid rgba(30,66,102,.28)!important;
+  box-shadow:none!important;
+  transition:opacity .45s ease, background-color .8s ease;
 }
-.m-glass .f{background:
-  repeating-linear-gradient(90deg,rgba(232,248,255,.8) 0 1px,transparent 1px 22px),
-  repeating-linear-gradient(0deg, rgba(232,248,255,.8) 0 1px,transparent 1px 22px),
-  rgba(140,210,250,.18)!important}
-.m-ribbon .f{background:
-  repeating-linear-gradient(90deg,rgba(232,248,255,.8) 0 1px,transparent 1px 15px),
-  rgba(90,160,210,.30)!important}
-/* topping-out: the lights come on */
+.m-glass .f{background:rgba(150,196,228,.45)!important}
+.m-ribbon .f{background:rgba(120,170,210,.55)!important}
+/* topping-out: the lights come on — a shade brighter, nothing more */
 body.done .m-glass .f,body.done .m-ribbon .f{
-  background-color:rgba(170,230,255,.34)!important;
-  box-shadow:inset 0 0 34px rgba(190,240,255,.5)!important;
+  background-color:rgba(178,214,240,.62)!important;
 }
 
-/* facade plates: signage & designation codes (paint, not mass) */
+/* facade plates: signage & designation codes (paint, not mass).
+   Dark in both themes — they're painted on white walls either way. */
 .plate{
   position:absolute;display:flex;flex-direction:column;
   align-items:center;justify-content:space-between;
-  color:#fbfdff;text-shadow:0 1px 2px rgba(5,15,30,.45);
+  color:#26405a;
 }
 .plate span{opacity:0;transition:opacity .5s ease}
 .plate.built span{opacity:1}
@@ -280,13 +294,12 @@ body.done .m-glass .f,body.done .m-ribbon .f{
   position:absolute;transform-style:preserve-3d;
   display:grid;justify-items:center;gap:2px;
   font-size:26px;line-height:1;
-  filter:drop-shadow(0 3px 3px rgba(0,10,20,.5));
   opacity:0;transition:opacity .5s ease;transition-delay:var(--td,0ms);
 }
 .bill.built{opacity:1}
 .bill small{
   font-size:8px;letter-spacing:.1em;color:var(--ink-dim);
-  background:rgba(7,22,40,.7);padding:2px 5px;
+  background:var(--card);padding:2px 5px;
   border:1px solid var(--card-edge);white-space:nowrap;
 }
 
@@ -313,7 +326,8 @@ body.done .m-glass .f,body.done .m-ribbon .f{
   position:fixed;font-size:9px;letter-spacing:.14em;color:var(--ink-dim);
 }
 #survey{top:18px;left:44px}
-#north{top:16px;right:44px;font-size:11px;letter-spacing:.1em;color:var(--ink)}
+/* the compass steps aside to make room for the switch */
+#north{top:16px;right:104px;font-size:11px;letter-spacing:.1em;color:var(--ink)}
 #donotscale{bottom:36px;left:44px}
 #builtwith{bottom:18px;left:44px}
 #builtwith b{color:var(--go);font-weight:400}
@@ -450,16 +464,28 @@ body.done .m-glass .f,body.done .m-ribbon .f{
 }
 @keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(5px)}}
 
-/* ── theme toggle ─────────────────────────────────────────── */
+/* ── theme toggle — a real switch, top right ──────────────── */
 #themeToggle{
-  position:fixed;top:38px;left:44px;
-  font-size:9px;letter-spacing:.14em;color:var(--ink-dim);
-  border:1px solid var(--card-edge);background:var(--card);
+  position:fixed;top:13px;right:44px;
+  display:flex;align-items:center;
+  width:48px;height:24px;padding:2px;
+  border:1px solid var(--card-edge);border-radius:999px;
+  background:var(--card);
   -webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);
-  padding:6px 10px;
-  transition:color .2s ease,border-color .2s ease;
+  transition:border-color .2s ease,background-color .3s ease;
 }
-#themeToggle:hover{color:var(--accent);border-color:var(--accent)}
+#themeToggle:hover{border-color:var(--accent)}
+#themeToggle .knob{
+  display:grid;place-items:center;
+  width:18px;height:18px;border-radius:50%;
+  background:var(--accent);color:var(--paper-0);
+  font-size:10px;line-height:1;
+  transition:transform .3s cubic-bezier(.4,0,.2,1),
+             background-color .3s ease,color .3s ease;
+}
+#themeToggle .knob::after{content:"☾"}
+:root[data-theme="light"] #themeToggle .knob{transform:translateX(24px)}
+:root[data-theme="light"] #themeToggle .knob::after{content:"☀"}
 
 /* ── final card + stamp ───────────────────────────────────── */
 #final{left:6vw;top:50%;transform:translateY(calc(-50% + 14px));max-width:430px}
@@ -486,77 +512,11 @@ body.done .m-glass .f,body.done .m-ribbon .f{
 #confetti span{position:absolute;left:0;top:0;font-size:18px;will-change:transform}
 
 /* ─────────────────────────────────────────────────────────────
-   9 · Light Mode — the same building, drawn instead of rendered.
+   9 · Sheet-specific ink
 
-   Everything decorative is temporary works and comes off: the felt
-   shading, the stitched seams, the mullion gradients, the interior
-   glow, the drop shadows and the fine grid. What's left is mass,
-   hairline edge and label — which is all a plan ever was.
+   The model and its flat treatment are shared — see sections 2 and 3.
+   Only these few things genuinely differ between the two sheets.
    ───────────────────────────────────────────────────────────── */
-/* site: a whisper of a grid, no property line, a soft shadow */
-[data-theme="light"] .groundgrid{
-  background:
-    repeating-linear-gradient(0deg,  rgba(30,66,102,.10) 0 1px, transparent 1px 40px),
-    repeating-linear-gradient(90deg, rgba(30,66,102,.10) 0 1px, transparent 1px 40px);
-  opacity:.55;
-}
-[data-theme="light"] .propline{display:none}
-[data-theme="light"] .road{
-  background:rgba(30,66,102,.035);
-  border-left-color:rgba(30,66,102,.14);
-  border-right-color:rgba(30,66,102,.14);
-}
-[data-theme="light"] .road::after{
-  background:repeating-linear-gradient(0deg,
-    rgba(30,66,102,.16) 0 16px, transparent 16px 42px);
-}
-[data-theme="light"] .gshadow{
-  background:radial-gradient(closest-side,rgba(35,70,105,.16),transparent 70%);
-}
-
-/* the plan: pencil, not glow */
-[data-theme="light"] .g .f{
-  background:transparent;
-  border:1px dashed rgba(30,66,102,.3);
-  opacity:.5;
-}
-/* the mass: flat fill, hairline edge — no seam, no felt */
-[data-theme="light"] .sd .f{
-  border:1px solid rgba(30,66,102,.26);
-  box-shadow:none;
-}
-[data-theme="light"] .m-ink .sd .f{border:0}
-
-/* materials collapse toward white; only crane, beam and glass keep
-   a hue, because each one has to be told apart at a glance */
-[data-theme="light"] .m-conc  {--ft:#ffffff;--ff:#f1f3f5;--fs:#e3e7eb}
-[data-theme="light"] .m-slab  {--ft:#ffffff;--ff:#f1f3f5;--fs:#e3e7eb}
-[data-theme="light"] .m-stucco{--ft:#ffffff;--ff:#f5f7f9;--fs:#e8ecf0}
-[data-theme="light"] .m-steel {--ft:#f7f9fa;--ff:#e8ecf0;--fs:#d8dee4}
-[data-theme="light"] .m-dark  {--ft:#8c98a4;--ff:#7b8794;--fs:#6b7783}
-[data-theme="light"] .m-peach {--ft:#f0a763;--ff:#e2914a;--fs:#d07f38}
-[data-theme="light"] .m-mint  {--ft:#7cc79c;--ff:#67b98b;--fs:#54a679}
-[data-theme="light"] .m-plank {--ft:#e8c987;--ff:#dbb96f;--fs:#cba75c}
-
-/* glass: one flat tint. No mullion grid, no dusk light within. */
-[data-theme="light"] .m-glass .f,
-[data-theme="light"] .m-ribbon .f{
-  border:1px solid rgba(30,66,102,.28)!important;
-  box-shadow:none!important;
-  background:rgba(124,176,214,.26)!important;
-}
-[data-theme="light"] .m-ribbon .f{background:rgba(96,152,196,.32)!important}
-[data-theme="light"] body.done .m-glass .f,
-[data-theme="light"] body.done .m-ribbon .f{
-  background-color:rgba(150,198,232,.42)!important;
-  box-shadow:none!important;
-}
-
-/* lettering has to darken once the walls are white */
-[data-theme="light"] .plate{color:#26405a;text-shadow:none}
-[data-theme="light"] .bill{filter:none}
-[data-theme="light"] .bill small{background:rgba(255,255,255,.9)}
-[data-theme="light"] #titleblock .row{border-bottom-color:rgba(30,66,102,.14)}
 [data-theme="light"] #wing:hover{color:#fff}
 [data-theme="light"] ::selection{background:var(--safety);color:#fff}
 
@@ -582,7 +542,7 @@ body.done .m-glass .f,body.done .m-ribbon .f{
   #bar{display:none}
   #survey{display:none}#donotscale{display:none}
   #builtwith{bottom:auto;top:16px;left:14px}
-  #themeToggle{top:34px;left:14px}
+  #themeToggle{top:12px;right:40px}
   #scrollPill{bottom:20px}
   .card p{font-size:11.5px;line-height:1.6}
 }
@@ -606,7 +566,6 @@ body.done .m-glass .f,body.done .m-ribbon .f{
   <div id="camera">
     <div id="world">
       <div class="groundgrid"></div>
-      <div class="propline"></div>
       <div class="road"></div>
       <div class="gshadow"></div>
       <div id="build"><!-- the campus is drafted here by JS --></div>
@@ -624,8 +583,10 @@ body.done .m-glass .f,body.done .m-ribbon .f{
   <div class="microtag" id="donotscale">Do Not Scale Drawing · Dimensions Are a Vibe</div>
   <div class="microtag" id="builtwith">Built With <b>♥</b> Using Claude</div>
 
-  <button class="live" id="themeToggle" type="button" aria-pressed="false">
-    ◑ Light Sheet</button>
+  <button class="live" id="themeToggle" type="button" role="switch"
+          aria-checked="false" aria-label="Light sheet">
+    <span class="knob" aria-hidden="true"></span>
+  </button>
 
   <div id="scrollPill">Scroll to Build<i>▼</i></div>
 
@@ -981,16 +942,24 @@ $('#az').textContent=`Az ${CAM.ry}° · El ${CAM.rx}°`;
    The value is already on <html> from the head script; this only
    keeps the button label honest and writes the choice down.      */
 const themeBtn=$('#themeToggle'),root=document.documentElement;
-function paintTheme(t){
+function paintTheme(t,write){
   root.setAttribute('data-theme',t);
-  themeBtn.textContent=t==='light'?'◐ Blueprint':'◑ Light Sheet';
-  themeBtn.setAttribute('aria-pressed',String(t==='light'));
+  themeBtn.setAttribute('aria-checked',String(t==='light'));
+  themeBtn.setAttribute('aria-label',
+    t==='light'?'Switch to the blueprint sheet':'Switch to the light sheet');
+  if(!write)return;
+  /* cookie carries the choice across the subdomains; localStorage is the
+     fallback for when there is no registrable domain (file://, localhost) */
+  try{
+    document.cookie='sheet-theme='+t+';domain=.rishabhdoshi.com;path=/;'
+                   +'max-age=31536000;samesite=lax';
+    document.cookie='sheet-theme='+t+';path=/;max-age=31536000;samesite=lax';
+    localStorage.setItem('sheet-theme',t);
+  }catch(e){}
 }
-paintTheme(root.getAttribute('data-theme')==='light'?'light':'dark');
+paintTheme(root.getAttribute('data-theme')==='light'?'light':'dark',false);
 themeBtn.addEventListener('click',()=>{
-  const next=root.getAttribute('data-theme')==='light'?'dark':'light';
-  paintTheme(next);
-  try{localStorage.setItem('sheet-theme',next);}catch(e){}
+  paintTheme(root.getAttribute('data-theme')==='light'?'dark':'light',true);
 });
 
 $('#rebuild').addEventListener('click',()=>{
