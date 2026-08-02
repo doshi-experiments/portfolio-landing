@@ -295,6 +295,12 @@ body.done .m-glass .f,body.done .m-ribbon .f{
    ───────────────────────────────────────────────────────────── */
 #hud{position:fixed;inset:0;z-index:2;pointer-events:none}
 #hud .live{pointer-events:auto}
+/* ...but only while its card is actually showing. #final is positioned
+   over #hero, so without this its invisible buttons sit on top and eat
+   every click aimed at the hero. This is the load-bearing rule; the
+   visibility transition on .card is belt-and-braces (and screen readers). */
+#hud .card:not(.on),
+#hud .card:not(.on) .live{pointer-events:none}
 
 .mark{position:fixed;width:18px;height:18px;opacity:.55}
 .mark::before,.mark::after{content:"";position:absolute;background:var(--accent)}
@@ -345,9 +351,19 @@ body.done .m-glass .f,body.done .m-ribbon .f{
   -webkit-backdrop-filter:blur(7px);backdrop-filter:blur(7px);
   padding:18px 20px 20px;
   opacity:0;transform:translateY(14px);
-  transition:opacity .5s ease,transform .5s ease;
+  /* A faded card must stop hit-testing. #final is positioned over #hero,
+     and opacity:0 alone leaves its .live children clickable — invisible
+     buttons that swallow every click aimed at the hero beneath them.
+     visibility can't be undone by a descendant, so it's the right lever;
+     it's delayed on the way out so the fade still reads. */
+  visibility:hidden;
+  transition:opacity .5s ease,transform .5s ease,visibility 0s linear .5s;
 }
-.card.on{opacity:1;transform:translateY(0)}
+.card.on{
+  opacity:1;transform:translateY(0);
+  visibility:visible;
+  transition:opacity .5s ease,transform .5s ease,visibility 0s;
+}
 .card .eyebrow{
   font-size:9px;letter-spacing:.16em;color:var(--accent);
   margin-bottom:10px;
@@ -386,26 +402,34 @@ body.done .m-glass .f,body.done .m-ribbon .f{
 /* the way through to the finished work — the one door that is open */
 #hero .wingnote{margin-top:12px;color:var(--ink)}
 #hero .wingnote b{color:var(--go);font-weight:700}
+/* One grid holds the door and the three contacts: the wing spans all
+   three columns, so the row of small links is exactly as wide as the
+   button above it and the three stay equal to each other. Whichever
+   row is intrinsically wider sets the block's width — no magic number. */
+#heroActions{
+  display:inline-grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:8px;margin-top:14px;max-width:100%;
+}
 #wing{
-  display:inline-block;margin-top:14px;padding:11px 15px;
+  grid-column:1/-1;
+  padding:11px 15px;text-align:center;
   border:1px solid var(--go);color:var(--go);
   font-size:11px;letter-spacing:.12em;text-decoration:none;
   transition:background-color .25s ease,color .25s ease;
 }
 #wing:hover{background:var(--go);color:#08243a}
-#wingLink{border-color:var(--go);color:var(--go)}
-#wingLink:hover{background:rgba(143,227,174,.14);border-color:var(--go);
-  color:var(--go)}
-
-/* contact — small, quiet, secondary to the wing door above it */
-#heroLinks{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
-#heroLinks a{
-  padding:8px 12px;border:1px solid var(--card-edge);
+#heroActions a:not(#wing){
+  padding:8px 6px;text-align:center;
+  border:1px solid var(--card-edge);
   font-size:10px;letter-spacing:.1em;
   text-decoration:none;color:var(--ink);
   transition:border-color .2s ease,color .2s ease;
 }
-#heroLinks a:hover{border-color:var(--accent);color:var(--accent)}
+#heroActions a:not(#wing):hover{border-color:var(--accent);color:var(--accent)}
+#wingLink{border-color:var(--go);color:var(--go)}
+#wingLink:hover{background:rgba(143,227,174,.14);border-color:var(--go);
+  color:var(--go)}
 
 /* ── scroll cue ────────────────────────────────────────────────
    A note in the margin, not a button: no border, no box. It sits
@@ -570,6 +594,7 @@ body.done .m-glass .f,body.done .m-ribbon .f{
   html{scroll-behavior:auto}
   .drop{transition:none;transform:none!important}
   .f,.bill,.card,.plate span,.cline{transition-duration:.01s}
+  .card{transition-delay:0s}   /* drop the visibility hold-off too */
   #scrollPill i,#hero h1 i{animation:none!important}
 }
 </style>
@@ -615,11 +640,8 @@ body.done .m-glass .f,body.done .m-ribbon .f{
        reflection of our context.</p>
     <p class="wingnote">The main building is still going up — but the
        <b>experiments wing</b> is finished and open to visitors.</p>
-    <div class="live">
-      <a id="wing" href="https://experiments.rishabhdoshi.com">
-        Enter the Experiments Wing ↗</a>
-    </div>
-    <div class="live" id="heroLinks">
+    <div class="live" id="heroActions">
+      <a id="wing" href="https://experiments.rishabhdoshi.com">Enter the Experiments Wing ↗</a>
       <a href="mailto:hello@rishabhdoshi.com">Email</a>
       <a href="https://www.linkedin.com/in/rishabhdoshi13/" rel="noopener">LinkedIn</a>
       <a href="https://github.com/doshi-experiments" rel="noopener">GitHub</a>
