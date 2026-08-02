@@ -352,6 +352,20 @@ body.done .m-glass .f,body.done .m-ribbon .f{
 @keyframes blink{50%{opacity:0}}
 #hero .sub{font-size:13px;color:var(--ink);margin-bottom:12px}
 #hero .sub b{color:var(--accent);font-weight:700}
+/* the way through to the finished work — the one door that is open */
+#hero .wingnote{margin-top:12px;color:var(--ink)}
+#hero .wingnote b{color:var(--go);font-weight:700}
+#wing{
+  display:inline-block;margin-top:14px;padding:11px 15px;
+  border:1px solid var(--go);color:var(--go);
+  font-size:11px;letter-spacing:.12em;text-decoration:none;
+  transition:background-color .25s ease,color .25s ease;
+}
+#wing:hover{background:var(--go);color:#08243a}
+#wingLink{border-color:var(--go);color:var(--go)}
+#wingLink:hover{background:rgba(143,227,174,.14);border-color:var(--go);
+  color:var(--go)}
+
 #scrollPill{
   display:inline-block;margin-top:16px;padding:9px 14px;
   border:1px dashed var(--accent);color:var(--accent);
@@ -455,6 +469,12 @@ body.done .m-glass .f,body.done .m-ribbon .f{
     <p>Outside of work, I enjoy making and breaking things. I'm a hoarder of
        stories, experiences, and knowledge because I believe we are a
        reflection of our context.</p>
+    <p class="wingnote">The main building is still going up — but the
+       <b>experiments wing</b> is finished and open to visitors.</p>
+    <div class="live">
+      <a id="wing" href="https://experiments.rishabhdoshi.com">
+        Enter the Experiments Wing ↗</a>
+    </div>
     <span id="scrollPill">Scroll to Build ▼</span>
   </div>
 
@@ -497,9 +517,10 @@ body.done .m-glass .f,body.done .m-ribbon .f{
     <div class="corner"></div><div class="corner b"></div>
     <div id="stamp">Topped Out</div>
     <h2>Nothing is perfect, at first.</h2>
-    <p>The full portfolio opens after a few more revisions. Until then, the
-       inspector's office is open:</p>
+    <p>The full portfolio opens after a few more revisions. The experiments
+       wing is already finished — and the inspector's office is open:</p>
     <div id="links" class="live">
+      <a id="wingLink" href="https://experiments.rishabhdoshi.com">Experiments ↗</a>
       <a href="mailto:hello@rishabhdoshi.com">Email</a>
       <a href="https://www.linkedin.com/in/rishabhdoshi13/" rel="noopener">LinkedIn</a>
       <button id="rebuild" type="button">Demolish &amp; Rebuild ⟲</button>
