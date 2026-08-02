@@ -25,11 +25,23 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Under Construction — Rishabh Doshi</title>
 <meta name="description" content="The portfolio of Rishabh Doshi is being assembled on-site. Scroll to build it. 100% vanilla HTML, CSS &amp; JS — no libraries, no images.">
+<!-- Theme is stamped on <html> before the first paint. Anything later
+     and the light-mode visitor gets a dark flash on every load. -->
+<script>
+(function(){
+  var t;
+  try{ t=localStorage.getItem('sheet-theme'); }catch(e){}
+  if(t!=='light'&&t!=='dark')
+    t=matchMedia('(prefers-color-scheme: light)').matches?'light':'dark';
+  document.documentElement.setAttribute('data-theme',t);
+})();
+</script>
 <style>
 /* ─────────────────────────────────────────────────────────────
    0 · Tokens  (the whole drawing is inked from these)
    ───────────────────────────────────────────────────────────── */
 :root{
+  color-scheme:dark;
   --paper-0:#081b30;          /* deep field                    */
   --paper-1:#0f2c4c;          /* blueprint blue                */
   --line-1:rgba(146,206,255,.10);  /* minor grid               */
@@ -48,9 +60,28 @@
 
   --s:.8;            /* scene scale        */
   --lift:150px;      /* scene vertical set */
-  --rx:-24;          /* camera pitch (deg, unitless nums) */
-  --ry:-34;          /* camera yaw                        */
+  --rx:-26;          /* camera pitch — fixed, see CAM in the script */
+  --ry:-29;          /* camera yaw   — fixed                        */
   --shadow:0;        /* building shadow scale 0..1        */
+}
+
+/* Light mode is not a recolour — it is a different drawing. The dark
+   sheet is a rendering; this is the line drawing underneath it. Ink
+   inverts here; the simplification itself lives in section 9. */
+:root[data-theme="light"]{
+  color-scheme:light;
+  --paper-0:#e8ecf0;
+  --paper-1:#ffffff;
+  --line-1:transparent;            /* the fine grid comes off entirely */
+  --line-2:rgba(30,66,102,.06);
+  --ink:#12293e;
+  --ink-dim:#5f7791;
+  --accent:#0f6ea3;
+  --safety:#b45f16;
+  --go:#237a4d;
+  --redline:#c0392b;
+  --card:rgba(255,255,255,.88);
+  --card-edge:rgba(24,64,100,.18);
 }
 @media (max-width:860px){ :root{ --s:.52; --lift:110px; } }
 @media (max-width:480px){ :root{ --s:.42; --lift:100px; } }
@@ -366,14 +397,45 @@ body.done .m-glass .f,body.done .m-ribbon .f{
 #wingLink:hover{background:rgba(143,227,174,.14);border-color:var(--go);
   color:var(--go)}
 
+/* contact — small, quiet, secondary to the wing door above it */
+#heroLinks{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+#heroLinks a{
+  padding:8px 12px;border:1px solid var(--card-edge);
+  font-size:10px;letter-spacing:.1em;
+  text-decoration:none;color:var(--ink);
+  transition:border-color .2s ease,color .2s ease;
+}
+#heroLinks a:hover{border-color:var(--accent);color:var(--accent)}
+
+/* ── scroll cue ────────────────────────────────────────────────
+   A note in the margin, not a button: no border, no box. It sits
+   at the foot of the sheet and holds still for a beat before it
+   starts nodding — an instruction you notice once you've stopped
+   reading, rather than one that waves for attention immediately. */
 #scrollPill{
-  display:inline-block;margin-top:16px;padding:9px 14px;
-  border:1px dashed var(--accent);color:var(--accent);
-  font-size:10px;letter-spacing:.14em;
-  animation:bob 1.6s ease-in-out infinite;
-  transition:opacity .4s ease;
+  position:fixed;left:50%;bottom:26px;transform:translateX(-50%);
+  display:flex;flex-direction:column;align-items:center;gap:5px;
+  font-size:9px;letter-spacing:.2em;color:var(--ink-dim);
+  white-space:nowrap;transition:opacity .4s ease;
+}
+/* the bob lives on the arrow, so it can't fight the centring
+   transform on the parent */
+#scrollPill i{
+  font-style:normal;font-size:11px;color:var(--accent);
+  animation:bob 1.8s ease-in-out 3.2s infinite;
 }
 @keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(5px)}}
+
+/* ── theme toggle ─────────────────────────────────────────── */
+#themeToggle{
+  position:fixed;top:38px;left:44px;
+  font-size:9px;letter-spacing:.14em;color:var(--ink-dim);
+  border:1px solid var(--card-edge);background:var(--card);
+  -webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);
+  padding:6px 10px;
+  transition:color .2s ease,border-color .2s ease;
+}
+#themeToggle:hover{color:var(--accent);border-color:var(--accent)}
 
 /* ── final card + stamp ───────────────────────────────────── */
 #final{left:6vw;top:50%;transform:translateY(calc(-50% + 14px));max-width:430px}
@@ -400,6 +462,81 @@ body.done .m-glass .f,body.done .m-ribbon .f{
 #confetti span{position:absolute;left:0;top:0;font-size:18px;will-change:transform}
 
 /* ─────────────────────────────────────────────────────────────
+   9 · Light Mode — the same building, drawn instead of rendered.
+
+   Everything decorative is temporary works and comes off: the felt
+   shading, the stitched seams, the mullion gradients, the interior
+   glow, the drop shadows and the fine grid. What's left is mass,
+   hairline edge and label — which is all a plan ever was.
+   ───────────────────────────────────────────────────────────── */
+/* site: a whisper of a grid, no property line, a soft shadow */
+[data-theme="light"] .groundgrid{
+  background:
+    repeating-linear-gradient(0deg,  rgba(30,66,102,.10) 0 1px, transparent 1px 40px),
+    repeating-linear-gradient(90deg, rgba(30,66,102,.10) 0 1px, transparent 1px 40px);
+  opacity:.55;
+}
+[data-theme="light"] .propline{display:none}
+[data-theme="light"] .road{
+  background:rgba(30,66,102,.035);
+  border-left-color:rgba(30,66,102,.14);
+  border-right-color:rgba(30,66,102,.14);
+}
+[data-theme="light"] .road::after{
+  background:repeating-linear-gradient(0deg,
+    rgba(30,66,102,.16) 0 16px, transparent 16px 42px);
+}
+[data-theme="light"] .gshadow{
+  background:radial-gradient(closest-side,rgba(35,70,105,.16),transparent 70%);
+}
+
+/* the plan: pencil, not glow */
+[data-theme="light"] .g .f{
+  background:transparent;
+  border:1px dashed rgba(30,66,102,.3);
+  opacity:.5;
+}
+/* the mass: flat fill, hairline edge — no seam, no felt */
+[data-theme="light"] .sd .f{
+  border:1px solid rgba(30,66,102,.26);
+  box-shadow:none;
+}
+[data-theme="light"] .m-ink .sd .f{border:0}
+
+/* materials collapse toward white; only crane, beam and glass keep
+   a hue, because each one has to be told apart at a glance */
+[data-theme="light"] .m-conc  {--ft:#ffffff;--ff:#f1f3f5;--fs:#e3e7eb}
+[data-theme="light"] .m-slab  {--ft:#ffffff;--ff:#f1f3f5;--fs:#e3e7eb}
+[data-theme="light"] .m-stucco{--ft:#ffffff;--ff:#f5f7f9;--fs:#e8ecf0}
+[data-theme="light"] .m-steel {--ft:#f7f9fa;--ff:#e8ecf0;--fs:#d8dee4}
+[data-theme="light"] .m-dark  {--ft:#8c98a4;--ff:#7b8794;--fs:#6b7783}
+[data-theme="light"] .m-peach {--ft:#f0a763;--ff:#e2914a;--fs:#d07f38}
+[data-theme="light"] .m-mint  {--ft:#7cc79c;--ff:#67b98b;--fs:#54a679}
+[data-theme="light"] .m-plank {--ft:#e8c987;--ff:#dbb96f;--fs:#cba75c}
+
+/* glass: one flat tint. No mullion grid, no dusk light within. */
+[data-theme="light"] .m-glass .f,
+[data-theme="light"] .m-ribbon .f{
+  border:1px solid rgba(30,66,102,.28)!important;
+  box-shadow:none!important;
+  background:rgba(124,176,214,.26)!important;
+}
+[data-theme="light"] .m-ribbon .f{background:rgba(96,152,196,.32)!important}
+[data-theme="light"] body.done .m-glass .f,
+[data-theme="light"] body.done .m-ribbon .f{
+  background-color:rgba(150,198,232,.42)!important;
+  box-shadow:none!important;
+}
+
+/* lettering has to darken once the walls are white */
+[data-theme="light"] .plate{color:#26405a;text-shadow:none}
+[data-theme="light"] .bill{filter:none}
+[data-theme="light"] .bill small{background:rgba(255,255,255,.9)}
+[data-theme="light"] #titleblock .row{border-bottom-color:rgba(30,66,102,.14)}
+[data-theme="light"] #wing:hover{color:#fff}
+[data-theme="light"] ::selection{background:var(--safety);color:#fff}
+
+/* ─────────────────────────────────────────────────────────────
    7 · Small Screens
    ───────────────────────────────────────────────────────────── */
 @media (max-width:860px){
@@ -421,6 +558,8 @@ body.done .m-glass .f,body.done .m-ribbon .f{
   #bar{display:none}
   #survey{display:none}#donotscale{display:none}
   #builtwith{bottom:auto;top:16px;left:14px}
+  #themeToggle{top:34px;left:14px}
+  #scrollPill{bottom:20px}
   .card p{font-size:11.5px;line-height:1.6}
 }
 
@@ -431,7 +570,7 @@ body.done .m-glass .f,body.done .m-ribbon .f{
   html{scroll-behavior:auto}
   .drop{transition:none;transform:none!important}
   .f,.bill,.card,.plate span,.cline{transition-duration:.01s}
-  #scrollPill,#hero h1 i{animation:none!important}
+  #scrollPill i,#hero h1 i{animation:none!important}
 }
 </style>
 </head>
@@ -455,10 +594,15 @@ body.done .m-glass .f,body.done .m-ribbon .f{
   <div class="mark tl"></div><div class="mark tr"></div>
   <div class="mark bl"></div><div class="mark br"></div>
 
-  <div class="microtag" id="survey">⌖ Site Plan · <span id="az">Az −34° · El −24°</span></div>
+  <div class="microtag" id="survey">⌖ Site Plan · <span id="az">Az −29° · El −26°</span></div>
   <div class="microtag" id="north">N ▲</div>
   <div class="microtag" id="donotscale">Do Not Scale Drawing · Dimensions Are a Vibe</div>
   <div class="microtag" id="builtwith">Built With <b>♥</b> Using Claude</div>
+
+  <button class="live" id="themeToggle" type="button" aria-pressed="false">
+    ◑ Light Sheet</button>
+
+  <div id="scrollPill">Scroll to Build<i>▼</i></div>
 
   <!-- hero -->
   <div class="card on" id="hero">
@@ -475,7 +619,11 @@ body.done .m-glass .f,body.done .m-ribbon .f{
       <a id="wing" href="https://experiments.rishabhdoshi.com">
         Enter the Experiments Wing ↗</a>
     </div>
-    <span id="scrollPill">Scroll to Build ▼</span>
+    <div class="live" id="heroLinks">
+      <a href="mailto:hello@rishabhdoshi.com">Email</a>
+      <a href="https://www.linkedin.com/in/rishabhdoshi13/" rel="noopener">LinkedIn</a>
+      <a href="https://github.com/doshi-experiments" rel="noopener">GitHub</a>
+    </div>
   </div>
 
   <!-- annotation 01 -->
@@ -567,7 +715,6 @@ body.done .m-glass .f,body.done .m-ribbon .f{
 'use strict';
 const $=s=>document.querySelector(s);
 const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
-const isTouch=matchMedia('(pointer: coarse)').matches;
 
 /* ── piece factory ────────────────────────────────────────────
    world coords: x → right, y → up (negated for CSS), z → viewer.
@@ -794,16 +941,35 @@ targets.sort((a,b)=>a.at-b.at);
 
 /* ── state ──────────────────────────────────────────────────── */
 const R=document.documentElement.style;
-let ry=-34,rx=-24,ryT=-34,rxT=-24,mx=0,my=0,p=0,shownPct=-1,
-    confettiArmed=true,parts=[],
+let p=0,shownPct=-1,confettiArmed=true,parts=[],
     yaw=40,trol=60,cab=80;                 /* crane pose (lerped) */
 const CRANE={bx:-40,bz:170,topY:308,restYaw:150,minR:34,maxR:192};
 
-addEventListener('pointermove',e=>{
-  if(isTouch)return;
-  mx=(e.clientX/innerWidth)*2-1;
-  my=(e.clientY/innerHeight)*2-1;
-},{passive:true});
+/* ── camera ───────────────────────────────────────────────────
+   Fixed. One three-quarter view, set once and never touched again:
+   yaw reads the glass curtain wall and the bridge together, pitch
+   is steep enough to show the roof slabs stack up as they land.
+   The building moves; the camera is a tripod, not a hand.        */
+const CAM={ry:-29,rx:-26};
+R.setProperty('--ry',CAM.ry);
+R.setProperty('--rx',CAM.rx);
+$('#az').textContent=`Az ${CAM.ry}° · El ${CAM.rx}°`;
+
+/* ── theme ────────────────────────────────────────────────────
+   The value is already on <html> from the head script; this only
+   keeps the button label honest and writes the choice down.      */
+const themeBtn=$('#themeToggle'),root=document.documentElement;
+function paintTheme(t){
+  root.setAttribute('data-theme',t);
+  themeBtn.textContent=t==='light'?'◐ Blueprint':'◑ Light Sheet';
+  themeBtn.setAttribute('aria-pressed',String(t==='light'));
+}
+paintTheme(root.getAttribute('data-theme')==='light'?'light':'dark');
+themeBtn.addEventListener('click',()=>{
+  const next=root.getAttribute('data-theme')==='light'?'dark':'light';
+  paintTheme(next);
+  try{localStorage.setItem('sheet-theme',next);}catch(e){}
+});
 
 $('#rebuild').addEventListener('click',()=>{
   scrollTo({top:0,behavior:reduced?'auto':'smooth'});
@@ -850,14 +1016,8 @@ function tick(){
   const max=document.documentElement.scrollHeight-innerHeight;
   p=max>0?Math.min(1,Math.max(0,scrollY/max)):0;
 
-  /* camera: gentle orbit driven by scroll, seasoned by the mouse */
-  ryT=-34+p*26+(isTouch?0:mx*14);
-  rxT=-24+p*4 +(isTouch?0:my*7);
-  ry+=(ryT-ry)*.06; rx+=(rxT-rx)*.06;
-  R.setProperty('--ry',ry.toFixed(2));
-  R.setProperty('--rx',rx.toFixed(2));
+  /* camera is fixed — only the shadow still answers to scroll */
   R.setProperty('--shadow',p.toFixed(3));
-  $('#az').textContent=`Az ${Math.round(ry)}° · El ${Math.round(rx)}°`;
 
   /* construction & dismantling */
   for(const pc of pieces){
