@@ -44,66 +44,50 @@
    0 · Tokens  (the whole drawing is inked from these)
    ───────────────────────────────────────────────────────────── */
 :root{
-  color-scheme:dark;
-  --paper-0:#081b30;          /* deep field                    */
-  --paper-1:#0f2c4c;          /* blueprint blue                */
-  --line-1:rgba(146,206,255,.10);  /* minor grid               */
-  --line-2:rgba(146,206,255,.20);  /* major grid               */
-  --ink:#e6f3ff;              /* drafting white                */
-  --ink-dim:#9fc3e2;          /* secondary lettering           */
-  --accent:#7fd4ff;           /* cyan pen                      */
-  --safety:#ffb277;           /* crane peach                   */
-  --go:#8fe3ae;               /* topped-out green              */
-  --redline:#ff6a5c;          /* reviewer's pencil             */
-  --card:rgba(7,22,40,.78);   /* annotation paper              */
-  --card-edge:rgba(146,206,255,.35);
+  /* Site inks, all aliased onto Feltwork. There is no palette of its own
+     here any more — feltwork's tokens.css is inlined above by the build and
+     is the single source of truth. Note the deliberate absence of --ink and
+     --paper aliases: Feltwork already owns those names, and shadowing them
+     breaks its dark theme. */
+  --ink-dim:var(--text-mute);
+  --accent:var(--pencil);         /* interaction only, never a category  */
+  --safety:var(--canary-text);    /* the crane, while it is on site      */
+  --go:var(--euca-text);          /* topped out                          */
+  --redline:var(--blush-text);    /* the reviewer's pencil               */
+  --card:var(--chip);
+  --card-edge:var(--rule);
 
-  --mono:ui-monospace,"SF Mono","Cascadia Mono","Segoe UI Mono",
-         Menlo,Consolas,"Liberation Mono",monospace;
+  --mono:var(--face-utility);
 
   --s:.8;            /* scene scale        */
-  --lift:150px;      /* scene vertical set */
-  --rx:-26;          /* camera pitch — fixed, see CAM in the script */
-  --ry:-29;          /* camera yaw   — fixed                        */
+  --lift:210px;      /* scene vertical set — raised for the isometric camera */
+
+  /* TRUE ISOMETRIC, per §6 — one projection, used everywhere. The scene is
+     Y-up, so the isometric pair is rotateX(-35.264) rotateY(-45): that is
+     the angle at which all three axes foreshorten equally. It replaces the
+     old -26/-29 perspective camera. The pieces did not need moving — they
+     were always placed in real 3D space, so changing the camera just changes
+     the viewpoint. `perspective` is removed with it: isometric has none. */
+  --rx:-35.264;
+  --ry:-45;
   --shadow:0;        /* building shadow scale 0..1        */
 
-  /* Site inks. The model itself is deliberately NOT themed — a white
-     scale model reads as a white scale model on either sheet. Only the
-     paper it sits on, and the lines drawn onto that paper, change. */
-  --plan:rgba(146,206,255,.45);   /* dashed plan line      */
-  --site:rgba(146,206,255,.12);   /* ground grid           */
-  --shade:rgba(0,8,18,.5);        /* ground shadow         */
-  --road-fill:rgba(220,240,255,.05);
-  --road-line:rgba(180,220,255,.22);
-  --road-dash:rgba(220,240,255,.3);
-  --rule:rgba(146,206,255,.18);   /* hairline in chrome    */
+  --plan:var(--rule);             /* dashed plan line      */
+  --site:var(--rule);             /* ground grid           */
+  --shade:var(--ink);             /* contact shadow, ink-tinted, never black */
+  --road-fill:var(--chip);
+  --road-line:var(--rule);
+  --road-dash:var(--rule);
 }
 
 /* Light mode is not a recolour — it is a different drawing. The dark
    sheet is a rendering; this is the line drawing underneath it. Ink
    inverts here; the simplification itself lives in section 9. */
-:root[data-theme="light"]{
-  color-scheme:light;
-  --paper-0:#e8ecf0;
-  --paper-1:#ffffff;
-  --line-1:transparent;            /* the fine grid comes off entirely */
-  --line-2:rgba(30,66,102,.06);
-  --ink:#12293e;
-  --ink-dim:#5f7791;
-  --accent:#0f6ea3;
-  --safety:#b45f16;
-  --go:#237a4d;
-  --redline:#c0392b;
-  --card:rgba(255,255,255,.88);
-  --card-edge:rgba(24,64,100,.18);
-  --plan:rgba(30,66,102,.3);
-  --site:rgba(30,66,102,.10);
-  --shade:rgba(35,70,105,.16);
-  --road-fill:rgba(30,66,102,.035);
-  --road-line:rgba(30,66,102,.14);
-  --road-dash:rgba(30,66,102,.16);
-  --rule:rgba(30,66,102,.14);
-}
+/* No per-theme override here any more. Feltwork flips the ground and leaves
+   the felt alone, and every alias above points at a token that already does
+   the right thing in both themes — so a second palette would only be a second
+   place for the first one to drift from. It also carried the last of the
+   blueprint blues, which is why the accents were still cyan after the swap. */
 @media (max-width:860px){ :root{ --s:.52; --lift:110px; } }
 @media (max-width:480px){ :root{ --s:.42; --lift:100px; } }
 
@@ -113,25 +97,34 @@
 *{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth}
 body{
-  font-family:var(--mono);
-  color:var(--ink);
-  background:
-    radial-gradient(1200px 800px at 50% 38%, var(--paper-1), var(--paper-0) 75%);
+  font-family:var(--face-body);
+  color:var(--text);
+  /* Flat paper. The old ground was a radial gradient between two blueprint
+     blues; §13 rules out gradient grounds and the felt wants a plain one to
+     sit on. Ample white is a Rams inheritance — keep it. */
+  background:var(--paper);
   overflow-x:hidden;
 }
-/* drafting grid, drawn — not downloaded */
-body::before{
-  content:"";position:fixed;inset:0;z-index:0;pointer-events:none;
-  background:
-    repeating-linear-gradient(0deg,  var(--line-1) 0 1px, transparent 1px 28px),
-    repeating-linear-gradient(90deg, var(--line-1) 0 1px, transparent 1px 28px),
-    repeating-linear-gradient(0deg,  var(--line-2) 0 1px, transparent 1px 140px),
-    repeating-linear-gradient(90deg, var(--line-2) 0 1px, transparent 1px 140px);
+/* The drafting grid is gone. It was four repeating-linear-gradients drawing
+   graph paper across the viewport — the single most blueprint thing on the
+   page, and pure furniture once the material stops being ink on a drawing.
+   The model keeps its own ground grid, because that one is the site the
+   building stands on and carries the scale. */
+::selection{background:var(--canary);color:var(--ink-deep)}
+/* §9: the pencil is a stroke colour, never a text colour — it is 3.55:1 on
+   paper. Prose links are ink with a pencil underline that thickens on hover;
+   it does not change colour and it does not slide. */
+a{
+  color:var(--text);
+  text-decoration:underline;
+  text-decoration-color:var(--pencil);
+  text-decoration-thickness:2px;
+  text-underline-offset:4px;
+  transition:text-decoration-thickness var(--squash);
 }
-::selection{background:var(--safety);color:#0a2036}
-a{color:var(--accent)}
+a:hover{text-decoration-thickness:3px}
 button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
-:focus-visible{outline:2px dashed var(--accent);outline-offset:3px}
+:focus-visible{outline:3px solid var(--pencil);outline-offset:3px;border-radius:var(--r-pill)}
 
 #spacer{height:640vh;height:640svh}   /* the scroll runway */
 
@@ -141,7 +134,7 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 #stage{
   position:fixed;inset:0;z-index:1;
   display:grid;place-items:center;
-  perspective:1500px;perspective-origin:50% 40%;
+  /* no perspective: isometric is a parallel projection */
   pointer-events:none;
 }
 #camera{
@@ -163,8 +156,8 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
   background:
     repeating-linear-gradient(0deg,  var(--site) 0 1px, transparent 1px 40px),
     repeating-linear-gradient(90deg, var(--site) 0 1px, transparent 1px 40px);
-  -webkit-mask-image:radial-gradient(closest-side,#000 30%,transparent 78%);
-          mask-image:radial-gradient(closest-side,#000 30%,transparent 78%);
+  -webkit-mask-image:radial-gradient(closest-side,var(--ink) 30%,transparent 78%);
+          mask-image:radial-gradient(closest-side,var(--ink) 30%,transparent 78%);
 }
 /* the road the bridge spans — reason the bridge exists */
 .road{
@@ -219,10 +212,15 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
   opacity:.5;
 }
 .piece.built .g .f{opacity:0}
-/* solid = the build. Flat fill, hairline edge, nothing else: no felt
-   shading, no stitched seams, no drop shadow. Same on both sheets. */
+/* solid = the build, in felt.
+   §6.1: no sharp edges, ever. Real plush has thick walls and oversized
+   rounded corners, so every face is rounded hard — this is the CSS analogue
+   of inflating an SVG polygon with a round-joined stroke of its own colour.
+   §6.2: no specular. Felt is matte: zero gloss, zero rim-light. The only
+   brightening allowed is the fiber-catch line along the top-left edge. */
 .sd .f{
-  border:1px solid rgba(30,66,102,.26);
+  border:0;
+  border-radius:var(--r-sm);
   box-shadow:none;
   opacity:0;
 }
@@ -235,30 +233,54 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
    the topping-out beam and the glass keep a hue, because those three
    have to be told apart at a glance. Not themed: a white model reads
    as a white model on either sheet. */
-.m-conc  {--ft:#ffffff;--ff:#f1f3f5;--fs:#e3e7eb}
-.m-slab  {--ft:#ffffff;--ff:#f1f3f5;--fs:#e3e7eb}
-.m-stucco{--ft:#ffffff;--ff:#f5f7f9;--fs:#e8ecf0}
-.m-steel {--ft:#f7f9fa;--ff:#e8ecf0;--fs:#d8dee4}
-.m-dark  {--ft:#8c98a4;--ff:#7b8794;--fs:#6b7783}
-.m-peach {--ft:#f0a763;--ff:#e2914a;--fs:#d07f38}
-.m-mint  {--ft:#7cc79c;--ff:#67b98b;--fs:#54a679}
-.m-plank {--ft:#e8c987;--ff:#dbb96f;--fs:#cba75c}
-.m-ink   {--ft:var(--ink);--ff:var(--ink);--fs:var(--ink)}
+/* Materials. Each is a three-stop set consumed by exactly the two rules
+   below — which IS §6's table lookup, so every face now takes a MEASURED
+   ramp stop. Top gets -light, the left face the base, the right face
+   -shadow. That mapping encodes the one global light (upper-left, 55°) and
+   is not adjustable per piece. No brightness(), no mixing toward black.
+
+   The model used to be deliberately unthemed — "a white scale model reads
+   as a white scale model on either sheet". Under Feltwork it is felt, and
+   felt does not change colour when you move it onto a dark table, so it is
+   still unthemed. Same reasoning, different material. */
+.m-conc  {--ft:var(--oxford-light); --ff:var(--oxford); --fs:var(--oxford-shadow)}
+.m-slab  {--ft:var(--oxford-light); --ff:var(--oxford); --fs:var(--oxford-shadow)}
+.m-stucco{--ft:var(--oxford-hi);    --ff:var(--oxford-light); --fs:var(--oxford)}
+.m-steel {--ft:var(--oxford-hi);    --ff:var(--oxford-light); --fs:var(--oxford-core)}
+.m-dark  {--ft:var(--oxford);       --ff:var(--oxford-core);  --fs:var(--oxford-shadow)}
+.m-peach {--ft:var(--canary-light); --ff:var(--canary); --fs:var(--canary-shadow)}
+.m-mint  {--ft:var(--euca-light);   --ff:var(--euca);   --fs:var(--euca-shadow)}
+.m-plank {--ft:var(--blush-light);  --ff:var(--blush);  --fs:var(--blush-shadow)}
+.m-ink   {--ft:var(--text);--ff:var(--text);--fs:var(--text)}
 .m-ink .sd .f{border:0}
+.sd .f::after{
+  /* §6.3 — grain on every face, from the same tile as the headlines. That
+     shared tile is what unifies the type and the objects into one material. */
+  content:"";position:absolute;inset:0;border-radius:inherit;
+  background-image:url("tex/felt-1024.png");
+  background-size:180px;
+  mix-blend-mode:overlay;opacity:.07;pointer-events:none;
+}
 .sd .ft{background:var(--ft)} .sd .ff,.sd .fb{background:var(--ff)}
 .sd .fr,.sd .fl{background:var(--fs)} .sd .fu{background:var(--fs)}
 
 /* glass — one flat tint. No mullion grid, no light from within. */
+/* The glazing. §6.2 is explicit: no specular, no gloss, no glass — felt is
+   matte. So the workshop's curtain wall is not translucent any more; it is a
+   lighter panel of the same wool as the walls, one stop up the oxford ramp.
+   It still reads as "this bay is different" without pretending to be a
+   material the rest of the model is not. */
 .m-glass .f,.m-ribbon .f{
-  border:1px solid rgba(30,66,102,.28)!important;
+  border:0!important;
+  border-radius:var(--r-sm);
   box-shadow:none!important;
   transition:opacity .45s ease, background-color .8s ease;
 }
-.m-glass .f{background:rgba(150,196,228,.45)!important}
-.m-ribbon .f{background:rgba(120,170,210,.55)!important}
-/* topping-out: the lights come on — a shade brighter, nothing more */
+.m-glass .f{background:var(--oxford-light)!important}
+.m-ribbon .f{background:var(--oxford-hi)!important}
+/* topping-out: the lights come on — one stop up the ramp, nothing more */
 body.done .m-glass .f,body.done .m-ribbon .f{
-  background-color:rgba(178,214,240,.62)!important;
+  background-color:var(--canary-hi)!important;
 }
 
 /* facade plates: signage & designation codes (paint, not mass).
@@ -266,7 +288,7 @@ body.done .m-glass .f,body.done .m-ribbon .f{
 .plate{
   position:absolute;display:flex;flex-direction:column;
   align-items:center;justify-content:space-between;
-  color:#26405a;
+  color:var(--ink-deep);
 }
 .plate span{opacity:0;transition:opacity .5s ease}
 .plate.built span{opacity:1}
@@ -299,7 +321,7 @@ body.done .m-glass .f,body.done .m-ribbon .f{
 .bill.built{opacity:1}
 .bill small{
   font-size:8px;letter-spacing:.1em;color:var(--ink-dim);
-  background:var(--card);padding:2px 5px;
+  background:var(--chip);padding:2px 5px;
   border:1px solid var(--card-edge);white-space:nowrap;
 }
 
@@ -325,18 +347,14 @@ body.done .m-glass .f,body.done .m-ribbon .f{
 .microtag{
   position:fixed;font-size:9px;letter-spacing:.14em;color:var(--ink-dim);
 }
-#survey{top:18px;left:44px}
 /* the compass steps aside to make room for the switch */
-#north{top:16px;right:104px;font-size:11px;letter-spacing:.1em;color:var(--ink)}
-#donotscale{bottom:36px;left:44px}
 #builtwith{bottom:18px;left:44px}
 #builtwith b{color:var(--go);font-weight:400}
 
 /* title block — bottom right, like a real sheet */
 #titleblock{
   position:fixed;right:26px;bottom:26px;width:250px;
-  border:1px solid var(--card-edge);background:var(--card);
-  -webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);
+  border:1px solid var(--card-edge);background:var(--chip);
   font-size:10px;letter-spacing:.06em;
 }
 #titleblock .row{
@@ -350,19 +368,22 @@ body.done .m-glass .f,body.done .m-ribbon .f{
   padding:8px 10px 4px;
 }
 #pctNum{font-size:26px;font-weight:700;font-variant-numeric:tabular-nums;color:var(--safety)}
-#bar{margin:0 10px 10px;height:6px;border:1px solid var(--card-edge);padding:1px}
-#barFill{height:100%;width:0%;background:
-  repeating-linear-gradient(45deg,var(--safety) 0 6px,#e08b4f 6px 12px)}
+#bar{margin:0 8px 8px;height:8px;border-radius:var(--r-pill);
+  background:var(--paper);overflow:hidden}
+/* One flat fill, no hazard stripe. The stripe was two-hue diagonal barber
+   pole — decoration, and the last raw hex on the page. Canary means shipped;
+   a progress bar filling toward "done" is exactly that. */
+#barFill{height:100%;width:0%;background:var(--canary);border-radius:var(--r-pill)}
 
-/* progress rail — thin, full width, bottom edge */
+/* progress rail — thin, full width, bottom edge. One colour: a two-hue
+   gradient rail is decoration and §13 rules it out. */
 #rail{position:fixed;left:0;bottom:0;height:3px;width:0;
-  background:linear-gradient(90deg,var(--accent),var(--safety));z-index:3}
+  background:var(--pencil);z-index:3}
 
 /* ── annotation cards ─────────────────────────────────────── */
 .card{
   position:fixed;max-width:360px;
-  background:var(--card);border:1px solid var(--card-edge);
-  -webkit-backdrop-filter:blur(7px);backdrop-filter:blur(7px);
+  background:var(--chip);border:1px solid var(--card-edge);
   padding:18px 20px 20px;
   opacity:0;transform:translateY(14px);
   /* A faded card must stop hit-testing. #final is positioned over #hero,
@@ -411,10 +432,10 @@ body.done .m-glass .f,body.done .m-ribbon .f{
 }
 #hero h1 i{font-style:normal;color:var(--safety);animation:blink 1.1s steps(1) infinite}
 @keyframes blink{50%{opacity:0}}
-#hero .sub{font-size:13px;color:var(--ink);margin-bottom:12px}
+#hero .sub{font-size:13px;color:var(--text);margin-bottom:12px}
 #hero .sub b{color:var(--accent);font-weight:700}
 /* the way through to the finished work — the one door that is open */
-#hero .wingnote{margin-top:12px;color:var(--ink)}
+#hero .wingnote{margin-top:12px;color:var(--text)}
 #hero .wingnote b{color:var(--go);font-weight:700}
 /* One grid holds the door and the three contacts: the wing spans all
    three columns, so the row of small links is exactly as wide as the
@@ -432,12 +453,12 @@ body.done .m-glass .f,body.done .m-ribbon .f{
   font-size:11px;letter-spacing:.12em;text-decoration:none;
   transition:background-color .25s ease,color .25s ease;
 }
-#wing:hover{background:var(--go);color:#08243a}
+#wing:hover{background:var(--euca);color:var(--ink-deep)}
 #heroActions a:not(#wing){
   padding:8px 6px;text-align:center;
   border:1px solid var(--card-edge);
   font-size:10px;letter-spacing:.1em;
-  text-decoration:none;color:var(--ink);
+  text-decoration:none;color:var(--text);
   transition:border-color .2s ease,color .2s ease;
 }
 #heroActions a:not(#wing):hover{border-color:var(--accent);color:var(--accent)}
@@ -470,15 +491,14 @@ body.done .m-glass .f,body.done .m-ribbon .f{
   display:flex;align-items:center;
   width:48px;height:24px;padding:2px;
   border:1px solid var(--card-edge);border-radius:999px;
-  background:var(--card);
-  -webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);
+  background:var(--chip);
   transition:border-color .2s ease,background-color .3s ease;
 }
 #themeToggle:hover{border-color:var(--accent)}
 #themeToggle .knob{
   display:grid;place-items:center;
   width:18px;height:18px;border-radius:50%;
-  background:var(--accent);color:var(--paper-0);
+  background:var(--canary);color:var(--ink-deep);
   font-size:10px;line-height:1;
   transition:transform .3s cubic-bezier(.4,0,.2,1),
              background-color .3s ease,color .3s ease;
@@ -501,7 +521,7 @@ body.done .m-glass .f,body.done .m-ribbon .f{
   pointer-events:auto;
   padding:9px 13px;border:1px solid var(--card-edge);
   font-size:10px;letter-spacing:.1em;
-  text-decoration:none;color:var(--ink);
+  text-decoration:none;color:var(--text);
 }
 #links a:hover{border-color:var(--accent);color:var(--accent)}
 #rebuild{border-style:dashed;color:var(--redline);border-color:var(--redline)}
@@ -517,8 +537,6 @@ body.done .m-glass .f,body.done .m-ribbon .f{
    The model and its flat treatment are shared — see sections 2 and 3.
    Only these few things genuinely differ between the two sheets.
    ───────────────────────────────────────────────────────────── */
-[data-theme="light"] #wing:hover{color:#fff}
-[data-theme="light"] ::selection{background:var(--safety);color:#fff}
 
 /* ─────────────────────────────────────────────────────────────
    7 · Small Screens
@@ -540,8 +558,7 @@ body.done .m-glass .f,body.done .m-ribbon .f{
   #titleblock .pct{padding:6px 10px}
   #pctNum{font-size:18px}
   #bar{display:none}
-  #survey{display:none}#donotscale{display:none}
-  #builtwith{bottom:auto;top:16px;left:14px}
+    #builtwith{bottom:auto;top:16px;left:14px}
   #themeToggle{top:12px;right:40px}
   #scrollPill{bottom:20px}
   .card p{font-size:11.5px;line-height:1.6}
@@ -575,13 +592,7 @@ body.done .m-glass .f,body.done .m-ribbon .f{
 
 <!-- ══ HUD / Sheet Chrome ═════════════════════════════════════ -->
 <div id="hud">
-  <div class="mark tl"></div><div class="mark tr"></div>
-  <div class="mark bl"></div><div class="mark br"></div>
-
-  <div class="microtag" id="survey">⌖ Site Plan · <span id="az">Az −29° · El −26°</span></div>
-  <div class="microtag" id="north">N ▲</div>
-  <div class="microtag" id="donotscale">Do Not Scale Drawing · Dimensions Are a Vibe</div>
-  <div class="microtag" id="builtwith">Built With <b>♥</b> Using Claude</div>
+  <div class="microtag" id="builtwith">Made with Claude</div>
 
   <button class="live" id="themeToggle" type="button" role="switch"
           aria-checked="false" aria-label="Light sheet">
@@ -593,7 +604,7 @@ body.done .m-glass .f,body.done .m-ribbon .f{
   <!-- hero -->
   <div class="card on" id="hero">
     <div class="corner"></div><div class="corner b"></div>
-    <div class="eyebrow">Site Notice — Permit № 001</div>
+    
     <h1>Under<br>Construction<i>▌</i></h1>
     <p class="sub">The portfolio of <b>Rishabh Doshi</b> is being assembled on-site.</p>
     <p>Outside of work, I enjoy making and breaking things. I'm a hoarder of
@@ -612,7 +623,7 @@ body.done .m-glass .f,body.done .m-ribbon .f{
   <!-- annotation 01 -->
   <div class="card" id="calloutA">
     <div class="corner"></div><div class="corner b"></div>
-    <div class="eyebrow">Annotation 01 · Site Survey</div>
+    <div class="eyebrow">01 / Empathize</div>
     <h2><b>01</b> Empathize</h2>
     <p>My process starts and ends with empathy. What does empathy mean to me?
        It means understanding your stakeholders, their journeys, frustrations,
@@ -623,7 +634,7 @@ body.done .m-glass .f,body.done .m-ribbon .f{
   <!-- annotation 02 -->
   <div class="card" id="calloutB">
     <div class="corner"></div><div class="corner b"></div>
-    <div class="eyebrow">Annotation 02 · The Blueprint</div>
+    <div class="eyebrow">02 / Design</div>
     <h2><b>02</b> Design</h2>
     <p>This is the easy part. Once you understand the user and what they're
        doing, you just build. The project dictates the tools and this phase
@@ -634,7 +645,7 @@ body.done .m-glass .f,body.done .m-ribbon .f{
   <!-- annotation 03 -->
   <div class="card" id="calloutC">
     <div class="corner"></div><div class="corner b"></div>
-    <div class="eyebrow">Annotation 03 · Revision Block</div>
+    <div class="eyebrow">03 / Iterate</div>
     <h2><b>03</b> Iterate</h2>
     <p>Nothing is <span class="typo">perfeet</span>. Nothing is perfect, at
        first. Good design takes iteration and testing, and lots of it. The
@@ -660,11 +671,7 @@ body.done .m-glass .f,body.done .m-ribbon .f{
 
   <!-- title block -->
   <div id="titleblock">
-    <div class="row"><span>Project</span><span>rishabhdoshi.com</span></div>
-    <div class="row"><span>Drawn By</span><span>Rishabh Doshi</span></div>
-    <div class="row"><span>Sheet</span><span>A-001</span></div>
-    <div class="row keep"><span>Rev</span><span>47</span></div>
-    <div class="row"><span>Status</span><span>Under Construction</span></div>
+    <div class="row"><span>Status</span><span>Still building</span></div>
     <div class="pct"><span style="color:var(--ink-dim)">Complete</span>
       <span><span id="pctNum">0</span><span style="font-size:12px;color:var(--ink-dim)"> %</span></span>
     </div>
@@ -679,14 +686,14 @@ body.done .m-glass .f,body.done .m-ribbon .f{
 
 <noscript>
   <div style="position:fixed;inset:0;z-index:9;display:grid;place-items:center;
-              background:#0f2c4c;padding:24px">
-    <div style="max-width:560px;border:1px solid #7fd4ff;padding:24px;
-                font-family:monospace;color:#e6f3ff;line-height:1.7">
+              background:var(--paper);padding:24px">
+    <div style="max-width:560px;border:2px solid var(--rule);border-radius:28px;padding:24px;
+                color:var(--text);line-height:1.7">
       <h1>Under Construction</h1>
       <p>The portfolio of Rishabh Doshi is being assembled on-site — with
          JavaScript enabled, this page builds itself as you scroll.</p>
       <p>01 Empathize · 02 Design · 03 Iterate. Nothing is perfect, at first.</p>
-      <p><a href="mailto:hello@rishabhdoshi.com" style="color:#7fd4ff">hello@rishabhdoshi.com</a></p>
+      <p><a href="mailto:hello@rishabhdoshi.com" style="color:var(--text)">hello@rishabhdoshi.com</a></p>
     </div>
   </div>
 </noscript>
@@ -750,7 +757,14 @@ function bill(o){ /* {x,y,z,emoji,label?,at,size?} */
   const b=document.createElement('div');b.className='bill';
   b.style.setProperty('--td',(idx++%4)*45+'ms');
   if(o.size)b.style.fontSize=o.size+'px';
-  b.innerHTML=(o.emoji?`<span class="e">${o.emoji}</span>`:'')+
+  /* The topping-out tree: a felt sprig, not an emoji glyph. Emoji render at
+     different sizes and colours on every platform, and §13 rules them out as
+     icons outright. Two rounded chips in the measured eucalyptus ramp. */
+  b.innerHTML=(o.tree?'<span class="e" data-tree>'+
+      '<i style="display:block;width:14px;height:16px;border-radius:var(--r-pill) var(--r-pill) var(--r-sm) var(--r-sm);'+
+      'background:var(--euca)"></i>'+
+      '<i style="display:block;width:5px;height:6px;margin:0 auto;border-radius:var(--r-pill);'+
+      'background:var(--blush-shadow)"></i></span>':'')+
               (o.label?`<small>${o.label}</small>`:'');
   b.style.transform=
     `translate3d(${o.x}px,${-o.y}px,${o.z}px)`+
@@ -918,7 +932,7 @@ bill({x:205,y:202,z:-75,label:'Elev +26.0 m',at:.875});
 
 /* ── the topping-out beam, with the traditional tree ── */
 P({x:150,y:196,z:-115,w:70,h:8,d:12,mat:'mint',at:.88,track:false});
-bill({x:150,y:208,z:-115,emoji:'🌲',at:.88,size:18});
+bill({x:150,y:208,z:-115,tree:true,at:.88,size:18});
 
 targets.sort((a,b)=>a.at-b.at);
 
@@ -936,7 +950,6 @@ const CRANE={bx:-40,bz:170,topY:308,restYaw:150,minR:34,maxR:192};
 const CAM={ry:-29,rx:-26};
 R.setProperty('--ry',CAM.ry);
 R.setProperty('--rx',CAM.rx);
-$('#az').textContent=`Az ${CAM.ry}° · El ${CAM.rx}°`;
 
 /* ── theme ────────────────────────────────────────────────────
    The value is already on <html> from the head script; this only
@@ -977,15 +990,20 @@ const phases=[
 
 /* confetti — a 20-line particle system, per the constraints.
    Bursts from the topping-out tree, as tradition demands. */
-const conf=$('#confetti'),EMOJI=['🎉','✨','🧱','🔧','📐','🟩'];
+const conf=$('#confetti');
+/* §13: no emoji as icons. The burst is scraps of the same felt the model is
+   built from — small rounded chips in the measured ramps. */
+const CHIP_HUES=['--canary','--euca','--blush','--oxford','--canary-light','--euca-light'];
 function popConfetti(){
   if(reduced)return;
   document.querySelectorAll('.bill .e').forEach(el=>{
-    if(el.textContent!=='🌲')return;
+    if(el.dataset.tree===undefined)return;
     const r=el.getBoundingClientRect();
     for(let i=0;i<36;i++){
       const s=document.createElement('span');
-      s.textContent=EMOJI[(Math.random()*EMOJI.length)|0];
+      /* a scrap of felt, not a glyph: rounded, matte, no gloss */
+      s.style.cssText='display:block;width:9px;height:11px;border-radius:var(--r-pill);'+
+        'background:var('+CHIP_HUES[(Math.random()*CHIP_HUES.length)|0]+')';
       conf.appendChild(s);
       parts.push({el:s,x:r.left+r.width/2,y:r.top,r:Math.random()*360,
         vx:(Math.random()-.5)*9,vy:-(4+Math.random()*8),
@@ -1066,8 +1084,8 @@ function tick(){
 }
 requestAnimationFrame(tick);
 
-console.log('%cBlueprint v47 · Dessau Edition','font-weight:bold;font-size:14px;color:#7fd4ff',
-'\nEvery beam is a <div>. The crane does its own trigonometry.\nNo frameworks were consulted. Sheet A-001 · hello@rishabhdoshi.com');
+console.log('%cBlueprint v47 · Dessau Edition','font-weight:bold;font-size:14px;color:#2C3D4E'  /* feltwork-allow-hex: devtools console, no CSS */,
+'\nEvery beam is a <div>. The crane does its own trigonometry.\nNo frameworks were consulted. hello@rishabhdoshi.com');
 </script>
 </body>
 </html>
