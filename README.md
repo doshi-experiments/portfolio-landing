@@ -1,9 +1,9 @@
 # portfolio-landing
 
 Under-construction landing page for [rishabhdoshi.com](https://rishabhdoshi.com)
-— a plush 3D scale model of the Bauhaus Dessau, built with vanilla HTML, CSS
-and JS. No frameworks, no build step, and **no images**: the whole model is
-CSS transforms and gradients, which is why the page is one file.
+— a plush 3D scale model of the Bauhaus Dessau, built with HTML, CSS and JS.
+No build step and **no images**: the whole model is CSS transforms and
+gradients, which is why the page is one file.
 
 This is **Sheet A-001**. Its companion is
 [experiments-landing](https://github.com/doshi-experiments/experiments-landing)

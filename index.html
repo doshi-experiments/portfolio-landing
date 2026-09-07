@@ -8,8 +8,6 @@
   workshop glass wing, bridge, north wing, and studio tower —
   assembled by a tower crane that actually tracks the work.
 
-  100% vanilla HTML, CSS and JavaScript.
-  No frameworks. No libraries. No images. No SVG. No fonts loaded.
   Every beam you see is a <div> rotated in 3D space.
   The "engine" is one requestAnimationFrame loop and some trig.
 
@@ -24,7 +22,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Under Construction — Rishabh Doshi</title>
-<meta name="description" content="The portfolio of Rishabh Doshi is being assembled on-site. Scroll to build it. 100% vanilla HTML, CSS &amp; JS — no libraries, no images.">
+<meta name="description" content="The portfolio of Rishabh Doshi is being assembled on-site. Scroll to build it. The whole model is CSS transforms and gradients.">
 <!-- Theme is stamped on <html> before the first paint. Anything later
      and the light-mode visitor gets a dark flash on every load.
      The choice lives in a cookie scoped to .rishabhdoshi.com so it
@@ -693,7 +691,7 @@ body.done .m-glass .f,body.done .m-ribbon .f{
 
 <script>
 /* ═══════════════════════════════════════════════════════════════
-   BLUEPRINT ENGINE — one RAF loop, zero dependencies
+   BLUEPRINT ENGINE — one RAF loop and some trigonometry
    ═══════════════════════════════════════════════════════════════ */
 'use strict';
 const $=s=>document.querySelector(s);
@@ -1067,7 +1065,7 @@ function tick(){
 requestAnimationFrame(tick);
 
 console.log('%cBlueprint v47 · Dessau Edition','font-weight:bold;font-size:14px;color:#7fd4ff',
-'\nEvery beam is a <div>. The crane does its own trigonometry.\nNo frameworks were consulted. Sheet A-001 · hello@rishabhdoshi.com');
+'\nEvery beam is a <div>. The crane does its own trigonometry.\nSheet A-001 · hello@rishabhdoshi.com');
 </script>
 </body>
 </html>
