@@ -1,0 +1,146 @@
+/* ─────────────────────────────────────────────────────────────
+   Scene — CSS-3D primitives, ported from the sheet's engine.
+   Every beam is still a <div> rotated in 3D space; what changed is
+   that the drawing style is a *treatment* the direction selects,
+   and the materials read the direction's tokens.
+
+   Structure the engine mounts inside .scene__stage:
+     .scene__viewport (perspective) > .scene__camera (rotate/scale)
+       > .scene__world > .scene__build > .piece.m-<mat> > .g|.drop>.sd > .f
+   ───────────────────────────────────────────────────────────── */
+
+.scene__stage {
+  --scene-line: var(--color-text-primary);
+  --scene-plan: color-mix(in srgb, var(--color-text-primary) 45%, transparent);
+  --scene-edge: color-mix(in srgb, var(--color-text-primary) 26%, transparent);
+  --scene-ground: color-mix(in srgb, var(--color-text-primary) 10%, transparent);
+  --scene-shade: color-mix(in srgb, var(--color-text-primary) 16%, transparent);
+  --scene-s: 1; --scene-lift: 0px; --scene-rx: -26; --scene-ry: -29;
+}
+.scene__viewport { position: absolute; inset: 0; display: grid; place-items: center; perspective: 1500px; perspective-origin: 50% 42%; pointer-events: none; }
+.scene__camera { width: 0; height: 0; transform-style: preserve-3d; transform: translateY(var(--scene-lift)) rotateX(calc(var(--scene-rx) * 1deg)) rotateY(calc(var(--scene-ry) * 1deg)) scale3d(var(--scene-s), var(--scene-s), var(--scene-s)); will-change: transform; }
+.scene__world, .scene__build, .grp { transform-style: preserve-3d; position: absolute; }
+
+/* horizontal planes: ground grids, shadows, roads */
+.plane { position: absolute; transform-style: preserve-3d; }
+.plane--grid { background: repeating-linear-gradient(0deg, var(--scene-ground) 0 1px, transparent 1px 40px), repeating-linear-gradient(90deg, var(--scene-ground) 0 1px, transparent 1px 40px); -webkit-mask-image: radial-gradient(closest-side, #000 30%, transparent 78%); mask-image: radial-gradient(closest-side, #000 30%, transparent 78%); }
+.plane--shade { background: radial-gradient(closest-side, var(--scene-shade), transparent 70%); }
+.plane--slab { background: var(--scene-slab, var(--scene-ground)); }
+
+/* pieces: ghost plan → solid build */
+.piece { position: absolute; transform-style: preserve-3d; }
+.drop { transform-style: preserve-3d; transform: translateY(-110px); transition: transform 0.6s cubic-bezier(0.32, 1.6, 0.45, 1); transition-delay: var(--td, 0ms); }
+.piece.built .drop { transform: translateY(0); }
+.cub { position: absolute; transform-style: preserve-3d; }
+.f { position: absolute; transition: opacity 0.45s ease; transition-delay: var(--td, 0ms); }
+.g .f { background: transparent; border: 1px dashed var(--scene-plan); opacity: 0.5; }
+.piece.built .g .f { opacity: 0; }
+.sd .f { border: 1px solid var(--scene-edge); opacity: 0; }
+.piece.built .sd .f { opacity: 1; }
+.piece.gone .f { opacity: 0 !important; }
+.bill.gone { opacity: 0 !important; }
+
+/* materials — a white model by default; directions retint through vars */
+.m-conc   { --ft: var(--scene-m-conc-t, #ffffff); --ff: var(--scene-m-conc-f, #f1f3f5); --fs: var(--scene-m-conc-s, #e3e7eb); }
+.m-slab   { --ft: var(--scene-m-slab-t, #ffffff); --ff: var(--scene-m-slab-f, #f1f3f5); --fs: var(--scene-m-slab-s, #e3e7eb); }
+.m-stucco { --ft: var(--scene-m-stucco-t, #ffffff); --ff: var(--scene-m-stucco-f, #f5f7f9); --fs: var(--scene-m-stucco-s, #e8ecf0); }
+.m-steel  { --ft: var(--scene-m-steel-t, #f7f9fa); --ff: var(--scene-m-steel-f, #e8ecf0); --fs: var(--scene-m-steel-s, #d8dee4); }
+.m-dark   { --ft: var(--scene-m-dark-t, #8c98a4); --ff: var(--scene-m-dark-f, #7b8794); --fs: var(--scene-m-dark-s, #6b7783); }
+.m-peach  { --ft: #f0a763; --ff: #e2914a; --fs: #d07f38; }
+.m-mint   { --ft: #7cc79c; --ff: #67b98b; --fs: #54a679; }
+.m-plank  { --ft: #e8c987; --ff: #dbb96f; --fs: #cba75c; }
+.m-ink    { --ft: var(--scene-line); --ff: var(--scene-line); --fs: var(--scene-line); }
+.m-a      { --ft: var(--scene-m-a-t, #d8d5cd); --ff: var(--scene-m-a-f, #cbc7bd); --fs: var(--scene-m-a-s, #b9b5ab); }
+.m-b      { --ft: var(--scene-m-b-t, #b8b3a8); --ff: var(--scene-m-b-f, #aaa599); --fs: var(--scene-m-b-s, #98938a); }
+.m-c      { --ft: var(--scene-m-c-t, #7a7670); --ff: var(--scene-m-c-f, #6c6862); --fs: var(--scene-m-c-s, #5e5a55); }
+.m-accent { --ft: var(--scene-m-accent-t, var(--color-action-bg)); --ff: var(--scene-m-accent-f, var(--color-action-bg)); --fs: var(--scene-m-accent-s, var(--color-action-hover-bg)); }
+.m-ink .sd .f { border: 0; }
+.sd .ft { background: var(--ft); } .sd .ff, .sd .fb { background: var(--ff); }
+.sd .fr, .sd .fl, .sd .fu { background: var(--fs); }
+
+/* glass — one flat tint */
+.m-glass .f, .m-ribbon .f { border: 1px solid var(--scene-edge) !important; transition: opacity 0.45s ease, background-color 0.8s ease; }
+.m-glass .f { background: var(--scene-m-glass, rgba(150, 196, 228, 0.45)) !important; }
+.m-ribbon .f { background: var(--scene-m-ribbon, rgba(120, 170, 210, 0.55)) !important; }
+
+/* facade plates: signage & codes (paint, not mass) */
+.plate { position: absolute; display: flex; flex-direction: column; align-items: center; justify-content: space-between; color: var(--scene-m-dark-f, #26405a); font-family: var(--type-ui-family); }
+.plate span { opacity: 0; transition: opacity 0.5s ease; }
+.plate.built span { opacity: 1; }
+.plate.sign { font-weight: 800; font-size: 13px; line-height: 1; }
+.plate.code { font-size: 6px; letter-spacing: 0.12em; flex-direction: row; justify-content: center; }
+/* SVG plates: drawn ornament living on a face in 3D */
+.svgplate { position: absolute; opacity: 0; transition: opacity 0.5s ease; transition-delay: var(--td, 0ms); }
+.svgplate.built { opacity: 1; }
+.svgplate svg { width: 100%; height: 100%; overflow: visible; }
+
+/* billboards face the camera (inverse rotation applied by the engine) */
+.bill { position: absolute; transform-style: preserve-3d; display: grid; justify-items: center; gap: 2px; font-size: 26px; line-height: 1; opacity: 0; transition: opacity 0.5s ease; transition-delay: var(--td, 0ms); }
+.bill.built { opacity: 1; }
+.bill small { font-size: 8px; letter-spacing: 0.1em; color: var(--color-text-secondary); background: var(--color-surface); padding: 2px 5px; border: 1px solid var(--scene-edge); white-space: nowrap; font-family: var(--type-ui-family); }
+
+/* crane cables */
+.cline { position: absolute; width: 2px; height: 260px; left: -1px; top: 0; background: var(--scene-line); transform-origin: top center; opacity: 0; transition: opacity 0.45s ease; }
+.cablewrap.built .cline { opacity: 1; }
+.cablewrap.gone .cline { opacity: 0; }
+.cline.x90 { transform: rotateY(90deg); }
+
+/* ── treatments ─────────────────────────────────────────────── */
+/* plan: the drawing *is* the ghost — 1px lines, no fill, no shadow */
+[data-treatment="plan"] .sd, [data-treatment="plan"] .plane--shade { display: none; }
+[data-treatment="plan"] .g .f { border: 1px solid var(--scene-line); opacity: 0; }
+[data-treatment="plan"] .piece.built .g .f { opacity: 1; }
+[data-treatment="plan"] .drop { transform: none; }
+
+/* mass: solid concrete, heavier edges, a hard offset on the ground */
+[data-treatment="mass"] .g { display: none; }
+[data-treatment="mass"] .sd .f { border-width: 2px; border-color: var(--scene-edge-strong, color-mix(in srgb, var(--color-text-primary) 55%, transparent)); }
+
+/* quiet: white, faint edges, nothing else */
+[data-treatment="quiet"] .g, [data-treatment="quiet"] .plane--shade { display: none; }
+[data-treatment="quiet"] .sd .f { border-color: color-mix(in srgb, var(--color-text-primary) 12%, transparent); }
+
+/* ornamented / outlined / print / fluted / assemblage / planes / optical: flat
+   fills plus drawn plates; ghosts off, the rest tuned per direction */
+[data-treatment="ornamented"] .g, [data-treatment="outlined"] .g, [data-treatment="print"] .g,
+[data-treatment="fluted"] .g, [data-treatment="assemblage"] .g, [data-treatment="planes"] .g,
+[data-treatment="optical"] .g { display: none; }
+[data-treatment="outlined"] .sd .f, [data-treatment="print"] .sd .f { border-width: 2px; border-color: var(--scene-line); }
+[data-treatment="planes"] .sd .f { border: 0; }
+
+/* assembly kinds */
+[data-assembly="fade"] .drop, [data-assembly="draw"] .drop, [data-assembly="none"] .drop { transform: none; }
+
+/* settled: everything built, no transitions (reduced motion, Reduce effects,
+   or the end of an assembly) */
+.scene__stage.settled .drop, .scene__stage.settled .f, .scene__stage.settled .plate span,
+.scene__stage.settled .bill, .scene__stage.settled .cline, .scene__stage.settled .svgplate { transition: none; }
+
+/* ── the Métro entrance: line on line ───────────────────────── */
+.metro .iron { stroke: var(--color-action-bg); }
+.metro .iron.thin { stroke: var(--color-decor-gold, var(--color-action-bg)); }
+.metro .lamp { fill: var(--color-decor-gold, #B39758); }
+.metro .lamp-core { fill: var(--color-decor-plum, #8B4C62); }
+.metro .bud { fill: var(--color-decor-plum, #8B4C62); }
+.metro .sign { fill: var(--color-action-bg); font-family: var(--type-display-family); font-weight: 600; }
+.metro .glass { fill: color-mix(in srgb, var(--color-surface) 62%, transparent); }
+/* the ironwork draws itself as each plate is built: an animation with a
+   fill, not a transition, because the *base* state must be the drawn one —
+   reduced motion and `settled` fall back to it by zeroing the animation */
+.metro path[pathLength] { stroke-dasharray: 1; stroke-dashoffset: 0; }
+.metro .svgplate.built path[pathLength] { animation: metro-draw 0.9s var(--ease) both; animation-delay: var(--td, 0ms); }
+@keyframes metro-draw { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
+.metro[data-detail="off"] .thin, .metro[data-detail="off"] .bud { display: none; }
+.metro[data-detail="low"] .bud { display: none; }
+.scene__stage.settled .metro path[pathLength] { animation: none; }
+
+/* ── Habitat: concrete greys from the direction's ink ───────── */
+.habitat { --scene-m-a-t: color-mix(in srgb, var(--color-surface) 92%, var(--color-text-primary)); --scene-m-a-f: color-mix(in srgb, var(--color-surface) 78%, var(--color-text-primary)); --scene-m-a-s: color-mix(in srgb, var(--color-surface) 64%, var(--color-text-primary));
+  --scene-m-b-t: color-mix(in srgb, var(--color-canvas) 90%, var(--color-text-primary)); --scene-m-b-f: color-mix(in srgb, var(--color-canvas) 74%, var(--color-text-primary)); --scene-m-b-s: color-mix(in srgb, var(--color-canvas) 58%, var(--color-text-primary));
+  --scene-m-c-t: color-mix(in srgb, var(--color-canvas) 60%, var(--color-text-primary)); --scene-m-c-f: color-mix(in srgb, var(--color-canvas) 46%, var(--color-text-primary)); --scene-m-c-s: color-mix(in srgb, var(--color-canvas) 34%, var(--color-text-primary));
+  --scene-m-dark-t: var(--color-text-primary); --scene-m-dark-f: var(--color-text-primary); --scene-m-dark-s: var(--color-text-primary); }
+.habitat[data-edge="-1"] .sd .f { border-width: 1px; }
+.habitat[data-edge="1"] .sd .f { border-width: 3px; }
+
+/* the road under the Dessau bridge */
+.plane--road { background: color-mix(in srgb, var(--color-text-primary) 5%, transparent); }

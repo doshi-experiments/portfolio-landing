@@ -1,0 +1,22 @@
+---
+import { closing, process } from '@content/site';
+---
+<section id="process" class="section section--process" aria-labelledby="process-title">
+  <div class="page section__inner">
+    <header class="section__head">
+      <span class="section__marker" aria-hidden="true">02</span>
+      <h2 id="process-title">Process</h2>
+      <div data-slot="section-divider" aria-hidden="true"></div>
+    </header>
+    <ol class="steps" role="list">
+      {process.map((s) => (
+        <li class="step">
+          <span class="step__number" aria-hidden="true">{s.number}</span>
+          <h3><span class="visually-hidden">{s.number} </span>{s.title}</h3>
+          {s.paragraphs.map((p) => <p set:html={p} />)}
+        </li>
+      ))}
+    </ol>
+    <p class="closing">{closing}</p>
+  </div>
+</section>

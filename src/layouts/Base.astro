@@ -1,0 +1,69 @@
+---
+/* The shell. Owns the head: fonts, the critical stylesheets, the inline
+   default tokens for every built direction, and the pre-paint boot. */
+import { Font, fontData } from 'astro:assets';
+import { DIRECTION_DATA } from '@content/directions';
+import { resolve, toDeclarations } from '@design/resolve';
+import { DEFAULT_DIRECTION, DEFAULT_GLOBAL, FONT_FAMILY_IDS, type DirectionId } from '@design/schema';
+import { BUILD_ID, DIRECTION_CSS } from '@client/manifest';
+import { STORAGE_KEY } from '@client/persistence';
+import bootSource from '@client/boot.js?raw';
+import '@styles/base.css';
+import '@styles/components.css';
+import '@styles/scene.css';
+import '@styles/directions/swiss.css';
+
+interface Props {
+  title: string;
+  description: string;
+  /** Force a direction for previews and the dev gate (?direction=). */
+  direction?: DirectionId;
+}
+const { title, description } = Astro.props;
+
+/* default tokens per built direction, inlined so any stamped direction
+   paints correctly before its stylesheet or any module arrives */
+const built = Object.values(DIRECTION_DATA);
+const defaults = built
+  .map((d) => `:root[data-direction="${d.id}"]{${toDeclarations(resolve(d, undefined, DEFAULT_GLOBAL).vars)}}`)
+  .join('\n');
+
+/* the boot manifest: stylesheet URLs, recipe attributes, font preloads */
+const data = Object.fromEntries(built.map((d) => [d.id, resolve(d, undefined, DEFAULT_GLOBAL).data]));
+const fonts = Object.fromEntries(
+  built.map((d) => {
+    const fams = new Set([d.typography.display.family, d.typography.body.family]);
+    const urls: string[] = [];
+    for (const f of fams) {
+      const entries = (fontData as Record<string, { src: { url: string }[]; style?: string }[]>)[`--font-${f}`] ?? [];
+      for (const e of entries) if (e.style !== 'italic') for (const s of e.src) urls.push(s.url);
+    }
+    return [d.id, urls];
+  }),
+);
+const manifest = { default: DEFAULT_DIRECTION, css: DIRECTION_CSS, data, fonts, buildId: BUILD_ID, storageKey: STORAGE_KEY };
+const boot = `window.RD=${JSON.stringify(manifest)};\n${bootSource}`;
+---
+<!doctype html>
+<html lang="en" data-direction={DEFAULT_DIRECTION} data-hero={data[DEFAULT_DIRECTION]?.['hero']} data-project={data[DEFAULT_DIRECTION]?.['project']} data-heading={data[DEFAULT_DIRECTION]?.['heading']} data-frame={data[DEFAULT_DIRECTION]?.['frame']} data-treatment={data[DEFAULT_DIRECTION]?.['treatment']} data-ornament={data[DEFAULT_DIRECTION]?.['ornament']} data-density={data[DEFAULT_DIRECTION]?.['density']}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta name="color-scheme" content="light" />
+    {FONT_FAMILY_IDS.map((id) => <Font cssVariable={`--font-${id}` as any} preload={id === 'inter'} />)}
+    <style set:html={defaults + '\nhtml[data-css-pending] body{visibility:hidden}'} />
+    <script is:inline set:html={boot} />
+    <slot name="head" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <slot />
+    <div id="live" class="visually-hidden" aria-live="polite" aria-atomic="true"></div>
+    <div id="notice" class="notice" role="status" hidden></div>
+    <script>
+      import '@client/main';
+    </script>
+  </body>
+</html>

@@ -1,0 +1,27 @@
+---
+import { actions, hero, identity } from '@content/site';
+import type { SceneRef } from '@design/schema';
+import SceneStage from './SceneStage.astro';
+interface Props { sceneRef: SceneRef }
+const { sceneRef } = Astro.props;
+const [statement, ...rest] = hero.positioning.split(/(?<=\.)\s+/);
+---
+<section class="hero" aria-labelledby="hero-title">
+  <div class="page hero__inner">
+    <div data-slot="hero-ornament" aria-hidden="true"></div>
+    <div class="hero__text hero__frame">
+      <p class="hero__name label">{identity.name}</p>
+      <h1 id="hero-title" class="hero__title">{statement}</h1>
+      <p class="hero__lead">{rest.join(' ')}</p>
+      <p class="hero__invite"><button type="button" class="hero__invite-btn" data-explore>{hero.invitation}</button></p>
+    </div>
+    <div class="hero__actions">
+      {actions.map((a) => (
+        <a class:list={['btn', { 'btn--primary': 'primary' in a && a.primary }]} href={a.href} {...('external' in a && a.external ? { rel: 'noopener' } : {})}>
+          {a.label}{'external' in a && a.external ? ' ↗' : ''}
+        </a>
+      ))}
+    </div>
+    <SceneStage reference={sceneRef} />
+  </div>
+</section>

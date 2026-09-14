@@ -1,0 +1,16 @@
+---
+/* The hero artwork: a CSS-3D scene the engine mounts into .scene__stage.
+   The geometry is decorative and hidden from assistive technology; the
+   caption and the Rebuild control are real content and sit outside it. */
+import { captionFor } from '@design/caption';
+import type { SceneRef } from '@design/schema';
+interface Props { reference: SceneRef }
+const { reference } = Astro.props;
+---
+<figure class="scene hero__scene" data-slot="scene">
+  <div class="scene__stage" aria-hidden="true"></div>
+  <figcaption class="scene__caption">
+    <span class="scene__ref">{captionFor(reference)}</span>
+    <button type="button" class="scene__rebuild">Rebuild</button>
+  </figcaption>
+</figure>

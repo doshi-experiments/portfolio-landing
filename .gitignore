@@ -1,2 +1,6 @@
 .DS_Store
 dist/
+node_modules/
+.astro/
+.wrangler/
+tools/out/

@@ -1,0 +1,85 @@
+/* ─────────────────────────────────────────────────────────────
+   Swiss International Typographic Style — "Clarity by structure"
+
+   Twelve columns, one rule weight, no boxes. The statement takes
+   eight columns and the introduction four; section numbers sit in
+   a margin column and everything else aligns to the main grid.
+   Red is the action and nothing else. Keyed on recipe attributes
+   so the composition reads as a recipe, not a brand.
+   ───────────────────────────────────────────────────────────── */
+
+/* ── header: a hairline masthead ───────────────────────────── */
+[data-direction="swiss"] .site-header { border-block-end: 1px solid var(--color-rule); }
+[data-direction="swiss"] .site-header__inner { gap: var(--sp-4) var(--sp-12); }
+[data-direction="swiss"] .site-nav { margin-inline-start: 0; }
+[data-direction="swiss"] .site-nav ul { gap: var(--sp-1) var(--sp-6); }
+[data-direction="swiss"] .explore-trigger { margin-inline-start: auto; border-width: 1px; }
+
+/* ── hero: 8 + 4 ───────────────────────────────────────────── */
+[data-hero="grid-8-4"] .hero { padding-block: var(--gap-block) var(--gap-section); }
+@media (min-width: 760px) {
+  [data-hero="grid-8-4"] .hero__inner {
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    grid-template-rows: auto auto auto 1fr;
+    column-gap: var(--sp-6);
+    row-gap: var(--gap-item);
+    align-items: start;
+  }
+  [data-hero="grid-8-4"] .hero__text { display: contents; }
+  [data-hero="grid-8-4"] .hero__name { grid-column: 1 / -1; grid-row: 1; margin: 0; }
+  [data-hero="grid-8-4"] .hero__title { grid-column: 1 / 9; grid-row: 2; max-width: none; margin-block-end: var(--sp-6); }
+  [data-hero="grid-8-4"] .hero__lead { grid-column: 9 / -1; grid-row: 2; align-self: end; margin: 0 0 var(--sp-6); font-size: var(--type-body-size); }
+  [data-hero="grid-8-4"] .hero__invite { grid-column: 9 / -1; grid-row: 3; margin: 0; }
+  [data-hero="grid-8-4"] .hero__scene { grid-column: 1 / 9; grid-row: 3 / 5; }
+  [data-hero="grid-8-4"] .hero__actions { grid-column: 9 / -1; grid-row: 4; flex-direction: column; align-items: stretch; align-self: end; }
+}
+[data-hero="grid-8-4"] .hero__title { letter-spacing: -0.02em; }
+/* with the scene hidden the drawing's columns go to the actions */
+@media (min-width: 760px) { html[data-scene="off"] [data-hero="grid-8-4"] .hero__actions { grid-column: 1 / 9; grid-row: 3; flex-direction: row; align-self: start; } }
+[data-hero="grid-8-4"] .scene__stage { aspect-ratio: 2 / 1; max-height: 380px; }
+[data-hero="grid-8-4"] .scene__caption { border-block-start: 1px solid var(--color-rule); padding-block-start: var(--sp-2); }
+
+/* ── sections: number in the margin, content on the main grid ─ */
+[data-heading="margin-number"] .section { border-block-start: 1px solid var(--color-rule); }
+@media (min-width: 760px) {
+  [data-heading="margin-number"] .section__inner { grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--sp-6); row-gap: var(--gap-block); }
+  [data-heading="margin-number"] .section__head { grid-column: 1 / -1; display: grid; grid-template-columns: subgrid; align-items: baseline; }
+  [data-heading="margin-number"] .section__marker { grid-column: 1 / 3; }
+  [data-heading="margin-number"] .section__head > :not(.section__marker):not([data-slot]) { grid-column: 3 / -1; }
+  [data-heading="margin-number"] .section__inner > :not(.section__head):not([data-slot]) { grid-column: 3 / -1; }
+}
+[data-heading="margin-number"] .section__marker { font-variant-numeric: tabular-nums; color: var(--color-text-primary); }
+
+/* ── projects: open groupings, hairlines, meaningful size variation ── */
+[data-project="open-grid"] .projects { gap: 0; }
+[data-project="open-grid"] .project { padding-block: var(--gap-block); border-block-start: 1px solid var(--color-rule); }
+[data-project="open-grid"] .project:first-child { border-block-start: 0; padding-block-start: 0; }
+[data-project="open-grid"] .project__figure { border: 0; background: var(--color-surface); min-height: 200px; }
+[data-project="open-grid"] .project__code { color: var(--color-text-primary); }
+@media (min-width: 760px) {
+  [data-project="open-grid"] .project { grid-template-columns: repeat(10, minmax(0, 1fr)); column-gap: var(--sp-6); row-gap: var(--sp-4); align-items: start; }
+  [data-project="open-grid"] .project__figure { grid-row: 1 / 4; }
+  [data-project="open-grid"] .project:nth-child(3n+1) .project__figure { grid-column: 1 / 6; }
+  [data-project="open-grid"] .project:nth-child(3n+1) .project__plate, [data-project="open-grid"] .project:nth-child(3n+1) .project__blurb, [data-project="open-grid"] .project:nth-child(3n+1) .project__parts { grid-column: 6 / -1; }
+  [data-project="open-grid"] .project:nth-child(3n+2) .project__figure { grid-column: 1 / 4; min-height: 160px; }
+  [data-project="open-grid"] .project:nth-child(3n+2) .project__plate, [data-project="open-grid"] .project:nth-child(3n+2) .project__blurb, [data-project="open-grid"] .project:nth-child(3n+2) .project__parts { grid-column: 4 / -1; }
+  [data-project="open-grid"] .project:nth-child(3n) .project__figure { grid-column: 1 / 5; }
+  [data-project="open-grid"] .project:nth-child(3n) .project__plate, [data-project="open-grid"] .project:nth-child(3n) .project__blurb, [data-project="open-grid"] .project:nth-child(3n) .project__parts { grid-column: 5 / -1; }
+}
+[data-project="open-grid"] .project__link:hover .project__title { text-decoration: none; }
+[data-project="open-grid"] .project__title::after { content: '\00a0→'; display: inline-block; transition: transform var(--motion-feedback-duration) var(--ease); }
+[data-project="open-grid"] .project__link:hover .project__title::after { transform: translateX(4px); }
+
+/* ── process: three columns on the main grid ───────────────── */
+@media (min-width: 900px) {
+  [data-direction="swiss"] .steps { grid-template-columns: repeat(3, minmax(0, 1fr)); column-gap: var(--sp-6); }
+}
+[data-direction="swiss"] .step { border-block-start: 1px solid var(--color-rule); padding-block-start: var(--sp-4); }
+[data-direction="swiss"] .step__number { color: var(--color-text-primary); }
+[data-direction="swiss"] .closing { font-weight: 500; }
+
+/* ── contact ───────────────────────────────────────────────── */
+[data-direction="swiss"] .contact__links .btn { border-width: 1px; }
+
+/* ── education, footer ─────────────────────────────────────── */
+[data-direction="swiss"] .education { border-block-start-width: 1px; }

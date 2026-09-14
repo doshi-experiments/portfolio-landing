@@ -1,0 +1,36 @@
+---
+import { projects } from '@content/site';
+---
+<section id="work" class="section section--work" aria-labelledby="work-title">
+  <div class="page section__inner">
+    <header class="section__head">
+      <span class="section__marker" aria-hidden="true">01</span>
+      <h2 id="work-title">Work</h2>
+      <div data-slot="section-divider" aria-hidden="true"></div>
+    </header>
+    <ol class="projects" role="list">
+      {projects.map((p, i) => (
+        <li class="project" data-index={i + 1} style={`--i:${i}`}>
+          <div data-slot="project-backing" aria-hidden="true"></div>
+          <div class="project__figure" aria-hidden="true">
+            <span class="project__code">{p.code}</span>
+          </div>
+          <div class="project__plate">
+            <a class="project__link" href={p.url} rel="noopener">
+              <h3 class="project__title">{p.name}</h3>
+            </a>
+            <p class="meta project__meta">
+              <span>{p.code}</span><span>{p.discipline}</span><span>{p.status === 'live' ? 'Live' : p.status === 'wip' ? 'In progress' : 'Planned'}</span>
+            </p>
+          </div>
+          <p class="project__blurb">{p.blurb}</p>
+          {p.parts && (
+            <ul class="project__parts" role="list" aria-label={`${p.name} sections`}>
+              {p.parts.map((part) => <li><a href={part.url} rel="noopener">{part.name}</a></li>)}
+            </ul>
+          )}
+        </li>
+      ))}
+    </ol>
+  </div>
+</section>
