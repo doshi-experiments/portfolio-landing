@@ -1,0 +1,20 @@
+---
+import { identity, nav } from '@content/site';
+---
+<header class="site-header" id="top">
+  <div class="page site-header__inner">
+    <a class="site-header__name" href="/">{identity.name}</a>
+    <nav class="site-nav" aria-label="Site">
+      <ul role="list">
+        {nav.map((n) => (
+          <li>
+            <a href={n.href} {...('external' in n && n.external ? { rel: 'noopener' } : {})}>
+              {n.label}{'external' in n && n.external ? ' ↗' : ''}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </nav>
+    <button class="btn explore-trigger" type="button" aria-expanded="false" aria-controls="explorer" data-explore>Explore styles</button>
+  </div>
+</header>

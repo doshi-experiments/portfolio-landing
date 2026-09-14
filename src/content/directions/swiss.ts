@@ -1,0 +1,70 @@
+import type { DirectionData } from '@design/schema';
+
+export const swiss: DirectionData = {
+  id: 'swiss',
+  name: 'Swiss International Typographic Style',
+  tagline: 'Clarity by structure',
+  period: 'c. 1950s–1960s',
+  keywords: ['grid', 'asymmetry', 'sans-serif'],
+  palette: {
+    canvas: '#F7F5EF',
+    surface: '#FFFFFF',
+    ink: '#191919',
+    inkMuted: '#555550',
+    action: '#B83225',
+    actionFg: '#FFFFFF',
+    rule: '#C9C7C0',
+    decor: { red: '#D64132', blue: '#244A9B' },
+    // measured: decorative red 4.13 on canvas → large/non-text only; rule 1.55 → decorative
+    roles: { red: 'large', blue: 'text', rule: 'decorative' },
+  },
+  typography: {
+    display: { family: 'inter', weights: [600] },
+    body: { family: 'inter', weights: [400, 500] },
+    mono: { family: 'ibm-plex-mono', weights: [400] },
+    displayScale: 'grand',
+    labelTracking: '0',
+    labelCase: 'sentence',
+  },
+  recipe: {
+    hero: 'grid-8-4',
+    project: 'open-grid',
+    sectionHeading: 'margin-number',
+    frame: 'hairline',
+    ornament: 'none',
+    radius: 0,
+    ruleWeight: 1,
+    surface: 'flat',
+    motion: { feedbackMs: 150, reveal: 'none' },
+    scene: {
+      id: 'hfg-ulm',
+      reference: {
+        kind: 'analogy',
+        subject: 'building',
+        title: 'Hochschule für Gestaltung Ulm',
+        maker: 'Max Bill',
+        year: '1955',
+        place: 'Ulm',
+        note: 'Swiss style is a graphic tradition with no building of its own; Bill’s rationalist campus stands in, drawn as a 1px plan.',
+      },
+      treatment: 'plan',
+      assembly: 'draw',
+      assembleMs: 900,
+      camera: { yaw: -32, pitch: -22, scale: 0.8 },
+    },
+  },
+  controls: [
+    {
+      id: 'accent', kind: 'choice', label: 'Accent',
+      options: [
+        { id: 'red', label: 'Red', value: '#B83225' },
+        { id: 'blue', label: 'Blue', value: '#244A9B' },
+        { id: 'ink', label: 'Ink', value: '#191919' },
+      ],
+      default: 'red', affects: ['css', 'ui'],
+    },
+    { id: 'density', kind: 'choice', label: 'Density', options: [{ id: 'comfortable', label: 'Comfortable' }, { id: 'compact', label: 'Compact' }], default: 'comfortable', affects: ['css'] },
+    { id: 'displayEmphasis', kind: 'steps', label: 'Display emphasis', steps: [-1, 0, 1], stepLabels: ['Quieter', 'Standard', 'Stronger'], default: 0, affects: ['css'] },
+  ],
+  remix: { allowedEffects: [] },
+};

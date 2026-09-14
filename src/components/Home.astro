@@ -1,0 +1,26 @@
+---
+/* The whole portfolio, in reading order. index.astro and the dev gate
+   both render this; nothing about the order or the headings changes per
+   direction. */
+import { directionData } from '@content/directions';
+import type { DirectionId } from '@design/schema';
+import SiteHeader from './SiteHeader.astro';
+import Hero from './Hero.astro';
+import Work from './Work.astro';
+import Process from './Process.astro';
+import Contact from './Contact.astro';
+import EducationNote from './EducationNote.astro';
+import Footer from './Footer.astro';
+interface Props { direction: DirectionId }
+const { direction } = Astro.props;
+const d = directionData(direction);
+---
+<SiteHeader />
+<main id="main">
+  <Hero sceneRef={d.recipe.scene.reference} />
+  <Work />
+  <Process />
+  <Contact />
+  <EducationNote active={direction} />
+</main>
+<Footer />

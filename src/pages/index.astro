@@ -1,0 +1,9 @@
+---
+import Base from '../layouts/Base.astro';
+import Home from '@components/Home.astro';
+import { identity } from '@content/site';
+import { DEFAULT_DIRECTION } from '@design/schema';
+---
+<Base title={identity.name} description="The portfolio of Rishabh Doshi — the same work, seen through twelve design movements.">
+  <Home direction={DEFAULT_DIRECTION} />
+</Base>

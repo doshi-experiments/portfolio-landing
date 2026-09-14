@@ -1,0 +1,48 @@
+---
+/* Development fixtures — built only when DEV_FIXTURES=1, so nothing here
+   ever reaches production. /dev/gate is the interactive preview for the
+   visual review; /dev/long-form is the long-form reading test. */
+import Base from '../../layouts/Base.astro';
+import Home from '@components/Home.astro';
+import SiteHeader from '@components/SiteHeader.astro';
+import Footer from '@components/Footer.astro';
+import DevToolbar from '@components/DevToolbar.astro';
+import { DEFAULT_DIRECTION } from '@design/schema';
+import { Content as LongForm, frontmatter } from '../../fixtures/long-form.md';
+
+export function getStaticPaths() {
+  if (!process.env['DEV_FIXTURES']) return [];
+  return [{ params: { fixture: 'gate' } }, { params: { fixture: 'long-form' } }];
+}
+const { fixture } = Astro.params;
+---
+<Base title={`dev · ${fixture}`} description="Development fixture — not published.">
+  {fixture === 'gate' ? (
+    <Home direction={DEFAULT_DIRECTION} />
+  ) : (
+    <>
+      <SiteHeader />
+      <main id="main">
+        <article class="section">
+          <div class="page section__inner">
+            <header class="section__head">
+              <span class="section__marker" aria-hidden="true">00</span>
+              <h1>{frontmatter.title}</h1>
+              <div data-slot="section-divider" aria-hidden="true"></div>
+            </header>
+            <div class="prose long-form">
+              <p class="meta">Fixture — development only. {frontmatter.summary}</p>
+              <LongForm />
+            </div>
+          </div>
+        </article>
+      </main>
+      <Footer />
+    </>
+  )}
+  <DevToolbar />
+</Base>
+<style is:global>
+  .fixture-swatch { aspect-ratio: 16 / 7; background: var(--color-surface); border: var(--border-structural-width, 1px) solid var(--color-rule); }
+  .long-form h1 { font-size: var(--type-h2-size); }
+</style>

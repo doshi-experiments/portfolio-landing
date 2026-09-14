@@ -1,0 +1,101 @@
+/* ─────────────────────────────────────────────────────────────
+   Component contracts — the neutral skeleton every direction
+   starts from. Each block names the parts a recipe may move,
+   frame, or decorate. Composition belongs to the direction files
+   (src/styles/directions/*.css); this file only guarantees the
+   parts exist, stack sensibly, and stay usable with no direction
+   CSS at all.
+   ───────────────────────────────────────────────────────────── */
+
+/* ── site header ────────────────────────────────────────────── */
+.site-header { position: relative; z-index: 5; }
+.site-header__inner { display: flex; flex-wrap: wrap; align-items: center; gap: var(--sp-4) var(--sp-6); min-height: 72px; padding-block: var(--sp-3); }
+.site-header__name { font-family: var(--type-ui-family); font-weight: 600; text-decoration: none; color: var(--color-text-primary); min-height: var(--target); display: inline-flex; align-items: center; }
+.site-header__name:visited { color: var(--color-text-primary); }
+.site-nav { margin-inline-start: auto; }
+.site-nav ul { display: flex; flex-wrap: wrap; gap: var(--sp-1) var(--sp-4); }
+.site-nav a { display: inline-flex; align-items: center; min-height: var(--target); padding-inline: var(--sp-1); font-family: var(--type-ui-family); text-decoration: none; color: var(--color-text-primary); }
+.site-nav a:hover { color: var(--color-link-hover); text-decoration: underline; text-underline-offset: 0.2em; }
+.site-nav a:visited { color: var(--color-text-primary); }
+.explore-trigger { flex-shrink: 0; }
+@media (max-width: 759px) {
+  .site-nav { order: 3; flex-basis: 100%; margin-inline-start: 0; }
+  .explore-trigger { margin-inline-start: auto; }
+}
+
+/* ── hero ───────────────────────────────────────────────────── */
+.hero { position: relative; padding-block: var(--gap-block) var(--gap-section); }
+.hero__inner { position: relative; display: grid; gap: var(--gap-item); }
+.hero__text { position: relative; }
+.hero__name { font-family: var(--type-ui-family); font-size: var(--type-meta-size); letter-spacing: var(--type-label-tracking, 0); text-transform: var(--type-label-transform, none); color: var(--color-text-secondary); margin-block-end: var(--sp-4); }
+.hero__title { max-width: 18ch; }
+.hero__lead { margin-block-start: var(--sp-6); font-size: calc(var(--type-body-size) * 1.1); }
+.hero__invite { margin-block-start: var(--sp-4); }
+.hero__invite-btn { font-family: var(--type-ui-family); color: var(--color-link); text-decoration: underline; text-underline-offset: 0.16em; min-height: var(--target); display: inline-flex; align-items: center; text-align: left; }
+.hero__invite-btn:hover { color: var(--color-link-hover); }
+.hero__actions { display: flex; flex-wrap: wrap; gap: var(--sp-2) var(--sp-3); align-items: center; }
+[data-slot="hero-ornament"] { position: absolute; inset: 0; }
+
+/* ── scene (the CSS-3D artwork) ─────────────────────────────── */
+.scene { position: relative; margin: 0; }
+.scene__stage { position: relative; width: 100%; aspect-ratio: 4 / 3; max-height: 460px; overflow: hidden; contain: layout paint; }
+.scene__caption { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--sp-2) var(--sp-4); margin-block-start: var(--sp-2); font-family: var(--type-ui-family); font-size: var(--type-meta-size); color: var(--color-text-secondary); }
+.scene__ref { flex: 1 1 24ch; }
+.scene__rebuild { display: inline-flex; align-items: center; min-height: 36px; padding-inline: var(--sp-2); text-decoration: underline; text-underline-offset: 0.16em; color: var(--color-link); }
+.scene__rebuild:hover { color: var(--color-link-hover); }
+html[data-reduce-effects="true"] .scene__rebuild { display: none; }
+@media (prefers-reduced-motion: reduce) { .scene__rebuild { display: none; } }
+/* dev/gate and Tune can hide the scene entirely; the caption goes with it */
+html[data-scene="off"] .scene { display: none; }
+
+/* ── sections ───────────────────────────────────────────────── */
+.section { padding-block: var(--gap-section); }
+.section__inner { display: grid; gap: var(--gap-block); }
+.section__head { display: flex; flex-wrap: wrap; align-items: baseline; gap: var(--sp-4); }
+.section__marker { font-family: var(--type-ui-family); font-size: var(--type-meta-size); color: var(--color-text-secondary); font-variant-numeric: tabular-nums; }
+[data-slot="section-divider"] { display: block; flex-basis: 100%; }
+
+/* ── project previews ───────────────────────────────────────── */
+.projects { display: grid; gap: var(--gap-block); }
+.project { position: relative; display: grid; gap: var(--sp-4); }
+.project__plate { position: relative; display: grid; gap: var(--sp-2); }
+.project__figure { display: grid; place-items: center; min-height: 160px; padding: var(--sp-6); background: var(--color-surface); border: var(--border-structural-width, 1px) solid var(--color-rule); container-type: inline-size; }
+.project__code { font-family: var(--type-display-family); font-weight: var(--type-display-weight, 600); font-size: clamp(1.75rem, 16cqw, 3.5rem); line-height: 1; letter-spacing: -0.02em; white-space: nowrap; }
+.project__link { text-decoration: none; color: inherit; }
+.project__link:visited { color: inherit; }
+.project__link:hover .project__title { text-decoration: underline; text-underline-offset: 0.12em; }
+.project__title { margin: 0; }
+.project__meta { display: flex; flex-wrap: wrap; gap: var(--sp-1) var(--sp-3); }
+.project__meta > * + *::before { content: '·'; margin-inline-end: var(--sp-3); }
+.project__parts { display: flex; flex-wrap: wrap; gap: var(--sp-1) var(--sp-3); font-family: var(--type-ui-family); font-size: var(--type-meta-size); }
+.project__parts a { display: inline-flex; align-items: center; min-height: 32px; }
+[data-slot="project-backing"] { position: absolute; inset: 0; z-index: -1; }
+
+/* ── process ────────────────────────────────────────────────── */
+.steps { display: grid; gap: var(--gap-block); }
+.step { display: grid; gap: var(--sp-2); }
+.step__number { font-family: var(--type-ui-family); font-variant-numeric: tabular-nums; color: var(--color-text-secondary); font-size: var(--type-meta-size); }
+.closing { font-family: var(--type-display-family); font-size: var(--type-h3-size); font-weight: var(--type-display-weight, 600); }
+
+/* ── contact ────────────────────────────────────────────────── */
+.contact__links { display: flex; flex-wrap: wrap; gap: var(--sp-2) var(--sp-3); }
+
+/* ── education note ─────────────────────────────────────────── */
+.education { padding-block: var(--gap-section); border-block-start: var(--border-structural-width, 1px) solid var(--color-rule); }
+.education__inner { display: grid; gap: var(--gap-item); }
+.education__identity { font-family: var(--type-ui-family); color: var(--color-text-secondary); }
+.education__grid { display: grid; gap: var(--gap-item); }
+@media (min-width: 900px) { .education__grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+.education__grid h3 { margin-block-end: var(--sp-2); }
+.education__grid ul { padding-inline-start: 1.2em; }
+.education__grid li + li { margin-block-start: var(--sp-2); }
+.education__refs { margin-block-start: var(--sp-2); }
+
+/* ── footer ─────────────────────────────────────────────────── */
+.site-footer { padding-block: var(--gap-block); border-block-start: var(--border-structural-width, 1px) solid var(--color-rule); font-family: var(--type-ui-family); font-size: var(--type-meta-size); color: var(--color-text-secondary); }
+.site-footer__inner { display: flex; flex-wrap: wrap; gap: var(--sp-2) var(--sp-6); justify-content: space-between; }
+.site-footer a { color: inherit; }
+
+/* ── live region / notices ──────────────────────────────────── */
+.notice { position: fixed; inset-inline: var(--sp-4); inset-block-end: var(--sp-4); z-index: 50; max-width: 40ch; margin-inline-start: auto; padding: var(--sp-3) var(--sp-4); background: var(--color-surface); color: var(--color-text-primary); border: var(--border-structural-width, 1px) solid var(--color-border-meaningful); font-family: var(--type-ui-family); font-size: var(--type-meta-size); }
+.notice[hidden] { display: none; }

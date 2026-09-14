@@ -1,0 +1,35 @@
+---
+/* "About this style" for every built direction, server-rendered. Only the
+   active one is visible; the engine flips `hidden` on switch, so the prose
+   never ships as JavaScript. */
+import { builtDirections } from '@content/directions/education';
+import type { DirectionId } from '@design/schema';
+interface Props { active: DirectionId }
+const { active } = Astro.props;
+---
+<aside class="education" aria-labelledby="education-title">
+  <div class="page education__inner">
+    <h2 id="education-title">About this style</h2>
+    {builtDirections().map((d) => (
+      <div class="education__body" data-education={d.id} hidden={d.id !== active}>
+        <p class="education__identity" data-identity>{d.name} · {d.period}</p>
+        <div class="education__grid">
+          <section aria-labelledby={`edu-${d.id}-context`}>
+            <h3 id={`edu-${d.id}-context`}>Historical context</h3>
+            <p>{d.education.context}</p>
+            <p class="meta education__refs">{d.education.refs.map((r, i) => <>{i > 0 && ' · '}<a href={r.url} rel="noopener">{r.label}</a></>)}</p>
+          </section>
+          <section aria-labelledby={`edu-${d.id}-page`}>
+            <h3 id={`edu-${d.id}-page`}>On this page</h3>
+            <ul>{d.education.onThisPage.map((o) => <li>{o}</li>)}</ul>
+          </section>
+          <section aria-labelledby={`edu-${d.id}-interp`}>
+            <h3 id={`edu-${d.id}-interp`}>Our interpretation</h3>
+            <p>{d.education.interpretation}</p>
+          </section>
+        </div>
+      </div>
+    ))}
+    <p class="meta education__note">Dates are approximate periods of emergence or prominence; movements overlap, and this collection is a selection, not a history.</p>
+  </div>
+</aside>

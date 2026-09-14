@@ -1,0 +1,59 @@
+---
+/* Development-only controls, driven by the live engine (window.rd). Rendered
+   only on /dev/* pages, which exist only when DEV_FIXTURES=1. */
+import { BUILT_DIRECTIONS, DIRECTION_DATA } from '@content/directions';
+---
+<div class="devbar" id="devbar" role="region" aria-label="Development controls">
+  <div class="devbar__group" role="group" aria-label="Direction">
+    {BUILT_DIRECTIONS.map((id) => <button type="button" class="devbar__btn" data-dev-direction={id} aria-pressed="false">{DIRECTION_DATA[id]!.name.split(' ')[0]}</button>)}
+  </div>
+  <div class="devbar__group">
+    <label><input type="checkbox" data-dev-scene checked> Scene</label>
+    <label><input type="checkbox" data-dev-reduce> Reduce effects</label>
+    <label>Reading <select data-dev-reading><option value="100">100%</option><option value="112.5">112.5%</option><option value="125">125%</option></select></label>
+    <a href="/dev/gate/">Home</a>
+    <a href="/dev/long-form/">Long-form</a>
+    <span class="devbar__status" data-dev-status aria-live="polite"></span>
+  </div>
+</div>
+<style>
+  .devbar { position: fixed; inset-inline: 0; inset-block-end: 0; z-index: 90; display: flex; flex-wrap: wrap; gap: 8px 16px; align-items: center; padding: 8px 12px; background: #1b1b1b; color: #f2f2f2; font: 13px/1.3 system-ui, sans-serif; }
+  .devbar__group { display: flex; flex-wrap: wrap; gap: 6px 10px; align-items: center; }
+  .devbar__btn { padding: 6px 10px; border: 1px solid #666; background: #2a2a2a; color: inherit; border-radius: 4px; min-height: 32px; }
+  .devbar__btn[aria-pressed="true"] { background: #f2f2f2; color: #1b1b1b; border-color: #f2f2f2; }
+  .devbar__btn[aria-busy="true"] { opacity: 0.6; }
+  .devbar a { color: #9cd; }
+  .devbar label { display: inline-flex; gap: 4px; align-items: center; }
+  .devbar select { font: inherit; }
+  .devbar__status { opacity: 0.8; }
+  body { padding-block-end: 64px; }
+</style>
+<script>
+  const bar = document.getElementById('devbar')!;
+  const status = bar.querySelector<HTMLElement>('[data-dev-status]')!;
+  const rd = () => window.rd!;
+  const sync = () => {
+    const e = rd();
+    for (const b of bar.querySelectorAll<HTMLButtonElement>('[data-dev-direction]')) {
+      b.setAttribute('aria-pressed', String(b.dataset.devDirection === e.applied));
+      b.setAttribute('aria-busy', String(b.dataset.devDirection === e.pending));
+    }
+    (bar.querySelector('[data-dev-reduce]') as HTMLInputElement).checked = e.global.reduceEffects;
+    (bar.querySelector('[data-dev-reading]') as HTMLSelectElement).value = String(e.global.readingSize);
+    (bar.querySelector('[data-dev-scene]') as HTMLInputElement).checked = document.documentElement.dataset.scene !== 'off';
+    status.textContent = `applied: ${e.applied}${e.pending ? ` · pending: ${e.pending}` : ''} · fonts: ${e.fonts ?? '—'}`;
+  };
+  for (const b of bar.querySelectorAll<HTMLButtonElement>('[data-dev-direction]')) {
+    b.addEventListener('click', async () => {
+      const t0 = performance.now();
+      const out = await rd().apply(b.dataset.devDirection as any, 'dev');
+      status.textContent += ` · ${out} in ${Math.round(performance.now() - t0)}ms`;
+    });
+  }
+  bar.querySelector('[data-dev-scene]')!.addEventListener('change', (ev) => rd().setSceneVisible((ev.target as HTMLInputElement).checked));
+  bar.querySelector('[data-dev-reduce]')!.addEventListener('change', (ev) => rd().setGlobal({ reduceEffects: (ev.target as HTMLInputElement).checked }));
+  bar.querySelector('[data-dev-reading]')!.addEventListener('change', (ev) => rd().setGlobal({ readingSize: Number((ev.target as HTMLSelectElement).value) as 100 | 112.5 | 125 }));
+  for (const t of ['rd:applied', 'rd:pending', 'rd:failed', 'rd:global', 'rd:tuned', 'rd:reset']) document.addEventListener(t, sync);
+  const whenReady = () => (window.rd ? sync() : setTimeout(whenReady, 50));
+  whenReady();
+</script>

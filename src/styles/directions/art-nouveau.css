@@ -1,0 +1,133 @@
+/* ─────────────────────────────────────────────────────────────
+   Art Nouveau — "The living line"
+
+   A poster-like page: the opening text inside an open, asymmetric
+   drawn frame; headings in a narrow annotation column that swaps
+   sides section by section; projects standing in tall frames with
+   small drawn corners. Cormorant carries the display, Source Sans
+   the reading. Gold is a line colour, never a text colour.
+   Drawn ornament arrives through the decoration slots
+   (src/client/directions/art-nouveau.ts); this file composes.
+   ───────────────────────────────────────────────────────────── */
+
+[data-direction="art-nouveau"] {
+  --an-line: var(--color-decor-gold);
+  --an-line-2: var(--color-action-bg);
+  --an-frame: 1px solid var(--color-decor-gold);
+}
+
+/* ── type: a large, quietly spaced serif with selective italic ── */
+[data-direction="art-nouveau"] h1, [data-direction="art-nouveau"] h2, [data-direction="art-nouveau"] h3 { letter-spacing: 0.005em; }
+[data-direction="art-nouveau"] h1 { font-weight: 500; line-height: 1.02; }
+[data-direction="art-nouveau"] h2 { font-weight: 600; font-size: calc(var(--type-h2-size) * 1.15); }
+[data-direction="art-nouveau"] h3 { font-weight: 600; font-size: calc(var(--type-h3-size) * 1.25); }
+[data-direction="art-nouveau"] .hero__name { font-family: var(--type-display-family); font-style: italic; font-size: calc(var(--type-body-size) * 1.35); letter-spacing: 0.01em; color: var(--color-decor-plum); text-transform: none; }
+[data-direction="art-nouveau"] .hero__lead { font-family: var(--type-display-family); font-style: italic; font-size: calc(var(--type-body-size) * 1.5); line-height: 1.35; font-weight: 500; }
+[data-direction="art-nouveau"] .closing { font-style: italic; font-weight: 500; font-size: calc(var(--type-h3-size) * 1.4); }
+
+/* ── header: a fine gold rule with a drawn curl beneath the masthead ── */
+[data-direction="art-nouveau"] .site-header { border-block-end: var(--an-frame); }
+[data-direction="art-nouveau"] .site-header__name { font-family: var(--type-display-family); font-style: italic; font-size: 1.5rem; font-weight: 600; }
+[data-direction="art-nouveau"] .site-nav a { font-size: var(--type-meta-size); letter-spacing: var(--type-label-tracking); }
+[data-direction="art-nouveau"] .explore-trigger { border-color: var(--color-action-bg); color: var(--color-action-bg); }
+
+/* ── hero: framed, asymmetric ───────────────────────────────── */
+[data-hero="framed-asymmetric"] .hero { padding-block: var(--gap-block) var(--gap-section); overflow: hidden; }
+[data-hero="framed-asymmetric"] .hero__inner { row-gap: var(--gap-item); grid-template-columns: minmax(0, 1fr); }
+[data-hero="framed-asymmetric"] .hero__text, [data-hero="framed-asymmetric"] [data-slot="hero-ornament"] { grid-column: 1; grid-row: 1; }
+[data-hero="framed-asymmetric"] .hero__text { padding: var(--sp-10, 40px) var(--sp-4) var(--sp-6) 48px; }
+@media (min-width: 900px) { [data-hero="framed-asymmetric"] .hero__text { padding: var(--sp-12) var(--sp-6) var(--sp-8) 60px; } }
+[data-hero="framed-asymmetric"] .hero__title { max-width: 14ch; }
+[data-hero="framed-asymmetric"] .hero__lead { max-width: 30ch; }
+[data-hero="framed-asymmetric"] .hero__actions { padding-inline-start: 48px; }
+@media (min-width: 900px) { [data-hero="framed-asymmetric"] .hero__actions { padding-inline-start: 60px; } }
+[data-hero="framed-asymmetric"] .hero__actions .btn { border-width: 1px; }
+@media (min-width: 900px) {
+  [data-hero="framed-asymmetric"] .hero__inner {
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    grid-template-rows: auto auto;
+    column-gap: var(--sp-6);
+    align-items: start;
+  }
+  [data-hero="framed-asymmetric"] .hero__text { grid-column: 1 / 8; grid-row: 1; }
+  [data-hero="framed-asymmetric"] .hero__actions { grid-column: 1 / 8; grid-row: 2; }
+  [data-hero="framed-asymmetric"] .hero__scene { grid-column: 8 / -1; grid-row: 1 / 3; align-self: end; margin-block-start: var(--sp-8); }
+  [data-hero="framed-asymmetric"] [data-slot="hero-ornament"] { grid-column: 1 / 8; grid-row: 1; }
+}
+/* the frame is three edge pieces around the text block: a stem down the
+   left, a whip along the top, a tendril along the bottom — each stretched
+   along its own axis only, so the curves stay curves at every size */
+[data-hero="framed-asymmetric"] [data-slot="hero-ornament"] { position: relative; inset: auto; grid-row: 1; z-index: 0; align-self: stretch; }
+[data-hero="framed-asymmetric"] [data-slot="hero-ornament"] svg { position: absolute; overflow: visible; }
+[data-hero="framed-asymmetric"] [data-slot="hero-ornament"] .an-left { left: 0; top: 0; height: 100%; width: 44px; }
+@media (min-width: 900px) { [data-hero="framed-asymmetric"] [data-slot="hero-ornament"] .an-left { width: 64px; } }
+[data-hero="framed-asymmetric"] [data-slot="hero-ornament"] .an-top { left: 40px; right: 0; top: 0; height: 56px; width: auto; }
+[data-hero="framed-asymmetric"] [data-slot="hero-ornament"] .an-bottom { left: 48px; right: 10%; bottom: 0; height: 40px; width: auto; }
+[data-hero="framed-asymmetric"] .hero__text, [data-hero="framed-asymmetric"] .hero__actions, [data-hero="framed-asymmetric"] .hero__scene { position: relative; z-index: 1; }
+[data-hero="framed-asymmetric"] .scene__stage { aspect-ratio: 5 / 6; max-height: 560px; }
+[data-hero="framed-asymmetric"] .scene__caption { border-block-start: var(--an-frame); padding-block-start: var(--sp-2); font-family: var(--type-display-family); font-style: italic; font-size: 1.05rem; }
+[data-hero="framed-asymmetric"] .scene__rebuild { font-family: var(--type-ui-family); font-style: normal; font-size: var(--type-meta-size); }
+
+/* the drawn line: appears once, stroked, when the direction is applied */
+[data-direction="art-nouveau"] .whiplash path, [data-direction="art-nouveau"] .whiplash ellipse { fill: none; stroke: var(--an-line); stroke-linecap: round; stroke-linejoin: round; vector-effect: non-scaling-stroke; }
+[data-direction="art-nouveau"] .whiplash .bud { fill: var(--an-line-2); stroke: none; }
+[data-direction="art-nouveau"] .whiplash .thin { stroke: var(--an-line-2); }
+[data-direction="art-nouveau"] .whiplash [pathLength] { stroke-dasharray: 1; stroke-dashoffset: 0; }
+[data-direction="art-nouveau"] .whiplash.drawing [pathLength] { animation: an-draw var(--motion-reveal-duration, 0ms) var(--ease) both; }
+@keyframes an-draw { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
+
+/* ── sections: heading in a narrow annotation column, alternating sides ── */
+[data-heading="ornamental-baseline"] .section { padding-block: var(--gap-section); }
+[data-heading="ornamental-baseline"] .section__head { display: block; }
+[data-heading="ornamental-baseline"] .section__marker { display: block; font-family: var(--type-display-family); font-style: italic; font-size: 1.25rem; color: var(--color-decor-plum); margin-block-end: var(--sp-2); }
+[data-heading="ornamental-baseline"] .section__head h2 { padding-block-end: var(--sp-3); background: linear-gradient(var(--an-line), var(--an-line)) 0 100% / 3.5em 1px no-repeat; }
+[data-heading="ornamental-baseline"] [data-slot="section-divider"] { display: block; height: 28px; margin-block: var(--sp-2) 0; }
+[data-heading="ornamental-baseline"] [data-slot="section-divider"] svg { width: 100%; max-width: 360px; height: 100%; overflow: visible; }
+@media (min-width: 900px) {
+  [data-heading="ornamental-baseline"] .section__inner { grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--sp-6); row-gap: var(--gap-item); align-items: start; }
+  [data-heading="ornamental-baseline"] .section__head { grid-column: 1 / 4; grid-row: 1; position: sticky; top: var(--sp-6); }
+  [data-heading="ornamental-baseline"] .section__inner > :not(.section__head):not([data-slot]) { grid-column: 5 / -1; }
+  /* the annotation column swaps sides on alternate sections (Work left,
+     Process right, Contact left); content auto-places beside the head */
+  [data-heading="ornamental-baseline"] .section--process .section__head { grid-column: 10 / -1; }
+  [data-heading="ornamental-baseline"] .section--process .section__inner > :not(.section__head):not([data-slot]) { grid-column: 1 / 9; }
+}
+
+/* ── projects: tall editorial frames with drawn corners ─────── */
+[data-project="vertical-frame"] .projects { gap: var(--gap-item); }
+@media (min-width: 760px) { [data-project="vertical-frame"] .projects { grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); align-items: start; } }
+[data-project="vertical-frame"] .project { padding: var(--sp-8) var(--sp-6) var(--sp-6); border: var(--an-frame); background: var(--color-surface); gap: var(--sp-4); align-content: start; }
+@media (min-width: 760px) { [data-project="vertical-frame"] .project:last-child:nth-child(odd) { grid-column: 1 / -1; grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr); column-gap: var(--sp-8); align-items: start; }
+  [data-project="vertical-frame"] .project:last-child:nth-child(odd) .project__figure { grid-row: 1 / 4; } }
+[data-project="vertical-frame"] .project__figure { border: var(--an-frame); background: var(--color-canvas); min-height: 150px; margin-inline: var(--sp-2); }
+[data-project="vertical-frame"] .project__code { font-weight: 500; font-style: italic; color: var(--color-decor-plum); }
+[data-project="vertical-frame"] .project__plate { text-align: center; }
+[data-project="vertical-frame"] .project__meta { justify-content: center; }
+[data-project="vertical-frame"] .project__title { font-size: calc(var(--type-h3-size) * 1.6); }
+[data-project="vertical-frame"] .project__title::after { content: ''; display: block; width: 2.5em; height: 1px; margin: var(--sp-3) auto 0; background: var(--an-line); }
+[data-project="vertical-frame"] .project__blurb { font-size: calc(var(--type-body-size) * 0.94); }
+[data-project="vertical-frame"] .project__parts { justify-content: center; }
+[data-project="vertical-frame"] [data-slot="project-backing"] { z-index: 1; }
+[data-project="vertical-frame"] [data-slot="project-backing"] svg { position: absolute; width: 44px; height: 44px; overflow: visible; }
+[data-project="vertical-frame"] [data-slot="project-backing"] svg:nth-child(1) { top: 6px; left: 6px; }
+[data-project="vertical-frame"] [data-slot="project-backing"] svg:nth-child(2) { top: 6px; right: 6px; transform: scaleX(-1); }
+[data-project="vertical-frame"] [data-slot="project-backing"] svg:nth-child(3) { bottom: 6px; left: 6px; transform: scaleY(-1); }
+[data-project="vertical-frame"] [data-slot="project-backing"] svg:nth-child(4) { bottom: 6px; right: 6px; transform: scale(-1); }
+
+/* ── process: a numbered run in the main column ─────────────── */
+[data-direction="art-nouveau"] .steps { gap: var(--gap-item); }
+[data-direction="art-nouveau"] .step { grid-template-columns: auto 1fr; column-gap: var(--sp-4); align-items: baseline; }
+[data-direction="art-nouveau"] .step__number { grid-row: 1 / span 3; font-family: var(--type-display-family); font-style: italic; font-size: 2.6rem; line-height: 1; color: var(--color-decor-plum); }
+[data-direction="art-nouveau"] .step h3, [data-direction="art-nouveau"] .step p { grid-column: 2; }
+[data-direction="art-nouveau"] .step + .step { border-block-start: var(--an-frame); padding-block-start: var(--gap-item); }
+
+/* ── contact, education, footer ─────────────────────────────── */
+[data-direction="art-nouveau"] .contact__lead { font-family: var(--type-display-family); font-style: italic; font-size: calc(var(--type-body-size) * 1.3); }
+[data-direction="art-nouveau"] .contact__links .btn { border-width: 1px; }
+[data-direction="art-nouveau"] .education { border-block-start: var(--an-frame); }
+[data-direction="art-nouveau"] .education__identity { font-family: var(--type-display-family); font-style: italic; font-size: 1.15rem; }
+[data-direction="art-nouveau"] .site-footer { border-block-start: var(--an-frame); }
+
+/* ── line detail: off removes the drawn ornament, low keeps baselines ── */
+[data-direction="art-nouveau"][data-line-detail="off"] .section__head h2 { background: none; }
+[data-direction="art-nouveau"][data-line-detail="off"] .project__title::after { display: none; }

@@ -1,0 +1,9 @@
+---
+import { identity } from '@content/site';
+---
+<footer class="site-footer">
+  <div class="page site-footer__inner">
+    <p>{identity.name} · <a href={`mailto:${identity.email}`}>{identity.email}</a></p>
+    <p>Built with ♥ using Claude · <a href="/blueprint/">The construction sheet</a></p>
+  </div>
+</footer>

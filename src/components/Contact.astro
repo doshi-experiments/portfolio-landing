@@ -1,0 +1,19 @@
+---
+import { actions } from '@content/site';
+const links = actions.filter((a) => !('primary' in a && a.primary));
+const wing = actions.find((a) => 'primary' in a && a.primary)!;
+---
+<section id="contact" class="section section--contact" aria-labelledby="contact-title">
+  <div class="page section__inner">
+    <header class="section__head">
+      <span class="section__marker" aria-hidden="true">03</span>
+      <h2 id="contact-title">Contact</h2>
+      <div data-slot="section-divider" aria-hidden="true"></div>
+    </header>
+    <p class="contact__lead">The experiments wing is already finished — and the inspector’s office is open:</p>
+    <ul class="contact__links" role="list">
+      <li><a class="btn btn--primary" href={wing.href} rel="noopener">Experiments ↗</a></li>
+      {links.map((a) => <li><a class="btn" href={a.href} {...('external' in a && a.external ? { rel: 'noopener' } : {})}>{a.label}</a></li>)}
+    </ul>
+  </div>
+</section>
