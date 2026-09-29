@@ -47,3 +47,9 @@ run its `scripts/sync.mjs` against this asset directory to upgrade. Do not edit
 these generated files locally. Keep the `sheet-theme` cookie and pre-paint
 stamp intact. Light/dark appearance and project identity are separate dimensions.
 Hanken Grotesk is served locally with its OFL notice.
+
+The checked-in `wrangler.jsonc` declares the `wip` Worker and root asset
+folder for both production and branch-preview commands. `.assetsignore`
+limits uploaded files to the landing page and its shared design assets.
+This avoids relying on an `--assets` flag in a production-only dashboard
+command when Cloudflare runs a different command for preview branches.
