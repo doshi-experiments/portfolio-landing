@@ -17,7 +17,7 @@
   Sheet A-001 · Rev 47 · Rishabh Doshi
   ═══════════════════════════════════════════════════════════════════
 -->
-<html lang="en">
+<html lang="en" data-project="portfolio" data-density="comfortable">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -556,8 +556,12 @@ body.done .m-glass .f,body.done .m-ribbon .f{
   #scrollPill i,#hero h1 i{animation:none!important}
 }
 </style>
+<link rel="stylesheet" href="/design-system/tokens.css">
+<link rel="stylesheet" href="/design-system/legacy.css">
+<script defer src="/design-system/metadata.js"></script>
 </head>
 <body>
+<a class="ds-skip" href="#hero">Skip to content</a>
 
 <!-- ══ 3D Stage ═══════════════════════════════════════════════ -->
 <div id="stage" aria-hidden="true">
@@ -589,7 +593,7 @@ body.done .m-glass .f,body.done .m-ribbon .f{
   <div id="scrollPill">Scroll to Build<i>▼</i></div>
 
   <!-- hero -->
-  <div class="card on" id="hero">
+  <div class="card on" id="hero" tabindex="-1">
     <div class="corner"></div><div class="corner b"></div>
     <div class="eyebrow">Site Notice — Permit № 001</div>
     <h1>Under<br>Construction<i>▌</i></h1>
