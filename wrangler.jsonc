@@ -1,0 +1,10 @@
+{
+  // Explicit assets configuration is shared by deploy and branch preview commands.
+  "$schema": "https://raw.githubusercontent.com/cloudflare/workers-sdk/main/packages/wrangler/config-schema.json",
+  "name": "wip",
+  "compatibility_date": "2026-09-29",
+  "assets": {
+    "directory": ".",
+    "not_found_handling": "404-page"
+  }
+}
