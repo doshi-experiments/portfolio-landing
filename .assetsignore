@@ -1,0 +1,5 @@
+# Only website assets belong in the deployment, not repository metadata.
+*
+!index.html
+!design-system/
+!design-system/**
