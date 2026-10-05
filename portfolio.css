@@ -1,0 +1,231 @@
+#stage{
+  position:fixed;inset:104px 0 80px 46%;z-index:1;
+  display:grid;place-items:center;
+  perspective:1500px;perspective-origin:50% 40%;
+  pointer-events:none;
+}
+#camera{
+  width:0;height:0;
+  transform-style:preserve-3d;
+  transform:
+    translateY(var(--lift))
+    rotateX(calc(var(--rx)*1deg))
+    rotateY(calc(var(--ry)*1deg))
+    scale3d(var(--s),var(--s),var(--s));
+  will-change:transform;
+}
+#world,#build,.grp{transform-style:preserve-3d;position:absolute}
+
+/* ground plane — its own finer grid, fading at the edges */
+.groundgrid{
+  position:absolute;width:1400px;height:1400px;left:-700px;top:-700px;
+  transform:rotateX(90deg);
+  background:
+    repeating-linear-gradient(0deg,  var(--site) 0 1px, transparent 1px 40px),
+    repeating-linear-gradient(90deg, var(--site) 0 1px, transparent 1px 40px);
+  -webkit-mask-image:radial-gradient(closest-side,#000 30%,transparent 78%);
+          mask-image:radial-gradient(closest-side,#000 30%,transparent 78%);
+}
+/* the road the bridge spans — reason the bridge exists */
+.road{
+  position:absolute;width:48px;height:780px;left:-81px;top:-390px;
+  transform:rotateX(90deg) translateZ(2px);
+  background:var(--road-fill);
+  border-left:1px solid var(--road-line);
+  border-right:1px solid var(--road-line);
+}
+.road::after{
+  content:"";position:absolute;left:calc(50% - 1.5px);top:0;
+  width:3px;height:100%;
+  background:repeating-linear-gradient(0deg,
+    var(--road-dash) 0 16px, transparent 16px 42px);
+}
+.gshadow{ /* building shadow grows with progress */
+  position:absolute;width:520px;height:340px;left:-260px;top:-170px;
+  transform:rotateX(90deg) translateZ(3px)
+            scale(calc(.25 + var(--shadow)*.75));
+  background:radial-gradient(closest-side,var(--shade),transparent 70%);
+  opacity:calc(.2 + var(--shadow)*.8);
+}
+
+/* ─────────────────────────────────────────────────────────────
+   3 · Pieces  (ghost plan → soft build → clean site)
+   The plan shows structure only — dashed, faint, square. What
+   gets built is a plush model of the Dessau campus: rounded
+   faces, felt shading, stitched seams. Temporary works (crane,
+   scaffold, stockpiles) carry an `off` mark and leave the site
+   before the ceremony. Dieter Rams runs the site office; the
+   materials supplier is a toy shop.
+   ───────────────────────────────────────────────────────────── */
+.piece{position:absolute;transform-style:preserve-3d}
+.drop{
+  transform-style:preserve-3d;
+  transform:translateY(-110px);
+  transition:transform .6s cubic-bezier(.32,1.6,.45,1);
+  transition-delay:var(--td,0ms);
+}
+.piece.built .drop{transform:translateY(0)}
+
+.cub{position:absolute;transform-style:preserve-3d}
+.f{
+  position:absolute;
+  transition:opacity .45s ease;
+  transition-delay:var(--td,0ms);
+}
+/* ghost = the plan */
+.g .f{
+  background:transparent;
+  border:1px dashed var(--plan);
+  opacity:.5;
+}
+.piece.built .g .f{opacity:0}
+/* solid = the build. Flat fill, hairline edge, nothing else: no felt
+   shading, no stitched seams, no drop shadow. Same on both sheets. */
+.sd .f{
+  border:1px solid rgba(30,66,102,.26);
+  box-shadow:none;
+  opacity:0;
+}
+.piece.built .sd .f{opacity:1}
+/* temporary works, dismantled: hide solid AND ghost */
+.piece.gone .f{opacity:0!important}
+.bill.gone{opacity:0!important}
+
+/* materials — flat fills. Whites collapse toward white; only the crane,
+   the topping-out beam and the glass keep a hue, because those three
+   have to be told apart at a glance. Not themed: a white model reads
+   as a white model on either sheet. */
+.m-conc  {--ft:#ffffff;--ff:#f1f3f5;--fs:#e3e7eb}
+.m-slab  {--ft:#ffffff;--ff:#f1f3f5;--fs:#e3e7eb}
+.m-stucco{--ft:#ffffff;--ff:#f5f7f9;--fs:#e8ecf0}
+.m-steel {--ft:#f7f9fa;--ff:#e8ecf0;--fs:#d8dee4}
+.m-dark  {--ft:#8c98a4;--ff:#7b8794;--fs:#6b7783}
+.m-peach {--ft:#edca64;--ff:#E7BD45;--fs:#c9a337}
+.m-mint  {--ft:#7cc79c;--ff:#67b98b;--fs:#54a679}
+.m-plank {--ft:#e8c987;--ff:#dbb96f;--fs:#cba75c}
+.m-ink   {--ft:var(--ink);--ff:var(--ink);--fs:var(--ink)}
+.m-ink .sd .f{border:0}
+.sd .ft{background:var(--ft)} .sd .ff,.sd .fb{background:var(--ff)}
+.sd .fr,.sd .fl{background:var(--fs)} .sd .fu{background:var(--fs)}
+
+/* glass — one flat tint. No mullion grid, no light from within. */
+.m-glass .f,.m-ribbon .f{
+  border:1px solid rgba(30,66,102,.28)!important;
+  box-shadow:none!important;
+  transition:opacity .45s ease, background-color .8s ease;
+}
+.m-glass .f{background:rgba(150,196,228,.45)!important}
+.m-ribbon .f{background:rgba(120,170,210,.55)!important}
+/* topping-out: the lights come on — a shade brighter, nothing more */
+body.done .m-glass .f,body.done .m-ribbon .f{
+  background-color:rgba(178,214,240,.62)!important;
+}
+
+/* facade plates: signage & designation codes (paint, not mass).
+   Dark in both themes — they're painted on white walls either way. */
+.plate{
+  position:absolute;display:flex;flex-direction:column;
+  align-items:center;justify-content:space-between;
+  color:#26405a;
+}
+.plate span{opacity:0;transition:opacity .5s ease}
+.plate.built span{opacity:1}
+.plate.sign{font-weight:800;font-size:13px;line-height:1;letter-spacing:0}
+.plate.code{font-size:6px;letter-spacing:.12em;color:var(--ink-dim);
+  text-shadow:none;flex-direction:row;justify-content:center}
+
+/* ─────────────────────────────────────────────────────────────
+   4 · Crane  (JS-driven: slews, trolleys and lowers to the work)
+   ───────────────────────────────────────────────────────────── */
+#craneYaw,#trolley,#cableWrap{transform-style:preserve-3d;position:absolute}
+.cline{
+  position:absolute;width:2px;height:260px;left:-1px;top:0;
+  background:var(--ink);transform-origin:top center;
+  opacity:0;transition:opacity .45s ease;
+}
+#cableWrap.built .cline{opacity:1}
+#cableWrap.gone  .cline{opacity:0}
+.cline.x90{transform:rotateY(90deg)}
+
+/* ─────────────────────────────────────────────────────────────
+   5 · Billboards  (always face the camera — see inverse in JS)
+   ───────────────────────────────────────────────────────────── */
+.bill{
+  position:absolute;transform-style:preserve-3d;
+  display:grid;justify-items:center;gap:2px;
+  font-size:26px;line-height:1;
+  opacity:0;transition:opacity .5s ease;transition-delay:var(--td,0ms);
+}
+.bill.built{opacity:1}
+.bill small{
+  font-size:8px;letter-spacing:.1em;color:var(--ink-dim);
+  background:var(--card);padding:2px 5px;
+  border:1px solid var(--card-edge);white-space:nowrap;
+}
+
+
+/* Portfolio composition; shared components own navigation and controls. */
+:root {
+  --portfolio-gutter:max(clamp(20px,4vw,48px),calc((100vw - var(--ds-page-width))/2 + clamp(20px,4vw,48px)));
+  --s:1.1; --lift:88px; --rx:-26; --ry:-29; --shadow:.4;
+  --ink:var(--ds-text); --ink-dim:var(--ds-text-secondary);
+  --plan:color-mix(in srgb,var(--ds-text-secondary) 35%,transparent);
+  --site:color-mix(in srgb,var(--ds-border) 40%,transparent);
+  --shade:color-mix(in srgb,var(--ds-text) 14%,transparent);
+  --road-fill:color-mix(in srgb,var(--ds-border) 16%,transparent);
+  --road-line:var(--ds-border); --road-dash:var(--ds-border);
+}
+* {box-sizing:border-box}
+html {scroll-behavior:smooth}
+body {margin:0; background:var(--ds-surface-page); color:var(--ds-text); font-family:var(--ds-font-body); line-height:1.55; overflow-x:clip}
+a {color:var(--ds-action-primary)}
+.site-header-slot {position:fixed;inset:0 0 auto;z-index:10;background:var(--ds-surface-page)}
+#content {min-height:300svh; padding-top:120px}
+.panel {position:fixed;left:var(--portfolio-gutter);top:clamp(140px,24svh,280px);width:min(38vw,440px);z-index:2;pointer-events:auto}
+.panel[hidden] {display:none}
+.panel h1 {margin:0 0 22px;font-size:clamp(39px,4.25vw,61px);font-weight:700;line-height:1.04;letter-spacing:-.035em;font-variation-settings:var(--ds-font-display-variation)}
+.panel h2 {margin:0;font-size:clamp(31px,3.4vw,49px);line-height:1.14;font-weight:700;letter-spacing:-.025em;font-variation-settings:var(--ds-font-display-variation)}
+.panel p {margin:0 0 24px;font-size:18px;max-width:34ch}
+.panel .scroll-hint {margin:22px 0 0;font-size:16px;color:var(--ds-text-secondary)}
+.portfolio-cta.ds-button {display:inline-flex;align-items:center;font-size:16px;min-height:48px;padding:12px 20px;text-decoration:none}
+#contacts {position:fixed;inset:auto 0 0;z-index:4;display:flex;align-items:center;gap:24px;padding:20px var(--portfolio-gutter);background:var(--ds-surface-page);font-size:16px}
+#contacts a {text-decoration-thickness:1px;text-underline-offset:4px}
+#rebuild {margin-left:auto}
+#stage {overflow:clip}
+.groundgrid {opacity:.55}
+.plate.code {display:none}
+#progress {position:fixed;left:0;bottom:0;height:3px;z-index:8;background:var(--ds-crane);width:0;pointer-events:none}
+@media(max-width:1000px) { :root {--s:.86;--lift:70px} .panel {width:39vw} }
+@media(max-width:700px) {
+  :root {--s:.64;--lift:60px}
+  #content {padding-top:135px}
+  .panel {left:var(--portfolio-gutter);right:var(--portfolio-gutter);top:140px;width:auto;max-width:480px}
+  .panel h1 {font-size:49px;margin-bottom:14px}
+  .panel h2 {font-size:39px}
+  .panel p {font-size:18px;margin-bottom:18px;max-width:34ch}
+  .panel .scroll-hint {font-size:16px;margin-top:14px}
+  #stage {inset:43svh 0 72px;perspective:1100px;perspective-origin:50% 45%}
+  #contacts {padding:18px var(--portfolio-gutter);gap:18px;font-size:16px;flex-wrap:wrap}
+  #rebuild {font-size:14px}
+}
+@media(max-width:390px) {
+  :root {--s:.55;--lift:65px}
+  .panel {left:var(--portfolio-gutter);right:var(--portfolio-gutter);top:140px}
+  .panel h1 {font-size:39px}
+  .panel h2 {font-size:31px}
+  .panel p {font-size:18px}
+  #stage {inset:46svh 0 100px}
+  #contacts {padding:14px var(--portfolio-gutter);gap:16px}
+  #rebuild {margin-left:0}
+}
+/* Without motion, the content is an ordinary document with a completed model. */
+:root:not([data-engine="active"]) #content {min-height:0;padding:150px 24px 36px;max-width:1100px;margin:auto}
+:root:not([data-engine="active"]) .panel {position:static;width:auto;max-width:64ch;margin:32px 0}
+:root:not([data-engine="active"]) #stage {position:relative;inset:auto;height:430px;margin:16px auto;width:100%}
+:root:not([data-engine="active"]) #contacts {position:static;padding:24px;max-width:1100px;margin:auto}
+:root:not([data-engine="active"]) #progress,
+:root:not([data-engine="active"]) .scroll-hint {display:none}
+@media(prefers-reduced-motion:reduce) {
+  html {scroll-behavior:auto}
+  .f,.drop,.plate span,.cline {transition:none!important}
+}

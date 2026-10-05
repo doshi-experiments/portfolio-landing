@@ -1,55 +1,17 @@
-# portfolio-landing
+# Rishabh Doshi’s portfolio
 
-Under-construction landing page for [rishabhdoshi.com](https://rishabhdoshi.com)
-— a plush 3D scale model of the Bauhaus Dessau, built with HTML, CSS and JS.
-No build step and **no images**: the whole model is CSS transforms and
-gradients, which is why the page is one file.
+A partly assembled scale model of the Bauhaus Dessau becomes a complete building as visitors scroll. The portfolio introduction and three brief process moments sit beside it; contact links remain available throughout. Visitors who request reduced motion get the completed model and ordinary document flow.
 
-This is **Sheet A-001**. Its companion is
-[experiments-landing](https://github.com/doshi-experiments/experiments-landing)
-(Sheet A-002), the index of things actually built.
+The model uses the existing HTML/CSS 3D engine, with a crane that tracks construction. The site has no build step: `index.html`, `portfolio.css`, and the generated `design-system/` assets are served directly.
 
-## Deploy
+## Shared identity
 
-Connected to Cloudflare and deployed on push to `main` — usually live in
-about a minute.
+Navigation, the labeled System/Light/Dark appearance control, Commissioner, colors, and controls come from `@doshi-experiments/design-system`. Change that source package and use its central rollout command to update the checked-in assets. `design-system/release.json` records the release and integrity hashes; generated assets are not edited here.
 
-There is no build step and no `package.json`: `index.html` at the repo root
-*is* the site, so the build command stays empty and the output directory is
-the root. To work on it, open `index.html` in a browser — there's nothing to
-install and nothing to run.
+The `sheet-theme` preference uses a `.rishabhdoshi.com` cookie across the public sites, with localStorage as a fallback. The shared prepaint script applies it before styles paint.
 
-## The shared theme cookie
+## Preview and deploy
 
-The light/dark toggle writes a `sheet-theme` cookie scoped to
-`.rishabhdoshi.com`, so the choice follows you across the subdomains:
+Serve the repository root with a local HTTP server, for example `python3 -m http.server 8080`. JavaScript modules need HTTP rather than opening the HTML as a file.
 
-```js
-document.cookie = 'sheet-theme=' + t + ';domain=.rishabhdoshi.com;path=/;' ...
-```
-
-`experiments.rishabhdoshi.com` and `rent-vs-buy.rishabhdoshi.com` both read
-that same cookie before first paint, falling back to `localStorage` and then
-to `prefers-color-scheme`. **Three repos depend on the name `sheet-theme` and
-that domain scope** — renaming either here silently un-syncs the other two,
-and nothing will fail loudly when it happens.
-
-`localStorage` is also written, as the fallback for when the page is opened
-somewhere the cookie domain doesn't apply (a local file, a preview URL).
-
-
-## Shared design system (0.1.0)
-
-This checkout consumes generated assets from `@doshi-experiments/design-system`.
-The `design-system/release.json` file (under `public/` or `src/` where applicable)
-records their version and hashes. Edit the shared token source, rebuild it, and
-run its `scripts/sync.mjs` against this asset directory to upgrade. Do not edit
-these generated files locally. Keep the `sheet-theme` cookie and pre-paint
-stamp intact. Light/dark appearance and project identity are separate dimensions.
-Hanken Grotesk is served locally with its OFL notice.
-
-The checked-in `wrangler.jsonc` declares the `wip` Worker and root asset
-folder for both production and branch-preview commands. `.assetsignore`
-limits uploaded files to the landing page and its shared design assets.
-This avoids relying on an `--assets` flag in a production-only dashboard
-command when Cloudflare runs a different command for preview branches.
+Cloudflare deploys pushes to `main`. `wrangler.jsonc` serves the root asset directory, and `.assetsignore` includes only the site and shared design assets. There is no build command.
