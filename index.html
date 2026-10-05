@@ -1,702 +1,54 @@
 <!doctype html>
-<!--
-  ═══════════════════════════════════════════════════════════════════
-  BLUEPRINT.HTML — an under-construction page that is, itself,
-  the construction.
-
-  The subject: a plush scale model of the Bauhaus Dessau —
-  workshop glass wing, bridge, north wing, and studio tower —
-  assembled by a tower crane that actually tracks the work.
-
-  Every beam you see is a <div> rotated in 3D space.
-  The "engine" is one requestAnimationFrame loop and some trig.
-
-  You're reading the source, which means you're my kind of person.
-  We should probably talk: hello@rishabhdoshi.com
-
-  Sheet A-001 · Rev 47 · Rishabh Doshi
-  ═══════════════════════════════════════════════════════════════════
--->
-<html lang="en" data-project="portfolio" data-density="comfortable">
+<html lang="en" data-project="portfolio" data-density="comfortable" data-appearance-storage="sheet-theme">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Under Construction — Rishabh Doshi</title>
-<meta name="description" content="The portfolio of Rishabh Doshi is being assembled on-site. Scroll to build it. The whole model is CSS transforms and gradients.">
-<!-- Theme is stamped on <html> before the first paint. Anything later
-     and the light-mode visitor gets a dark flash on every load.
-     The choice lives in a cookie scoped to .rishabhdoshi.com so it
-     carries across the portfolio, the experiments index and the
-     calculator — localStorage can't, being per-origin. -->
-<script>
-(function(){
-  var m=document.cookie.match(/(?:^|;\s*)sheet-theme=(light|dark)/),t=m&&m[1];
-  if(!t){ try{ t=localStorage.getItem('sheet-theme'); }catch(e){} }
-  if(t!=='light'&&t!=='dark')
-    t=matchMedia('(prefers-color-scheme: light)').matches?'light':'dark';
-  document.documentElement.setAttribute('data-theme',t);
-})();
-</script>
-<style>
-/* ─────────────────────────────────────────────────────────────
-   0 · Tokens  (the whole drawing is inked from these)
-   ───────────────────────────────────────────────────────────── */
-:root{
-  color-scheme:dark;
-  --paper-0:#081b30;          /* deep field                    */
-  --paper-1:#0f2c4c;          /* blueprint blue                */
-  --line-1:rgba(146,206,255,.10);  /* minor grid               */
-  --line-2:rgba(146,206,255,.20);  /* major grid               */
-  --ink:#e6f3ff;              /* drafting white                */
-  --ink-dim:#9fc3e2;          /* secondary lettering           */
-  --accent:#7fd4ff;           /* cyan pen                      */
-  --safety:#ffb277;           /* crane peach                   */
-  --go:#8fe3ae;               /* topped-out green              */
-  --redline:#ff6a5c;          /* reviewer's pencil             */
-  --card:rgba(7,22,40,.78);   /* annotation paper              */
-  --card-edge:rgba(146,206,255,.35);
-
-  --mono:ui-monospace,"SF Mono","Cascadia Mono","Segoe UI Mono",
-         Menlo,Consolas,"Liberation Mono",monospace;
-
-  --s:.8;            /* scene scale        */
-  --lift:150px;      /* scene vertical set */
-  --rx:-26;          /* camera pitch — fixed, see CAM in the script */
-  --ry:-29;          /* camera yaw   — fixed                        */
-  --shadow:0;        /* building shadow scale 0..1        */
-
-  /* Site inks. The model itself is deliberately NOT themed — a white
-     scale model reads as a white scale model on either sheet. Only the
-     paper it sits on, and the lines drawn onto that paper, change. */
-  --plan:rgba(146,206,255,.45);   /* dashed plan line      */
-  --site:rgba(146,206,255,.12);   /* ground grid           */
-  --shade:rgba(0,8,18,.5);        /* ground shadow         */
-  --road-fill:rgba(220,240,255,.05);
-  --road-line:rgba(180,220,255,.22);
-  --road-dash:rgba(220,240,255,.3);
-  --rule:rgba(146,206,255,.18);   /* hairline in chrome    */
-}
-
-/* Light mode is not a recolour — it is a different drawing. The dark
-   sheet is a rendering; this is the line drawing underneath it. Ink
-   inverts here; the simplification itself lives in section 9. */
-:root[data-theme="light"]{
-  color-scheme:light;
-  --paper-0:#e8ecf0;
-  --paper-1:#ffffff;
-  --line-1:transparent;            /* the fine grid comes off entirely */
-  --line-2:rgba(30,66,102,.06);
-  --ink:#12293e;
-  --ink-dim:#5f7791;
-  --accent:#0f6ea3;
-  --safety:#b45f16;
-  --go:#237a4d;
-  --redline:#c0392b;
-  --card:rgba(255,255,255,.88);
-  --card-edge:rgba(24,64,100,.18);
-  --plan:rgba(30,66,102,.3);
-  --site:rgba(30,66,102,.10);
-  --shade:rgba(35,70,105,.16);
-  --road-fill:rgba(30,66,102,.035);
-  --road-line:rgba(30,66,102,.14);
-  --road-dash:rgba(30,66,102,.16);
-  --rule:rgba(30,66,102,.14);
-}
-@media (max-width:860px){ :root{ --s:.52; --lift:110px; } }
-@media (max-width:480px){ :root{ --s:.42; --lift:100px; } }
-
-/* ─────────────────────────────────────────────────────────────
-   1 · Sheet  (page = a drawing sheet)
-   ───────────────────────────────────────────────────────────── */
-*{box-sizing:border-box;margin:0;padding:0}
-html{scroll-behavior:smooth}
-body{
-  font-family:var(--mono);
-  color:var(--ink);
-  background:
-    radial-gradient(1200px 800px at 50% 38%, var(--paper-1), var(--paper-0) 75%);
-  overflow-x:hidden;
-}
-/* drafting grid, drawn — not downloaded */
-body::before{
-  content:"";position:fixed;inset:0;z-index:0;pointer-events:none;
-  background:
-    repeating-linear-gradient(0deg,  var(--line-1) 0 1px, transparent 1px 28px),
-    repeating-linear-gradient(90deg, var(--line-1) 0 1px, transparent 1px 28px),
-    repeating-linear-gradient(0deg,  var(--line-2) 0 1px, transparent 1px 140px),
-    repeating-linear-gradient(90deg, var(--line-2) 0 1px, transparent 1px 140px);
-}
-::selection{background:var(--safety);color:#0a2036}
-a{color:var(--accent)}
-button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
-:focus-visible{outline:2px dashed var(--accent);outline-offset:3px}
-
-#spacer{height:640vh;height:640svh}   /* the scroll runway */
-
-/* ─────────────────────────────────────────────────────────────
-   2 · Stage  (fixed 3D viewport)
-   ───────────────────────────────────────────────────────────── */
-#stage{
-  position:fixed;inset:0;z-index:1;
-  display:grid;place-items:center;
-  perspective:1500px;perspective-origin:50% 40%;
-  pointer-events:none;
-}
-#camera{
-  width:0;height:0;
-  transform-style:preserve-3d;
-  transform:
-    translateY(var(--lift))
-    rotateX(calc(var(--rx)*1deg))
-    rotateY(calc(var(--ry)*1deg))
-    scale3d(var(--s),var(--s),var(--s));
-  will-change:transform;
-}
-#world,#build,.grp{transform-style:preserve-3d;position:absolute}
-
-/* ground plane — its own finer grid, fading at the edges */
-.groundgrid{
-  position:absolute;width:1400px;height:1400px;left:-700px;top:-700px;
-  transform:rotateX(90deg);
-  background:
-    repeating-linear-gradient(0deg,  var(--site) 0 1px, transparent 1px 40px),
-    repeating-linear-gradient(90deg, var(--site) 0 1px, transparent 1px 40px);
-  -webkit-mask-image:radial-gradient(closest-side,#000 30%,transparent 78%);
-          mask-image:radial-gradient(closest-side,#000 30%,transparent 78%);
-}
-/* the road the bridge spans — reason the bridge exists */
-.road{
-  position:absolute;width:48px;height:780px;left:-81px;top:-390px;
-  transform:rotateX(90deg) translateZ(2px);
-  background:var(--road-fill);
-  border-left:1px solid var(--road-line);
-  border-right:1px solid var(--road-line);
-}
-.road::after{
-  content:"";position:absolute;left:calc(50% - 1.5px);top:0;
-  width:3px;height:100%;
-  background:repeating-linear-gradient(0deg,
-    var(--road-dash) 0 16px, transparent 16px 42px);
-}
-.gshadow{ /* building shadow grows with progress */
-  position:absolute;width:520px;height:340px;left:-260px;top:-170px;
-  transform:rotateX(90deg) translateZ(3px)
-            scale(calc(.25 + var(--shadow)*.75));
-  background:radial-gradient(closest-side,var(--shade),transparent 70%);
-  opacity:calc(.2 + var(--shadow)*.8);
-}
-
-/* ─────────────────────────────────────────────────────────────
-   3 · Pieces  (ghost plan → soft build → clean site)
-   The plan shows structure only — dashed, faint, square. What
-   gets built is a plush model of the Dessau campus: rounded
-   faces, felt shading, stitched seams. Temporary works (crane,
-   scaffold, stockpiles) carry an `off` mark and leave the site
-   before the ceremony. Dieter Rams runs the site office; the
-   materials supplier is a toy shop.
-   ───────────────────────────────────────────────────────────── */
-.piece{position:absolute;transform-style:preserve-3d}
-.drop{
-  transform-style:preserve-3d;
-  transform:translateY(-110px);
-  transition:transform .6s cubic-bezier(.32,1.6,.45,1);
-  transition-delay:var(--td,0ms);
-}
-.piece.built .drop{transform:translateY(0)}
-
-.cub{position:absolute;transform-style:preserve-3d}
-.f{
-  position:absolute;
-  transition:opacity .45s ease;
-  transition-delay:var(--td,0ms);
-}
-/* ghost = the plan */
-.g .f{
-  background:transparent;
-  border:1px dashed var(--plan);
-  opacity:.5;
-}
-.piece.built .g .f{opacity:0}
-/* solid = the build. Flat fill, hairline edge, nothing else: no felt
-   shading, no stitched seams, no drop shadow. Same on both sheets. */
-.sd .f{
-  border:1px solid rgba(30,66,102,.26);
-  box-shadow:none;
-  opacity:0;
-}
-.piece.built .sd .f{opacity:1}
-/* temporary works, dismantled: hide solid AND ghost */
-.piece.gone .f{opacity:0!important}
-.bill.gone{opacity:0!important}
-
-/* materials — flat fills. Whites collapse toward white; only the crane,
-   the topping-out beam and the glass keep a hue, because those three
-   have to be told apart at a glance. Not themed: a white model reads
-   as a white model on either sheet. */
-.m-conc  {--ft:#ffffff;--ff:#f1f3f5;--fs:#e3e7eb}
-.m-slab  {--ft:#ffffff;--ff:#f1f3f5;--fs:#e3e7eb}
-.m-stucco{--ft:#ffffff;--ff:#f5f7f9;--fs:#e8ecf0}
-.m-steel {--ft:#f7f9fa;--ff:#e8ecf0;--fs:#d8dee4}
-.m-dark  {--ft:#8c98a4;--ff:#7b8794;--fs:#6b7783}
-.m-peach {--ft:#f0a763;--ff:#e2914a;--fs:#d07f38}
-.m-mint  {--ft:#7cc79c;--ff:#67b98b;--fs:#54a679}
-.m-plank {--ft:#e8c987;--ff:#dbb96f;--fs:#cba75c}
-.m-ink   {--ft:var(--ink);--ff:var(--ink);--fs:var(--ink)}
-.m-ink .sd .f{border:0}
-.sd .ft{background:var(--ft)} .sd .ff,.sd .fb{background:var(--ff)}
-.sd .fr,.sd .fl{background:var(--fs)} .sd .fu{background:var(--fs)}
-
-/* glass — one flat tint. No mullion grid, no light from within. */
-.m-glass .f,.m-ribbon .f{
-  border:1px solid rgba(30,66,102,.28)!important;
-  box-shadow:none!important;
-  transition:opacity .45s ease, background-color .8s ease;
-}
-.m-glass .f{background:rgba(150,196,228,.45)!important}
-.m-ribbon .f{background:rgba(120,170,210,.55)!important}
-/* topping-out: the lights come on — a shade brighter, nothing more */
-body.done .m-glass .f,body.done .m-ribbon .f{
-  background-color:rgba(178,214,240,.62)!important;
-}
-
-/* facade plates: signage & designation codes (paint, not mass).
-   Dark in both themes — they're painted on white walls either way. */
-.plate{
-  position:absolute;display:flex;flex-direction:column;
-  align-items:center;justify-content:space-between;
-  color:#26405a;
-}
-.plate span{opacity:0;transition:opacity .5s ease}
-.plate.built span{opacity:1}
-.plate.sign{font-weight:800;font-size:13px;line-height:1;letter-spacing:0}
-.plate.code{font-size:6px;letter-spacing:.12em;color:var(--ink-dim);
-  text-shadow:none;flex-direction:row;justify-content:center}
-
-/* ─────────────────────────────────────────────────────────────
-   4 · Crane  (JS-driven: slews, trolleys and lowers to the work)
-   ───────────────────────────────────────────────────────────── */
-#craneYaw,#trolley,#cableWrap{transform-style:preserve-3d;position:absolute}
-.cline{
-  position:absolute;width:2px;height:260px;left:-1px;top:0;
-  background:var(--ink);transform-origin:top center;
-  opacity:0;transition:opacity .45s ease;
-}
-#cableWrap.built .cline{opacity:1}
-#cableWrap.gone  .cline{opacity:0}
-.cline.x90{transform:rotateY(90deg)}
-
-/* ─────────────────────────────────────────────────────────────
-   5 · Billboards  (always face the camera — see inverse in JS)
-   ───────────────────────────────────────────────────────────── */
-.bill{
-  position:absolute;transform-style:preserve-3d;
-  display:grid;justify-items:center;gap:2px;
-  font-size:26px;line-height:1;
-  opacity:0;transition:opacity .5s ease;transition-delay:var(--td,0ms);
-}
-.bill.built{opacity:1}
-.bill small{
-  font-size:8px;letter-spacing:.1em;color:var(--ink-dim);
-  background:var(--card);padding:2px 5px;
-  border:1px solid var(--card-edge);white-space:nowrap;
-}
-
-/* ─────────────────────────────────────────────────────────────
-   6 · HUD  (sheet chrome: title block, marks, annotations)
-   ───────────────────────────────────────────────────────────── */
-#hud{position:fixed;inset:0;z-index:2;pointer-events:none}
-#hud .live{pointer-events:auto}
-/* ...but only while its card is actually showing. #final is positioned
-   over #hero, so without this its invisible buttons sit on top and eat
-   every click aimed at the hero. This is the load-bearing rule; the
-   visibility transition on .card is belt-and-braces (and screen readers). */
-#hud .card:not(.on),
-#hud .card:not(.on) .live{pointer-events:none}
-
-.mark{position:fixed;width:18px;height:18px;opacity:.55}
-.mark::before,.mark::after{content:"";position:absolute;background:var(--accent)}
-.mark::before{left:8px;top:0;width:1px;height:18px}
-.mark::after{left:0;top:8px;width:18px;height:1px}
-.mark.tl{top:14px;left:14px}.mark.tr{top:14px;right:14px}
-.mark.bl{bottom:14px;left:14px}.mark.br{bottom:14px;right:14px}
-
-.microtag{
-  position:fixed;font-size:9px;letter-spacing:.14em;color:var(--ink-dim);
-}
-#survey{top:18px;left:44px}
-/* the compass steps aside to make room for the switch */
-#north{top:16px;right:104px;font-size:11px;letter-spacing:.1em;color:var(--ink)}
-#donotscale{bottom:36px;left:44px}
-#builtwith{bottom:18px;left:44px}
-#builtwith b{color:var(--go);font-weight:400}
-
-/* title block — bottom right, like a real sheet */
-#titleblock{
-  position:fixed;right:26px;bottom:26px;width:250px;
-  border:1px solid var(--card-edge);background:var(--card);
-  -webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);
-  font-size:10px;letter-spacing:.06em;
-}
-#titleblock .row{
-  display:flex;justify-content:space-between;gap:10px;
-  padding:6px 10px;border-bottom:1px solid rgba(146,206,255,.18);
-}
-#titleblock .row span:first-child{color:var(--ink-dim)}
-#titleblock .row.keep{justify-content:center;gap:8px}
-#titleblock .pct{
-  display:flex;align-items:baseline;justify-content:center;gap:10px;
-  padding:8px 10px 4px;
-}
-#pctNum{font-size:26px;font-weight:700;font-variant-numeric:tabular-nums;color:var(--safety)}
-#bar{margin:0 10px 10px;height:6px;border:1px solid var(--card-edge);padding:1px}
-#barFill{height:100%;width:0%;background:
-  repeating-linear-gradient(45deg,var(--safety) 0 6px,#e08b4f 6px 12px)}
-
-/* progress rail — thin, full width, bottom edge */
-#rail{position:fixed;left:0;bottom:0;height:3px;width:0;
-  background:linear-gradient(90deg,var(--accent),var(--safety));z-index:3}
-
-/* ── annotation cards ─────────────────────────────────────── */
-.card{
-  position:fixed;max-width:360px;
-  background:var(--card);border:1px solid var(--card-edge);
-  -webkit-backdrop-filter:blur(7px);backdrop-filter:blur(7px);
-  padding:18px 20px 20px;
-  opacity:0;transform:translateY(14px);
-  /* A faded card must stop hit-testing. #final is positioned over #hero,
-     and opacity:0 alone leaves its .live children clickable — invisible
-     buttons that swallow every click aimed at the hero beneath them.
-     visibility can't be undone by a descendant, so it's the right lever;
-     it's delayed on the way out so the fade still reads. */
-  visibility:hidden;
-  transition:opacity .5s ease,transform .5s ease,visibility 0s linear .5s;
-}
-.card.on{
-  opacity:1;transform:translateY(0);
-  visibility:visible;
-  transition:opacity .5s ease,transform .5s ease,visibility 0s;
-}
-.card .eyebrow{
-  font-size:9px;letter-spacing:.16em;color:var(--accent);
-  margin-bottom:10px;
-}
-.card h2{
-  font-size:21px;letter-spacing:.02em;margin-bottom:10px;font-weight:700;
-}
-.card h2 b{color:var(--safety);font-weight:700}
-.card p{font-size:12.5px;line-height:1.7;color:var(--ink-dim)}
-.card p+p{margin-top:8px}
-.corner{position:absolute;width:10px;height:10px;
-  border-left:1px solid var(--redline);border-top:1px solid var(--redline);
-  left:-1px;top:-1px}
-.corner.b{left:auto;top:auto;right:-1px;bottom:-1px;transform:rotate(180deg)}
-
-#calloutA,#calloutB,#calloutC{right:4vw;top:50%;transform:translateY(calc(-50% + 14px))}
-#calloutA.on,#calloutB.on,#calloutC.on{transform:translateY(-50%)}
-
-/* the spellchecker's revenge */
-.typo{
-  text-decoration:underline wavy var(--redline);
-  text-decoration-skip-ink:none;text-underline-offset:3px;
-}
-
-/* ── hero ─────────────────────────────────────────────────── */
-#hero{left:6vw;top:16vh;max-width:520px}
-#hero .eyebrow{color:var(--redline)}
-#hero h1{
-  font-size:clamp(34px,5.6vw,62px);line-height:1.02;
-  letter-spacing:-.01em;margin-bottom:14px;font-weight:800;
-}
-#hero h1 i{font-style:normal;color:var(--safety);animation:blink 1.1s steps(1) infinite}
-@keyframes blink{50%{opacity:0}}
-#hero .sub{font-size:13px;color:var(--ink);margin-bottom:12px}
-#hero .sub b{color:var(--accent);font-weight:700}
-/* the way through to the finished work — the one door that is open */
-#hero .wingnote{margin-top:12px;color:var(--ink)}
-#hero .wingnote b{color:var(--go);font-weight:700}
-/* One grid holds the door and the three contacts: the wing spans all
-   three columns, so the row of small links is exactly as wide as the
-   button above it and the three stay equal to each other. Whichever
-   row is intrinsically wider sets the block's width — no magic number. */
-#heroActions{
-  display:inline-grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:8px;margin-top:14px;max-width:100%;
-}
-#wing{
-  grid-column:1/-1;
-  padding:11px 15px;text-align:center;
-  border:1px solid var(--go);color:var(--go);
-  font-size:11px;letter-spacing:.12em;text-decoration:none;
-  transition:background-color .25s ease,color .25s ease;
-}
-#wing:hover{background:var(--go);color:#08243a}
-#heroActions a:not(#wing){
-  padding:8px 6px;text-align:center;
-  border:1px solid var(--card-edge);
-  font-size:10px;letter-spacing:.1em;
-  text-decoration:none;color:var(--ink);
-  transition:border-color .2s ease,color .2s ease;
-}
-#heroActions a:not(#wing):hover{border-color:var(--accent);color:var(--accent)}
-#wingLink{border-color:var(--go);color:var(--go)}
-#wingLink:hover{background:rgba(143,227,174,.14);border-color:var(--go);
-  color:var(--go)}
-
-/* ── scroll cue ────────────────────────────────────────────────
-   A note in the margin, not a button: no border, no box. It sits
-   at the foot of the sheet and holds still for a beat before it
-   starts nodding — an instruction you notice once you've stopped
-   reading, rather than one that waves for attention immediately. */
-#scrollPill{
-  position:fixed;left:50%;bottom:26px;transform:translateX(-50%);
-  display:flex;flex-direction:column;align-items:center;gap:5px;
-  font-size:9px;letter-spacing:.2em;color:var(--ink-dim);
-  white-space:nowrap;transition:opacity .4s ease;
-}
-/* the bob lives on the arrow, so it can't fight the centring
-   transform on the parent */
-#scrollPill i{
-  font-style:normal;font-size:11px;color:var(--accent);
-  animation:bob 1.8s ease-in-out 3.2s infinite;
-}
-@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(5px)}}
-
-/* ── theme toggle — a real switch, top right ──────────────── */
-#themeToggle{
-  position:fixed;top:13px;right:44px;
-  display:flex;align-items:center;
-  width:48px;height:24px;padding:2px;
-  border:1px solid var(--card-edge);border-radius:999px;
-  background:var(--card);
-  -webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);
-  transition:border-color .2s ease,background-color .3s ease;
-}
-#themeToggle:hover{border-color:var(--accent)}
-#themeToggle .knob{
-  display:grid;place-items:center;
-  width:18px;height:18px;border-radius:50%;
-  background:var(--accent);color:var(--paper-0);
-  font-size:10px;line-height:1;
-  transition:transform .3s cubic-bezier(.4,0,.2,1),
-             background-color .3s ease,color .3s ease;
-}
-#themeToggle .knob::after{content:"☾"}
-:root[data-theme="light"] #themeToggle .knob{transform:translateX(24px)}
-:root[data-theme="light"] #themeToggle .knob::after{content:"☀"}
-
-/* ── final card + stamp ───────────────────────────────────── */
-#final{left:6vw;top:50%;transform:translateY(calc(-50% + 14px));max-width:430px}
-#final.on{transform:translateY(-50%)}
-#stamp{
-  display:inline-block;margin-bottom:14px;padding:8px 14px;
-  border:3px double var(--go);color:var(--go);
-  font-weight:800;letter-spacing:.12em;font-size:13px;
-}
-#final h2{font-size:26px;margin-bottom:10px}
-#links{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px}
-#links a,#rebuild{
-  pointer-events:auto;
-  padding:9px 13px;border:1px solid var(--card-edge);
-  font-size:10px;letter-spacing:.1em;
-  text-decoration:none;color:var(--ink);
-}
-#links a:hover{border-color:var(--accent);color:var(--accent)}
-#rebuild{border-style:dashed;color:var(--redline);border-color:var(--redline)}
-#rebuild:hover{background:rgba(255,106,92,.12)}
-
-/* ── confetti overlay ─────────────────────────────────────── */
-#confetti{position:fixed;inset:0;z-index:4;pointer-events:none;overflow:hidden}
-#confetti span{position:absolute;left:0;top:0;font-size:18px;will-change:transform}
-
-/* ─────────────────────────────────────────────────────────────
-   9 · Sheet-specific ink
-
-   The model and its flat treatment are shared — see sections 2 and 3.
-   Only these few things genuinely differ between the two sheets.
-   ───────────────────────────────────────────────────────────── */
-[data-theme="light"] #wing:hover{color:#fff}
-[data-theme="light"] ::selection{background:var(--safety);color:#fff}
-
-/* ─────────────────────────────────────────────────────────────
-   7 · Small Screens
-   ───────────────────────────────────────────────────────────── */
-@media (max-width:860px){
-  #hero{left:5vw;right:5vw;top:12vh;max-width:none}
-  #calloutA,#calloutB,#calloutC{
-    left:12px;right:12px;top:auto;bottom:18px;max-width:none;
-    transform:translateY(14px);
-  }
-  #calloutA.on,#calloutB.on,#calloutC.on{transform:translateY(0)}
-  #final{left:12px;right:12px;top:auto;bottom:18px;max-width:none;
-    transform:translateY(14px)}
-  #final.on{transform:translateY(0)}
-  #titleblock{right:12px;bottom:auto;top:40px;width:auto;left:auto;
-    display:flex}
-  #titleblock .row{display:none}
-  #titleblock .row.keep{display:flex;border:0}
-  #titleblock .pct{padding:6px 10px}
-  #pctNum{font-size:18px}
-  #bar{display:none}
-  #survey{display:none}#donotscale{display:none}
-  #builtwith{bottom:auto;top:16px;left:14px}
-  #themeToggle{top:12px;right:40px}
-  #scrollPill{bottom:20px}
-  .card p{font-size:11.5px;line-height:1.6}
-}
-
-/* ─────────────────────────────────────────────────────────────
-   8 · Reduced Motion — the site respects your settings
-   ───────────────────────────────────────────────────────────── */
-@media (prefers-reduced-motion:reduce){
-  html{scroll-behavior:auto}
-  .drop{transition:none;transform:none!important}
-  .f,.bill,.card,.plate span,.cline{transition-duration:.01s}
-  .card{transition-delay:0s}   /* drop the visibility hold-off too */
-  #scrollPill i,#hero h1 i{animation:none!important}
-}
-</style>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Rishabh Doshi</title>
+<meta name="description" content="The portfolio is under construction. The experiments work. Explore Rishabh Doshi’s interactive projects.">
+<script src="/design-system/prepaint.js"></script>
 <link rel="stylesheet" href="/design-system/tokens.css">
-<link rel="stylesheet" href="/design-system/legacy.css">
+<link rel="stylesheet" href="/design-system/components.css">
+<link rel="stylesheet" href="/portfolio.css">
 <script defer src="/design-system/metadata.js"></script>
 </head>
 <body>
-<a class="ds-skip" href="#hero">Skip to content</a>
-
-<!-- ══ 3D Stage ═══════════════════════════════════════════════ -->
-<div id="stage" aria-hidden="true">
-  <div id="camera">
-    <div id="world">
-      <div class="groundgrid"></div>
-      <div class="road"></div>
-      <div class="gshadow"></div>
-      <div id="build"><!-- the campus is drafted here by JS --></div>
-    </div>
+<a class="ds-skip-link" href="#content">Skip to content</a>
+<div class="site-header-slot" id="site-header"></div>
+<main id="content" tabindex="-1">
+  <section class="panel" id="hero" aria-labelledby="name">
+    <h1 id="name">Rishabh Doshi</h1>
+    <p>The portfolio is under construction. The experiments work.</p>
+    <a class="portfolio-cta ds-button" data-variant="primary" href="https://experiments.rishabhdoshi.com">Explore experiments</a>
+    <p class="scroll-hint">Scroll to build.</p>
+  </section>
+  <div id="stage" aria-hidden="true">
+    <div id="camera"><div id="world">
+      <div class="groundgrid"></div><div class="road"></div><div class="gshadow"></div>
+      <div id="build"></div>
+    </div></div>
   </div>
-</div>
-
-<!-- ══ HUD / Sheet Chrome ═════════════════════════════════════ -->
-<div id="hud">
-  <div class="mark tl"></div><div class="mark tr"></div>
-  <div class="mark bl"></div><div class="mark br"></div>
-
-  <div class="microtag" id="survey">⌖ Site Plan · <span id="az">Az −29° · El −26°</span></div>
-  <div class="microtag" id="north">N ▲</div>
-  <div class="microtag" id="donotscale">Do Not Scale Drawing · Dimensions Are a Vibe</div>
-  <div class="microtag" id="builtwith">Built With <b>♥</b> Using Claude</div>
-
-  <button class="live" id="themeToggle" type="button" role="switch"
-          aria-checked="false" aria-label="Light sheet">
-    <span class="knob" aria-hidden="true"></span>
-  </button>
-
-  <div id="scrollPill">Scroll to Build<i>▼</i></div>
-
-  <!-- hero -->
-  <div class="card on" id="hero" tabindex="-1">
-    <div class="corner"></div><div class="corner b"></div>
-    <div class="eyebrow">Site Notice — Permit № 001</div>
-    <h1>Under<br>Construction<i>▌</i></h1>
-    <p class="sub">The portfolio of <b>Rishabh Doshi</b> is being assembled on-site.</p>
-    <p>Outside of work, I enjoy making and breaking things. I'm a hoarder of
-       stories, experiences, and knowledge because I believe we are a
-       reflection of our context.</p>
-    <p class="wingnote">The main building is still going up — but the
-       <b>experiments wing</b> is finished and open to visitors.</p>
-    <div class="live" id="heroActions">
-      <a id="wing" href="https://experiments.rishabhdoshi.com">Enter the Experiments Wing ↗</a>
-      <a href="mailto:hello@rishabhdoshi.com">Email</a>
-      <a href="https://www.linkedin.com/in/rishabhdoshi13/" rel="noopener">LinkedIn</a>
-      <a href="https://github.com/doshi-experiments" rel="noopener">GitHub</a>
-    </div>
-  </div>
-
-  <!-- annotation 01 -->
-  <div class="card" id="calloutA">
-    <div class="corner"></div><div class="corner b"></div>
-    <div class="eyebrow">Annotation 01 · Site Survey</div>
-    <h2><b>01</b> Empathize</h2>
-    <p>My process starts and ends with empathy. What does empathy mean to me?
-       It means understanding your stakeholders, their journeys, frustrations,
-       and aspirations. Empathy is about the human in human-centered design.
-       If there is a secret sauce to good experiences, this is it.</p>
-  </div>
-
-  <!-- annotation 02 -->
-  <div class="card" id="calloutB">
-    <div class="corner"></div><div class="corner b"></div>
-    <div class="eyebrow">Annotation 02 · The Blueprint</div>
-    <h2><b>02</b> Design</h2>
-    <p>This is the easy part. Once you understand the user and what they're
-       doing, you just build. The project dictates the tools and this phase
-       can be anything from hi-fidelity prototypes to thumbnail sketches on
-       post-its. Agile is what I aim for here.</p>
-  </div>
-
-  <!-- annotation 03 -->
-  <div class="card" id="calloutC">
-    <div class="corner"></div><div class="corner b"></div>
-    <div class="eyebrow">Annotation 03 · Revision Block</div>
-    <h2><b>03</b> Iterate</h2>
-    <p>Nothing is <span class="typo">perfeet</span>. Nothing is perfect, at
-       first. Good design takes iteration and testing, and lots of it. The
-       important thing is to learn from one's mistakes.</p>
-    <p>(In case you're wondering, the missing period is intentional.
-       We are iterating)</p>
-  </div>
-
-  <!-- final -->
-  <div class="card" id="final">
-    <div class="corner"></div><div class="corner b"></div>
-    <div id="stamp">Topped Out</div>
-    <h2>Nothing is perfect, at first.</h2>
-    <p>The full portfolio opens after a few more revisions. The experiments
-       wing is already finished — and the inspector's office is open:</p>
-    <div id="links" class="live">
-      <a id="wingLink" href="https://experiments.rishabhdoshi.com">Experiments ↗</a>
-      <a href="mailto:hello@rishabhdoshi.com">Email</a>
-      <a href="https://www.linkedin.com/in/rishabhdoshi13/" rel="noopener">LinkedIn</a>
-      <button id="rebuild" type="button">Demolish &amp; Rebuild ⟲</button>
-    </div>
-  </div>
-
-  <!-- title block -->
-  <div id="titleblock">
-    <div class="row"><span>Project</span><span>rishabhdoshi.com</span></div>
-    <div class="row"><span>Drawn By</span><span>Rishabh Doshi</span></div>
-    <div class="row"><span>Sheet</span><span>A-001</span></div>
-    <div class="row keep"><span>Rev</span><span>47</span></div>
-    <div class="row"><span>Status</span><span>Under Construction</span></div>
-    <div class="pct"><span style="color:var(--ink-dim)">Complete</span>
-      <span><span id="pctNum">0</span><span style="font-size:12px;color:var(--ink-dim)"> %</span></span>
-    </div>
-    <div id="bar"><div id="barFill"></div></div>
-  </div>
-
-  <div id="rail"></div>
-</div>
-
-<div id="confetti" aria-hidden="true"></div>
-<div id="spacer"></div>
-
-<noscript>
-  <div style="position:fixed;inset:0;z-index:9;display:grid;place-items:center;
-              background:#0f2c4c;padding:24px">
-    <div style="max-width:560px;border:1px solid #7fd4ff;padding:24px;
-                font-family:monospace;color:#e6f3ff;line-height:1.7">
-      <h1>Under Construction</h1>
-      <p>The portfolio of Rishabh Doshi is being assembled on-site — with
-         JavaScript enabled, this page builds itself as you scroll.</p>
-      <p>01 Empathize · 02 Design · 03 Iterate. Nothing is perfect, at first.</p>
-      <p><a href="mailto:hello@rishabhdoshi.com" style="color:#7fd4ff">hello@rishabhdoshi.com</a></p>
-    </div>
-  </div>
-</noscript>
-
+  <section class="panel process" id="calloutA" aria-labelledby="process-a">
+    <h2 id="process-a">Understand what people need.</h2>
+  </section>
+  <section class="panel process" id="calloutB" aria-labelledby="process-b">
+    <h2 id="process-b">Make something they can try.</h2>
+  </section>
+  <section class="panel process" id="calloutC" aria-labelledby="process-c">
+    <h2 id="process-c">Improve it from there.</h2>
+  </section>
+</main>
+<footer id="contacts" aria-label="Contact Rishabh">
+  <a href="mailto:hello@rishabhdoshi.com">Email</a>
+  <a href="https://www.linkedin.com/in/rishabhdoshi13/" rel="noopener">LinkedIn</a>
+  <a href="https://github.com/doshi-experiments" rel="noopener">GitHub</a>
+  <button class="ds-button" data-variant="ghost" id="rebuild" type="button" hidden>Build again</button>
+</footer>
+<div id="progress" aria-hidden="true"></div>
+<script type="module">
+import { mountSiteHeader } from '/design-system/site.js';
+mountSiteHeader(document.getElementById('site-header'), {project:'portfolio'});
+</script>
 <script>
-/* ═══════════════════════════════════════════════════════════════
-   BLUEPRINT ENGINE — one RAF loop and some trigonometry
-   ═══════════════════════════════════════════════════════════════ */
 'use strict';
 const $=s=>document.querySelector(s);
 const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -912,164 +264,52 @@ P({x:-175,y:65,z:56,w:5,h:120,d:5,mat:'steel',at:.57,off:.80,track:false,ghost:f
 P({x:22,y:10,z:196,w:40,h:8,d:16,mat:'plank',at:.20,off:.79,track:false,ghost:false});
 P({x:-98,y:9,z:202,w:24,h:12,d:18,mat:'conc',at:.24,off:.795,track:false,ghost:false});
 
-/* ── survey dimension line, at the tallest point ── */
-P({x:205,y:94,z:-75,w:2,h:188,d:2,mat:'ink',at:.86,ghost:false,track:false});
-P({x:205,y:187,z:-75,w:16,h:2,d:2,mat:'ink',at:.87,ghost:false,track:false});
-P({x:205,y:1,z:-75,w:16,h:2,d:2,mat:'ink',at:.87,ghost:false,track:false});
-bill({x:205,y:202,z:-75,label:'Elev +26.0 m',at:.875});
-
-/* ── the topping-out beam, with the traditional tree ── */
-P({x:150,y:196,z:-115,w:70,h:8,d:12,mat:'mint',at:.88,track:false});
-bill({x:150,y:208,z:-115,emoji:'🌲',at:.88,size:18});
-
 targets.sort((a,b)=>a.at-b.at);
 
-/* ── state ──────────────────────────────────────────────────── */
 const R=document.documentElement.style;
-let p=0,shownPct=-1,confettiArmed=true,parts=[],
-    yaw=40,trol=60,cab=80;                 /* crane pose (lerped) */
+let p=.39,yaw=150,trol=50,cab=60;
 const CRANE={bx:-40,bz:170,topY:308,restYaw:150,minR:34,maxR:192};
-
-/* ── camera ───────────────────────────────────────────────────
-   Fixed. One three-quarter view, set once and never touched again:
-   yaw reads the glass curtain wall and the bridge together, pitch
-   is steep enough to show the roof slabs stack up as they land.
-   The building moves; the camera is a tripod, not a hand.        */
-const CAM={ry:-29,rx:-26};
-R.setProperty('--ry',CAM.ry);
-R.setProperty('--rx',CAM.rx);
-$('#az').textContent=`Az ${CAM.ry}° · El ${CAM.rx}°`;
-
-/* ── theme ────────────────────────────────────────────────────
-   The value is already on <html> from the head script; this only
-   keeps the button label honest and writes the choice down.      */
-const themeBtn=$('#themeToggle'),root=document.documentElement;
-function paintTheme(t,write){
-  root.setAttribute('data-theme',t);
-  themeBtn.setAttribute('aria-checked',String(t==='light'));
-  themeBtn.setAttribute('aria-label',
-    t==='light'?'Switch to the blueprint sheet':'Switch to the light sheet');
-  if(!write)return;
-  /* cookie carries the choice across the subdomains; localStorage is the
-     fallback for when there is no registrable domain (file://, localhost) */
-  try{
-    document.cookie='sheet-theme='+t+';domain=.rishabhdoshi.com;path=/;'
-                   +'max-age=31536000;samesite=lax';
-    document.cookie='sheet-theme='+t+';path=/;max-age=31536000;samesite=lax';
-    localStorage.setItem('sheet-theme',t);
-  }catch(e){}
-}
-paintTheme(root.getAttribute('data-theme')==='light'?'light':'dark',false);
-themeBtn.addEventListener('click',()=>{
-  paintTheme(root.getAttribute('data-theme')==='light'?'dark':'light',true);
-});
-
-$('#rebuild').addEventListener('click',()=>{
-  scrollTo({top:0,behavior:reduced?'auto':'smooth'});
-});
-
-/* phase visibility (annotation windows along the scroll) */
-const phases=[
-  [$('#hero'),    -1,  .09],
-  [$('#calloutA'),.15, .42],
-  [$('#calloutB'),.46, .70],
-  [$('#calloutC'),.73, .905],
-  [$('#final'),   .925,2  ],
-];
-
-/* confetti — a 20-line particle system, per the constraints.
-   Bursts from the topping-out tree, as tradition demands. */
-const conf=$('#confetti'),EMOJI=['🎉','✨','🧱','🔧','📐','🟩'];
-function popConfetti(){
-  if(reduced)return;
-  document.querySelectorAll('.bill .e').forEach(el=>{
-    if(el.textContent!=='🌲')return;
-    const r=el.getBoundingClientRect();
-    for(let i=0;i<36;i++){
-      const s=document.createElement('span');
-      s.textContent=EMOJI[(Math.random()*EMOJI.length)|0];
-      conf.appendChild(s);
-      parts.push({el:s,x:r.left+r.width/2,y:r.top,r:Math.random()*360,
-        vx:(Math.random()-.5)*9,vy:-(4+Math.random()*8),
-        vr:(Math.random()-.5)*14,life:1});
-    }
-  });
-}
-
-/* crane brain: aim at whatever was most recently placed */
+const panels=[$('#hero'),$('#calloutA'),$('#calloutB'),$('#calloutC')];
+const replay=$('#rebuild');
+document.documentElement.dataset.engine=reduced?'reduced':'active';
+replay.addEventListener('click',()=>scrollTo({top:0,behavior:reduced?'auto':'smooth'}));
 function craneGoal(){
-  if(p<.15||p>.745)return null;            /* rigging up / rigging down */
-  let t=null;
-  for(const g of targets){ if(g.at<=p+.015)t=g; else break; }
-  return t;
+  if(p>.745)return null;
+  let target=null;
+  for(const next of targets){if(next.at<=p+.015)target=next;else break;}
+  return target;
 }
-
-/* ── the loop ───────────────────────────────────────────────── */
 function tick(){
   const max=document.documentElement.scrollHeight-innerHeight;
-  p=max>0?Math.min(1,Math.max(0,scrollY/max)):0;
-
-  /* camera is fixed — only the shadow still answers to scroll */
+  const scrollProgress=max>0?Math.min(1,Math.max(0,scrollY/max)):0;
+  p=reduced?1:.39+.61*scrollProgress;
   R.setProperty('--shadow',p.toFixed(3));
-
-  /* construction & dismantling */
   for(const pc of pieces){
-    const on=p>=pc.at&&(pc.off===undefined||p<pc.off);
-    pc.el.classList.toggle('built',on);
+    pc.el.classList.toggle('built',p>=pc.at&&(pc.off===undefined||p<pc.off));
     if(pc.off!==undefined)pc.el.classList.toggle('gone',p>=pc.off);
   }
-
-  /* crane mechanics: slew to the work, trolley out, lower the hook */
-  const g=craneGoal();
-  let yawT,trolT,cabT;
-  if(g){
-    const dx=g.x-CRANE.bx,dz=g.z-CRANE.bz,dist=Math.hypot(dx,dz);
+  const target=craneGoal();
+  let yawT=CRANE.restYaw,trolT=50,cabT=60;
+  if(target){
+    const dx=target.x-CRANE.bx,dz=target.z-CRANE.bz;
     yawT=Math.atan2(-dz,dx)*180/Math.PI;
-    trolT=Math.min(CRANE.maxR,Math.max(CRANE.minR,dist));
-    cabT=Math.min(260,Math.max(26,CRANE.topY-(g.y+30)));
-  }else{ yawT=CRANE.restYaw;trolT=50;cabT=60; }
-  let dy=((yawT-yaw+540)%360)-180;         /* shortest arc */
+    trolT=Math.min(CRANE.maxR,Math.max(CRANE.minR,Math.hypot(dx,dz)));
+    cabT=Math.min(260,Math.max(26,CRANE.topY-(target.y+30)));
+  }
   const k=reduced?1:.05;
-  yaw+=dy*k; trol+=(trolT-trol)*k; cab+=(cabT-cab)*k;
+  yaw+=(((yawT-yaw+540)%360)-180)*k;trol+=(trolT-trol)*k;cab+=(cabT-cab)*k;
   craneYaw.style.transform=`rotateY(${yaw}deg)`;
   trolley.style.transform=`translate3d(${trol}px,2px,0)`;
   cableWrap.style.transform=`scaleY(${(cab/260).toFixed(4)})`;
-  hookHost.style.transform=
-    `scaleY(${(260/cab).toFixed(4)}) translateY(${cab.toFixed(1)}px)`;
-
-  /* counters */
-  const pct=Math.round(Math.min(1,Math.max(0,(p-.06)/.82))*100);
-  if(pct!==shownPct){
-    shownPct=pct;
-    $('#pctNum').textContent=pct;
-    $('#barFill').style.width=pct+'%';
-  }
-  $('#rail').style.width=(p*100).toFixed(2)+'vw';
-
-  /* annotations */
-  for(const[el,a,b]of phases)el.classList.toggle('on',p>=a&&p<=b);
-  $('#scrollPill').style.opacity=p<.02?1:0;
-
-  /* topping-out ceremony: stamp, lights on, confetti */
-  const done=p>=.925;
-  document.body.classList.toggle('done',done);
-  if(done&&confettiArmed){confettiArmed=false;popConfetti();}
-  if(p<.85)confettiArmed=true;
-
-  /* particles */
-  for(let i=parts.length-1;i>=0;i--){
-    const q=parts[i];
-    q.vy+=.3;q.x+=q.vx;q.y+=q.vy;q.r+=q.vr;q.life-=.011;
-    q.el.style.transform=`translate(${q.x}px,${q.y}px) rotate(${q.r}deg)`;
-    q.el.style.opacity=Math.max(0,q.life);
-    if(q.life<=0||q.y>innerHeight+40){q.el.remove();parts.splice(i,1);}
-  }
-  requestAnimationFrame(tick);
+  hookHost.style.transform=`scaleY(${(260/cab).toFixed(4)}) translateY(${cab.toFixed(1)}px)`;
+  const active=Math.min(3,Math.floor(scrollProgress*4));
+  panels.forEach((panel,index)=>{panel.hidden=!reduced&&index!==active;panel.inert=panel.hidden;});
+  replay.hidden=reduced||scrollProgress<.9;
+  $('#progress').style.width=scrollProgress*100+'%';
+  document.body.classList.toggle('done',p>=.925);
+  if(!reduced)requestAnimationFrame(tick);
 }
-requestAnimationFrame(tick);
-
-console.log('%cBlueprint v47 · Dessau Edition','font-weight:bold;font-size:14px;color:#7fd4ff',
-'\nEvery beam is a <div>. The crane does its own trigonometry.\nSheet A-001 · hello@rishabhdoshi.com');
+tick();
 </script>
 </body>
 </html>
