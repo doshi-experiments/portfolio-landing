@@ -1,0 +1,322 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#000000">
+  <meta name="description" content="Truck &amp; Driver Management — a design case study by Rishabh Doshi.">
+  <title>Truck &amp; Driver Management — Rishabh Doshi</title>
+  <link rel="icon" href="/assets/favicon.png">
+  <link rel="stylesheet" href="/portfolio.css">
+  <link rel="stylesheet" href="/case-studies.css">
+  <script src="/site.js" defer></script>
+  <script src="/case-studies.js" defer></script>
+</head>
+<body class="shipment-page">
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header container">
+    <a class="wordmark" href="/" aria-label="Rishabh Doshi, home" lang="hi">ऋषभ</a>
+    <nav class="site-nav" aria-label="Main navigation"><a href="/about/">About</a><a href="/#work">Work</a></nav>
+  </header>
+  <main id="main" tabindex="-1" class="case-main case-light">
+
+    <section class="case-hero shipment-hero container" aria-labelledby="case-title">
+    <div class="shipment-hero-art"><img src="/assets/pages/shipment-01.png" width="414" height="267" alt="Shipment management product screen" fetchpriority="high"><img src="/assets/pages/shipment-02.png" width="414" height="268" alt="Driver planning product screen" fetchpriority="high"><img src="/assets/pages/shipment-03.png" width="414" height="267" alt="Transportation management dashboard" fetchpriority="high">
+    </div>
+    <h1 class="case-title" id="case-title">Optimizing trucking management for a Fortune 500 company</h1>
+    </section>
+    <div class="case-body">
+    <div class="container">
+    <section class="case-overview">
+    <div class="case-prose">
+    <h2>Introduction</h2>
+    <p>Ever wonder how shipments on trucks are managed? How do trucking companies figure out which truck is going to be used by which driver and which shipment it’s going to pick up? <br><br>How do you optimize tens of thousands of equipment and a hundred moving pieces to make sure the supply chain keeps trucking along? (pun intended). Well, that’s what this project looks at. A shipment management experience that allows trucking managers to effectively manage their drivers, equipment and shipments.</p>
+    <h3>Jump to section</h3>
+    <nav class="case-toc" aria-label="Jump to section"><a href="#discovery">Discovery</a><a href="#synthesis">Synthesis</a><a href="#ideation">Ideation</a><a href="#solution">Solution</a><a href="#testing">Testing</a><a href="#reflection">Reflection</a>
+    </nav>
+    <div class="case-stats">
+    <div class="case-stat"><strong>75%</strong><span>Reduction in training time</span>
+    </div>
+    <div class="case-stat"><strong>99th</strong><span>percentile system usability scores</span>
+    </div>
+    </div>
+    </div>
+    <dl class="case-facts">
+    <div><dt>Role</dt><dd>Lead UX Designer</dd>
+    </div>
+    <div><dt>Team</dt><dd>2 designers; 1 researcher</dd>
+    </div>
+    <div><dt>Project Duration</dt><dd>16 weeks</dd>
+    </div>
+    <div><dt>Sector</dt><dd>Transportation and logistics</dd>
+    </div>
+    <div><dt>Stakeholders</dt><dd>20 total (product owners, business analysts, and tech leads).</dd>
+    </div>
+    </dl>
+    </section>
+    <section class="case-chapter" id="discovery">
+    <h2>Discovery</h2>
+    <div class="case-chapter-content">
+    <section class="case-section">
+    <h3>A note on our users</h3>
+    <div class="case-grid">
+    <div class="case-prose">
+    <p>The goal for this project was to enable planning managers to plan their drivers day. They have a complicated job where they’re charting out which driver will pick up which shipment and from which location.</p>
+    <p>They’re juggling a whole bunch of priorities while doing this- they’ve got to make sure that :</p>
+    <ul><li>
+    <p>every shipment for the day gets picked up on time</p></li><li>
+    <p>they create an optimal route so trucks aren’t driving empty for too long</p></li><li>
+    <p>drivers individual preferences for routes and trucks are respected</p></li><li>
+    <p>drivers have work to do the entire day so they get paid</p></li></ul>
+    </div>
+    <figure class="case-media"><img src="/assets/pages/shipment-04.png" width="399" height="331" alt="Illustration of a planning manager coordinating drivers and shipments" loading="lazy">
+    </figure>
+    </div>
+    </section>
+    <section class="case-section">
+    <h3>User Goals</h3>
+    <div class="case-prose">
+    <p>We started out with some high level goals from the business and over the course of our research, translated business objectives into user goals. Here’s a brief snapshot of how we defined those goals.</p>
+    </div>
+    <div class="case-grid case-grid--three">
+    <article class="case-prose"><img src="/assets/pages/shipment-05.png" width="425" height="425" alt="" class="case-icon" loading="lazy">
+    <h4>Keep Drivers Happy</h4>
+    <p>Xiaolin likes to end her day near downtown Kirkland. Jessa needs to be off by 5:00 PM today. Swati doesn’t like going to the Target in Stoughton. Anderson had a rough week with difficult loads, so he needs something easier today.</p>
+    </article>
+    <article class="case-prose"><img src="/assets/pages/shipment-06.png" width="425" height="425" alt="" class="case-icon" loading="lazy">
+    <h4>Enable planning</h4>
+    <p>Melissa, a senior manager starts at 6 am and needs to get all 200 of her drivers at least 1 load before they start at 8:00 am. She’s also got 60 Amazon loads that need to be out before 8:30 am</p>
+    </article>
+    <article class="case-prose"><img src="/assets/pages/shipment-07.png" width="425" height="425" alt="" class="case-icon" loading="lazy">
+    <h4>Provide Visibility</h4>
+    <p>20 loads slipped through the cracks last week and had to be pushed to the next week. Did we not plan efficiently or do we need more drivers? </p>
+    </article>
+    </div>
+    <p class="case-note">*Real world scenarios based upon hours and hours of user research.</p>
+    </section>
+    <section class="case-section">
+    <h3>Virtual Whiteboarding</h3>
+    <div class="case-prose">
+    <p>Once we identified a core working team, the project kicked off on a virtual whiteboard using Miro to keep everybody aligned. UX owned the process while working closely with our dev, product and business counterparts.</p>
+    <p>The rest of this case study is going to be screenshots from this board walking you through the details.</p>
+    </div>
+    <figure class="case-media"><img src="/assets/pages/shipment-08.png" width="1144" height="777" alt="The collaborative Miro whiteboard used for the shipment management project" loading="lazy">
+    </figure>
+    <div class="case-grid">
+    <div class="case-prose">
+    <p>You’ll see a little thumbnail on the bottom right corner of each image that follows telling you where on the Miro board I’m taking screenshots from.  (And yes, I wish there was an easier way to share this content.)</p>
+    </div>
+    <figure class="case-media case-media--thumbnail"><img src="/assets/pages/shipment-09.png" width="172" height="117" alt="Position of the current research area on the Miro board" loading="lazy">
+    </figure>
+    </div>
+    </section>
+    <section class="case-section">
+    <h3>Contextual inquiries</h3>
+    <div class="case-grid">
+    <div class="case-prose">
+    <p><strong>Format:</strong> Contextual Inquiries</p>
+    <p><strong>Participants:</strong> UX Designers + Researchers</p>
+    <p><strong>Time:</strong> 8 sessions with end users</p>
+    <p><strong>Process:</strong> We shadowed 8 users through their day-to-day jobs to understand the current system and how its used to plan loads.</p>
+    <p><strong>Outcome:</strong> A detailed understanding of the current tools, processes and mental models of the user.</p>
+    </div>
+    <figure class="case-media"><img src="/assets/pages/shipment-10.png" width="629" height="390" alt="Contextual inquiry observations grouped on the project whiteboard" loading="lazy">
+    </figure>
+    </div>
+    <figure class="case-media case-media--thumbnail"><img src="/assets/pages/shipment-11.png" width="172" height="117" alt="Contextual inquiry location on the project board" loading="lazy">
+    </figure>
+    </section>
+    <section class="case-section">
+    <h3>Legacy Systems</h3>
+    <figure class="case-media"><img src="/assets/pages/shipment-12.png" width="1144" height="615" alt="Legacy trucking management system screens" loading="lazy">
+    </figure>
+    <div class="case-grid">
+    <figure class="case-media"><img src="/assets/pages/shipment-13.png" width="567" height="317" alt="Legacy shipment planning interface" loading="lazy">
+    </figure>
+    <figure class="case-media"><img src="/assets/pages/shipment-14.png" width="567" height="309" alt="Legacy driver planning interface" loading="lazy">
+    </figure>
+    </div>
+    <div class="case-prose">
+    <p>The answer? A hodge-podge of systems built in the 1980s and 1990s that they’re constantly jumping around in. We spent a great deal of time understanding these systems because that was our starting point- how does this job get done currently and how do we take that, re-imagine the process and build something that doesn’t take a 6 week training course to get started on.</p>
+    <p>I will go out on a limb though and say that despite how these systems look- they work and they work well. Not because of how well they were designed but because our users have had over 30 years of institutional knowledge passed down from person to person that really knew they nitty gritties of these systems. Across excel macros, word docs, and just knowing how the process works, the users had a workaround to get every single thing they needed done. <br><br>If it works, why redesign it? Because the current system needed a 6 week training course just to get started, and years before somebody was ready to start out solo. And that wasn’t even the biggest problem, our users were so focused on getting the job done and reacting to problems, they had no chance to anticipate problems and proactively solve issues before they arise. The project goal then? Let’s free up people to solve real problems and automate everything that can be automated.</p>
+    </div>
+    </section>
+    </div>
+    </section>
+    <section class="case-chapter" id="synthesis">
+    <h2>Synthesis</h2>
+    <div class="case-chapter-content">
+    <section class="case-section">
+    <h3>Visioning with the leadership team</h3>
+    <div class="case-prose">
+    <p>Once we’d understood things at ground level, we decided to switch to a 10,000 foot view. We got together with senior leadership to figure out what the future of this space looked like. What is the future or the role and the process?</p>
+    <p>That took the format of a workshop talking through ideas centered around these 6 key focus areas.</p>
+    </div>
+    <figure class="case-media"><img src="/assets/pages/shipment-15.png" width="1144" height="571" alt="Six focus areas from the leadership visioning workshop" loading="lazy">
+    </figure>
+    </section>
+    <section class="case-section">
+    <h3>Mapping Ideas</h3>
+    <div class="case-prose">
+    <p>Our synthesis was ongoing process through the rest of the process - endless impromptu calls, endless amounts of “this is so confusing and I don’t understand what is happening” which finally led to some great insights and ideas. It culminated with ideas grouped together across a few key themes.</p>
+    </div>
+    <figure class="case-media"><img src="/assets/pages/shipment-16.png" width="1144" height="412" alt="Research insights grouped into key themes" loading="lazy">
+    </figure>
+    <figure class="case-media case-media--thumbnail"><img src="/assets/pages/shipment-17.png" width="172" height="117" alt="Synthesis location on the project board" loading="lazy">
+    </figure>
+    </section>
+    <section class="case-section">
+    <h3>Collaborative Ideation</h3>
+    <div class="case-prose">
+    <p>We convinced our counterparts (product, business and tech) to get together, sketch some ideas and put them on our board. We then met in a workshop format to talk through the ideas and vote on what worked best.</p>
+    </div>
+    <figure class="case-media"><img src="/assets/pages/shipment-18.png" width="1144" height="643" alt="Collaborative sketches and votes from the ideation workshop" loading="lazy">
+    </figure>
+    <figure class="case-media"><img src="/assets/pages/shipment-19.png" width="1144" height="643" alt="An annotated concept sketch from a business analyst" loading="lazy"><figcaption>Here’s a zoomed in example of one of those sketches from a business analyst.</figcaption>
+    </figure>
+    </section>
+    </div>
+    </section>
+    <section class="case-chapter" id="ideation">
+    <h2>Ideation</h2>
+    <div class="case-chapter-content">
+    <section class="case-section">
+    <h3>Building the Information Architecture</h3>
+    <div class="case-prose">
+    <p>The product is centered around three key screens- a list of shipments that needed to be covered, a list of drivers that are working and a planning screen to help match those together.</p>
+    </div>
+    <figure class="case-media"><img src="/assets/pages/shipment-20.png" width="1144" height="643" alt="Information architecture connecting shipments, drivers and planning" loading="lazy">
+    </figure>
+    </section>
+    <section class="case-section">
+    <h3>Medium Fidelity</h3>
+    <div class="case-prose">
+    <p>We took the ideas from our ideation sessions and plugged them into medium fidelity mocks so we could have more conversations around the details and the data. This is where things start getting serious and we start layering in some discussions around technical and timeline feasibility.</p>
+    </div>
+    <figure class="case-media"><img src="/assets/pages/shipment-21.png" width="1144" height="643" alt="Medium fidelity screens used to discuss detailed workflows" loading="lazy">
+    </figure>
+    </section>
+    <section class="case-section">
+    <h3>Integrating with the design system</h3>
+    <div class="case-prose">
+    <p>We had a very robust design system so next steps were easy- plug and play to make sure we were compliant with the design system and to identify components that might need to be added.</p>
+    </div>
+    <figure class="case-media"><img src="/assets/pages/shipment-22.png" width="1144" height="643" alt="Final interface components integrated with the design system" loading="lazy">
+    </figure>
+    </section>
+    </div>
+    </section>
+    <section class="case-chapter" id="solution">
+    <h2>Solution</h2>
+    <div class="case-chapter-content">
+    <section class="case-section">
+    <h3>Solution</h3>
+    <div class="case-prose">
+    <p>Scroll on to see the solution that went live after multiple rounds of usability testing and feedback from our power users. The visuals have been recreated using an open-source design system, but the content structure and architecture remain true to the original release.</p>
+    </div>
+    <figure class="case-media case-media--inset"><img src="/assets/pages/shipment-23.png" width="858" height="695" alt="Shipment management product screen overview" loading="lazy">
+    </figure>
+    </section>
+    <div class="shipment-story" data-walkthrough>
+    <figure class="shipment-stage"><img data-stage-image src="/assets/pages/shipment-35.png" width="570" height="356" alt="List of shipments interface" loading="lazy">
+    </figure>
+    <div>
+    <section class="shipment-story-step case-prose" data-screen="/assets/pages/shipment-35.png" data-screen-alt="List of Shipments interface">
+    <h3>List of Shipments</h3>
+    <ul><li>
+    <p>Quick filters to find different kinds of shipments.</p></li><li>
+    <p>Comprehensive list of shipments that need to planned for the day. (Yes one manager can plan over 500 loads in a day.)</p></li><li>
+    <p>Options to see shipments from adjacent regions.</p></li></ul><img src="/assets/pages/shipment-35.png" width="570" height="356" alt="List of Shipments interface" class="story-mobile-image" loading="lazy">
+    </section>
+    <section class="shipment-story-step case-prose" data-screen="/assets/pages/shipment-34.png" data-screen-alt="Split Panel | Plan Load interface">
+    <h3>Split Panel | Plan Load</h3>
+    <ul><li>
+    <p>Option to type in a drivers name if the user has somebody in mind. Auto selected by default</p></li><li>
+    <p>List of recommended drivers and external carriers the user can choose from.</p></li></ul><img src="/assets/pages/shipment-34.png" width="570" height="356" alt="Split Panel | Plan Load interface" class="story-mobile-image" loading="lazy">
+    </section>
+    <section class="shipment-story-step case-prose" data-screen="/assets/pages/shipment-33.png" data-screen-alt="Split Panel | Confirmation interface">
+    <h3>Split Panel | Confirmation</h3>
+    <ul><li>
+    <p>Confirmation of what adding the new shipment will do to the drivers day.</p></li><li>
+    <p>The user needs to juggle the drivers drive time, availability, location and existing shipments - the confirmation screen gives them an easy way to do this.</p></li></ul><img src="/assets/pages/shipment-33.png" width="570" height="356" alt="Split Panel | Confirmation interface" class="story-mobile-image" loading="lazy">
+    </section>
+    <section class="shipment-story-step case-prose" data-screen="/assets/pages/shipment-30.png" data-screen-alt="Planning cart interface">
+    <h3>Planning cart</h3>
+    <ul><li>
+    <p>A planning cart that the user can add shipments they&#x27;re interested in. </p></li></ul>
+    <ul><li>
+    <p>They have the option to multi-select shipments and plan them straight to a driver from here. </p></li></ul><img src="/assets/pages/shipment-30.png" width="570" height="356" alt="Planning cart interface" class="story-mobile-image" loading="lazy">
+    </section>
+    <section class="shipment-story-step case-prose" data-screen="/assets/pages/shipment-29.png" data-screen-alt="Driver View interface">
+    <h3>Driver View</h3>
+    <ul><li>
+    <p>Overview of the drivers the user is responsible for along with their planned loads.</p></li></ul>
+    <ul><li>
+    <p>The user can add shipments to drivers and make sure they have some shipments for each driver. </p></li></ul><img src="/assets/pages/shipment-29.png" width="570" height="356" alt="Driver View interface" class="story-mobile-image" loading="lazy">
+    </section>
+    <section class="shipment-story-step case-prose" data-screen="/assets/pages/shipment-28.png" data-screen-alt="Split Panel | Plan Driver interface">
+    <h3>Split Panel | Plan Driver</h3>
+    <ul><li>
+    <p>Option to plan recommended loads to the driver </p></li><li>
+    <p>The user has can also pick loads they have in their planning cart to quickly add them<br><br></p></li></ul><img src="/assets/pages/shipment-28.png" width="570" height="356" alt="Split Panel | Plan Driver interface" class="story-mobile-image" loading="lazy">
+    </section>
+    </div>
+    </div><details class="shipment-extra-screens"><summary>More screens from the planning flow</summary>
+    <div class="case-grid">
+    <figure class="case-media"><img src="/assets/pages/shipment-32.png" width="570" height="356" alt="Shipment planning success notification" loading="lazy">
+    </figure>
+    <figure class="case-media"><img src="/assets/pages/shipment-31.png" width="570" height="356" alt="Shipment list after planning" loading="lazy">
+    </figure>
+    <figure class="case-media"><img src="/assets/pages/shipment-27.png" width="570" height="356" alt="Driver planning with a recommended load selected" loading="lazy">
+    </figure>
+    <figure class="case-media"><img src="/assets/pages/shipment-26.png" width="570" height="356" alt="Driver plan confirmation" loading="lazy">
+    </figure>
+    <figure class="case-media"><img src="/assets/pages/shipment-25.png" width="570" height="356" alt="Driver planning success notification" loading="lazy">
+    </figure>
+    </div></details>
+    </div>
+    </section>
+    <section class="case-chapter" id="testing">
+    <h2>Testing</h2>
+    <div class="case-chapter-content">
+    <section class="case-section">
+    <h3>Usability Testing</h3>
+    <div class="case-grid">
+    <div class="case-prose">
+    <p><strong>Format:</strong> Moderated usability tests </p>
+    <p><strong>Participants:</strong> 8 end users</p>
+    <p><strong>Process:</strong> 4 Task based usability tests with increasing complexity, Miro Board with screens to get initial feedback.</p>
+    </div>
+    <figure class="case-media case-media--small"><img src="/assets/pages/shipment-36.png" width="343" height="450" alt="Usability testing notes and observations" loading="lazy">
+    </figure>
+    </div>
+    </section>
+    </div>
+    </section>
+    <section class="case-chapter" id="reflection">
+    <h2>Reflection</h2>
+    <div class="case-chapter-content">
+    <section class="case-section">
+    <h3>Mistakes were made, lessons were learned</h3>
+    <div class="case-prose">
+    <p>I&#x27;ve presented this project as a neatly packaged bundle: a concise description, a glimpse into the process, and the solution. However, there&#x27;s so much more to the story—mistakes made, numerous course corrections, and dozens of screen iterations, some so drastically different they barely resemble the final product. Yet the underlying process was consistent: experiment, test, observe failures, improve, and repeat. Central to this iterative journey were our users, whose feedback significantly shaped both the functionality and appearance of the final designs.</p>
+    <p>Ultimately, this experience strengthened our team, solidified scalable processes adopted across our entire design organization, and produced work we&#x27;re deeply proud of. The response from users exceeded our expectations. </p>
+    <p>Unlike past experiences where transitions from legacy products were met with resistance, this rollout was eagerly embraced. Business units and locations proactively requested earlier access, reflecting genuine enthusiasm and validation of our approach.</p>
+    </div>
+    <div class="case-stats">
+    <div class="case-stat"><strong>75%</strong><span>Reduction in training time</span>
+    </div>
+    <div class="case-stat"><strong>99th</strong><span>percentile system usability scores</span>
+    </div>
+    </div>
+    </section>
+    </div>
+    </section>
+    <nav class="case-next" aria-label="More work"><a href="/#work">← Back to all work</a><a href="/genai/">GenAI Travel Claims →</a>
+    </nav>
+    </div>
+    </div>
+  </main>
+  <footer class="site-footer"><div class="container">I hope you have a gorgeous day!</div></footer>
+</body>
+</html>

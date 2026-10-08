@@ -1,0 +1,31 @@
+.wells-fargo-page{background:#da1020;color:#fff;--color-heading:#fff;--color-text:#fff;--color-accent:#fff}
+.wells-fargo-page .site-header{min-height:48px}
+.wells-hero{display:grid;grid-template-columns:minmax(0,1fr) 290px;gap:32px;align-items:center;min-height:940px;padding-block:160px}
+.wells-hero .case-title{font-size:clamp(36px,4vw,52px);line-height:1.12;max-width:850px}
+.wells-stagecoach{width:100%;margin-bottom:56px}
+.wells-hero>img{width:290px}
+.wells-overview{display:grid;grid-template-columns:340px minmax(0,1fr);gap:112px;align-items:center;padding-block:48px 96px}
+.wells-overview h2,.wells-learnings h2{font-size:44px}
+.wells-investor img{width:100%;max-width:377px;margin:auto}
+.wells-facts{margin:24px 0 0;display:grid;gap:16px}
+.wells-facts dt{font-weight:500}
+.wells-facts dd{margin:0;max-width:36ch}
+.wells-fargo-page .case-body{--color-heading:#222;--color-text:#222;--color-accent:#a90c19;--color-border:#ddd;padding-block:48px}
+.wells-fargo-page .case-body .case-section{padding-block:48px}
+.wells-fargo-page .case-body .case-media img{border-radius:0}
+.wells-business .case-media img{aspect-ratio:1.52;object-fit:cover;border-radius:20px!important}
+.legacy-pair{align-items:center;gap:64px}
+.wells-fargo-page .legacy-pair h2{font-family:var(--font-body);font-size:24px;font-weight:500;line-height:1.5}
+.wells-question{margin:0;padding:48px;font-size:24px;line-height:1.5}
+.wells-features{margin-top:32px}
+.wells-features h3{font-family:var(--font-body);font-size:18px;font-weight:500}
+.wells-features .case-prose>*+*{margin-top:12px}
+.wells-features .case-prose p{font-size:16px;line-height:1.8}
+.wells-features .case-media img{width:100%;aspect-ratio:2/3;object-fit:contain}
+.wells-screen-flow{max-width:900px;margin-inline:auto}
+.wells-learnings{padding-block:64px}
+.wells-fargo-page .case-next{border-color:#ffffff70;padding-block:32px}
+.wells-fargo-page .site-footer{background:#da1020;color:#fff}
+.wells-fargo-page a:hover{text-decoration:underline;text-underline-offset:5px}
+@media(max-width:900px){.wells-hero{grid-template-columns:minmax(0,1fr) 230px;min-height:760px;padding-block:100px}.wells-hero>img{width:230px}.wells-stagecoach{margin-bottom:32px}.wells-overview{grid-template-columns:28% minmax(0,1fr);gap:48px}.legacy-pair{gap:32px}.wells-question{padding:16px}}
+@media(max-width:650px){.wells-hero{grid-template-columns:1fr;min-height:auto;padding-block:72px;gap:48px}.wells-hero .case-title{font-size:38px}.wells-hero>img{width:200px;justify-self:center}.wells-stagecoach{margin-bottom:32px}.wells-overview{grid-template-columns:1fr;padding-block:32px 64px;gap:32px}.wells-investor img{max-width:230px}.wells-overview h2,.wells-learnings h2{font-size:34px}.wells-fargo-page .case-body{padding-block:16px}.wells-fargo-page .case-body .case-section{padding-block:32px}.wells-question{padding:0;font-size:22px}.wells-features{gap:48px}.wells-features .case-media img{max-height:520px}.wells-learnings{padding-block:48px}}

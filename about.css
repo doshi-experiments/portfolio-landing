@@ -1,0 +1,78 @@
+.about-page .site-header{position:absolute;inset:0 0 auto}
+.about-intro{min-height:100svh;display:grid;grid-template-columns:70% 30%;align-items:center;padding-block:112px 48px}
+.about-intro h1{font-size:36px;line-height:40px;font-weight:600}
+.about-intro-copy>p{margin-top:32px;line-height:26px}
+.about-dog{position:relative;aspect-ratio:1;width:100%}
+.dog-fallback,.dog-animation{position:absolute;inset:0;width:100%;height:100%}
+.dog-animation{visibility:hidden}
+.dog-animation.is-ready{visibility:visible}
+.dog-fallback.is-hidden{visibility:hidden}
+.motion-toggle{position:absolute;bottom:0;right:0;display:inline-flex;align-items:center;gap:6px;min-height:44px;padding:8px;background:none;border:0;color:#888;font-size:11px;cursor:pointer}
+.motion-toggle[hidden]{display:none}
+.motion-toggle:hover{color:var(--color-accent)}
+.about-process{display:grid;gap:70px;padding-block:40px 128px}
+.about-process>h2,.about-contact>h2{font-size:52px;line-height:58px}
+.process-step{display:grid;grid-template-columns:1fr 1fr;gap:10px;align-items:center}
+.process-title h3,.about-tools h2,.about-faq h2,.about-experience>h2{font-family:var(--font-display);font-size:44px;line-height:58px;font-weight:600}
+.process-number{display:block;font-family:monospace;font-size:32px;font-weight:500;line-height:38px;color:var(--color-accent)}
+.process-step p{line-height:26px}
+.about-tools{padding-bottom:96px}
+.about-tools>p{line-height:26px;margin-top:4px}
+.toolbelt{overflow-x:auto;scrollbar-width:thin;padding-block:48px 8px;mask-image:linear-gradient(to right,transparent,#000 8%,#000 92%,transparent)}
+.toolbelt-track{display:flex;width:max-content;gap:68px;align-items:center;list-style:none;padding:0;margin:0}
+.toolbelt-track li{flex-shrink:0;width:74px;height:72px}
+.toolbelt-track img{width:74px;height:72px;border-radius:19px}
+.motion-ready .toolbelt{overflow:hidden}
+.motion-ready .toolbelt-track{animation:toolbelt-scroll 35s linear infinite}
+.motion-paused .toolbelt-track,.toolbelt:hover .toolbelt-track{animation-play-state:paused}
+@keyframes toolbelt-scroll{to{transform:translateX(-1420px)}}
+.about-faq{padding-bottom:120px}
+.about-faq h2{margin-bottom:20px}
+.faq-list{max-width:1000px}
+.faq-list details{padding-block:12px}
+.faq-list summary{position:relative;display:block;list-style:none;padding:8px 0 8px 40px;cursor:pointer;font-size:20px;font-weight:400;line-height:29px}
+.faq-list summary::-webkit-details-marker{display:none}
+.faq-list summary::before,.faq-list summary::after{content:"";position:absolute;left:0;top:22px;width:16px;height:2px;background:var(--color-accent)}
+.faq-list summary::after{transform:rotate(90deg);transition:transform .15s}
+.faq-list details[open] summary::after{transform:rotate(0)}
+.faq-list summary:hover{color:#fff}
+.faq-list details>p{padding:12px 0 12px 40px;font-size:16px;line-height:26px}
+.faq-list a,.about-contact a{color:var(--color-accent);text-decoration:underline;text-underline-offset:3px}
+.about-experience>h2{margin-bottom:32px}
+.experience-entry{border-bottom:1px solid #222;padding-bottom:24px;margin-bottom:48px}
+.experience-entry h3{font-family:var(--font-display);font-size:36px;font-weight:600;line-height:40px;margin-bottom:14px}
+.experience-entry>p:not(.experience-date){max-width:1000px;line-height:26px}
+.experience-date{font-size:14px;line-height:26px;color:#a3a3a3}
+.experience-entry .project-action{margin-top:18px}
+.about-contact{padding-block:16px 64px}
+.about-contact>p{max-width:600px;line-height:26px;margin-top:24px}
+@media(max-width:1050px){.about-intro h1{font-size:32px;line-height:38px}.about-process>h2,.about-contact>h2{font-size:44px;line-height:52px}.process-title h3,.about-tools h2,.about-faq h2,.about-experience>h2{font-size:38px;line-height:48px}.experience-entry h3{font-size:30px;line-height:36px}}
+@media(max-width:700px){
+ .about-intro{display:flex;flex-direction:column;justify-content:center;gap:24px;padding-block:88px 72px;min-height:100svh}
+ .about-dog{order:-1;width:min(70%,260px)}
+ .about-intro h1{font-size:26px;line-height:32px}
+ .about-intro-copy>p{margin-top:28px}
+ .about-process{padding-block:48px 72px;gap:48px}
+ .about-process>h2,.about-contact>h2{font-size:36px;line-height:42px}
+ .process-step{grid-template-columns:1fr;gap:16px}
+ .process-title h3,.about-tools h2,.about-faq h2,.about-experience>h2{font-size:32px;line-height:40px}
+ .process-number{font-size:26px;line-height:32px}
+ .about-tools{padding-bottom:64px}
+ .about-tools>p{margin-top:16px}
+ .toolbelt{padding-top:32px}
+ .toolbelt-track{gap:36px}
+ .motion-ready .toolbelt-track{animation-name:toolbelt-scroll-mobile}
+ @keyframes toolbelt-scroll-mobile{to{transform:translateX(-1100px)}}
+ .about-faq{padding-bottom:64px}
+ .faq-list summary{font-size:17px;line-height:26px;padding-left:32px}
+ .faq-list details{padding-block:8px}
+ .faq-list details>p{padding-left:32px}
+ .faq-list summary::before,.faq-list summary::after{width:14px;top:20px}
+ .about-experience>h2{margin-bottom:28px}
+ .experience-entry{margin-bottom:32px;padding-bottom:24px}
+ .experience-entry h3{font-size:26px;line-height:32px;margin-bottom:16px}
+ .experience-date{font-size:12px}
+ .about-contact{padding-block:16px 48px}
+ .motion-toggle{right:-20px;bottom:-12px}
+}
+@media(prefers-reduced-motion:reduce){.motion-ready .toolbelt{overflow-x:auto;mask-image:none}.toolbelt-track [aria-hidden="true"]{display:none}.motion-toggle{display:none}}

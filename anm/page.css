@@ -1,0 +1,26 @@
+.anm-page{background:#fff;color:#222;--color-heading:#222;--color-text:#222;--color-accent:#b2252e;--color-border:#ddd;color-scheme:light}
+.anm-page .legacy-nav{background:#000}
+.anm-page .site-header{min-height:40px}
+.anm-page .case-body{padding-bottom:32px}
+.anm-title{padding-block:128px 160px}
+.anm-title .case-title{font-size:clamp(36px,4vw,52px);line-height:1.15;max-width:1184px}
+.anm-page .case-section{padding-block:32px}
+.anm-title+.case-section .case-media img{max-width:430px}
+.anm-page .case-prose h2,.anm-gallery-section h2{font-size:44px}
+.anm-page .case-prose>*+*{margin-top:10px}
+.anm-page .legacy-pair{align-items:center;gap:64px}
+.anm-page .legacy-pair .case-prose p{max-width:48ch}
+.anm-page .case-media img{border-radius:0;object-fit:contain}
+.anm-page .case-caption{font-size:12px;line-height:1.65;color:#555}
+.anm-gallery{display:flex;gap:16px;overflow-x:auto;scroll-snap-type:x mandatory;overscroll-behavior-x:contain;margin-top:24px;border:1px solid #ddd;scrollbar-color:#999 #eee;scrollbar-width:thin}
+.anm-gallery:focus-visible{outline:2px solid var(--color-accent);outline-offset:6px}
+.anm-gallery-slide{flex:0 0 100%;scroll-snap-align:start;scroll-snap-stop:always;min-width:0}
+.anm-gallery-slide img{width:100%;height:660px;object-fit:contain;background:#f8f8f8}
+.anm-gallery-controls{display:flex;gap:24px;align-items:center;justify-content:flex-end;margin-top:16px;font-size:13px;font-variant-numeric:tabular-nums}
+.anm-gallery-controls button{border:1px solid #777;color:#222;background:#fff;border-radius:50%;width:44px;height:44px;cursor:pointer;font-size:24px;line-height:1}
+.anm-gallery-controls button:hover{background:#eee}
+.anm-gallery-controls button:disabled{cursor:default;opacity:.3}
+.anm-page .case-next{margin-top:48px;border-color:#ddd}
+.anm-page .site-footer{background:#000;color:#ccc}
+@media(max-width:900px){.anm-title{padding-block:88px 64px}.anm-page .legacy-pair{gap:32px}.anm-page .case-prose h2,.anm-gallery-section h2{font-size:36px}.anm-gallery-slide img{height:480px}}
+@media(max-width:650px){.anm-title{padding-block:56px 32px}.anm-title .case-title{font-size:36px}.anm-page .case-section{padding-block:32px}.anm-page .case-prose h2,.anm-gallery-section h2{font-size:32px}.anm-page .legacy-pair{gap:24px}.anm-gallery-slide img{height:300px}.anm-gallery-controls{justify-content:center}.anm-page .case-next{margin-top:32px}}
