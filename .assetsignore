@@ -1,6 +1,23 @@
-# Only website assets belong in the deployment, not repository metadata.
+# Deploy the static site and its local assets only.
 *
 !index.html
 !portfolio.css
-!design-system/
-!design-system/**
+!site.js
+!about.css
+!about.js
+!case-studies.css
+!case-studies.js
+!about/
+!about/**
+!shipment/
+!shipment/**
+!genai/
+!genai/**
+!healthcare/
+!healthcare/**
+!wells-fargo/
+!wells-fargo/**
+!anm/
+!anm/**
+!assets/
+!assets/**
