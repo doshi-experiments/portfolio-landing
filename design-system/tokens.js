@@ -41,11 +41,25 @@ export const appearances = {
     'ramp-1': '#23414C', 'ramp-2': '#1B5D8A', 'ramp-3': '#6DA9CA', 'ramp-4': '#A8D7EB', 'ramp-5': '#DFEEF6',
   },
 };
-// One recognizable identity. Project IDs remain compatible with existing apps.
-export const projects = Object.fromEntries(
+// The portfolio uses warm model-making materials; application palettes stay shared.
+export const projectAppearanceOverrides = {
+  portfolio: {
+    light: {
+      'text': '#292D2B', 'text-secondary': '#71665B', 'text-disabled': '#7B7064', 'text-inverse': '#FFFFFF',
+      'surface-page': '#EFEEE8', 'surface-raised': '#FAF9F4', 'surface-overlay': '#FFFFFF',
+      'border': '#86786B', 'selection': '#EDE7DD',
+    },
+    dark: {
+      'text': '#F0EBE3', 'text-secondary': '#BEB8AE', 'text-disabled': '#ADA89F', 'text-inverse': '#171D1E',
+      'surface-page': '#252A2B', 'surface-raised': '#343B3C', 'surface-overlay': '#3A4142',
+      'border': '#898C87', 'selection': '#322722',
+    },
+  },
+};
+export const projects = {...Object.fromEntries(
   ['portfolio', 'experiments', 'visualizations', 'calculator', 'game', 'finance', 'household']
     .map(project => [project, {light: '#1B5D8A', dark: '#A8D7EB', radius: '16px'}]),
-);
+), portfolio: {light:'#A84B2A', dark:'#D17C54', radius:'16px'}};
 export const densities = {
   comfortable: {'control-height': '44px', 'control-target': '44px', 'cell-padding': '12px', 'panel-padding': '24px'},
   compact: {'control-height': '44px', 'control-target': '44px', 'cell-padding': '4px', 'panel-padding': '16px'},
@@ -57,8 +71,9 @@ function shade(hex, amount, light) {
 export function resolveTokens({project = 'finance', appearance = 'light', density = 'comfortable'} = {}) {
   if (!Object.hasOwn(projects, project) || !Object.hasOwn(appearances, appearance) || !Object.hasOwn(densities, density)) throw new RangeError('Unknown theme dimension');
   const brand = projects[project][appearance];
-  return {...foundation, ...appearances[appearance], ...densities[density],
+  const palette = {...appearances[appearance], ...projectAppearanceOverrides[project]?.[appearance]};
+  return {...foundation, ...palette, ...densities[density],
     'action-primary': brand, 'action-hover': shade(brand, .12, appearance === 'dark'), 'action-pressed': shade(brand, .22, appearance === 'dark'),
-    'action-text': appearances[appearance]['text-inverse'], 'focus': brand,
-    'amount-in': appearances[appearance]['success-text'], 'amount-out': appearances[appearance]['error-text']};
+    'action-text': palette['text-inverse'], 'focus': brand,
+    'amount-in': palette['success-text'], 'amount-out': palette['error-text']};
 }
