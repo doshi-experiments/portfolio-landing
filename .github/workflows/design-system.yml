@@ -1,4 +1,4 @@
-name: Design system checks
+name: Site checks
 on: [push, pull_request]
 permissions:
   contents: read
@@ -7,12 +7,21 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Verify shared release integrity
+      - name: Verify shared release integrity (live site and archived versions)
         run: |
           python3 - <<'PYTHON'
           import hashlib, json, pathlib
-          root = pathlib.Path("design-system")
-          release = json.loads((root / "release.json").read_text())
-          for name, expected in release["files"].items():
-              assert hashlib.sha256((root / name).read_bytes()).hexdigest() == expected, name
+          found = 0
+          for release_path in sorted(pathlib.Path(".").rglob("release.json")):
+              root = release_path.parent
+              if root.name != "design-system":
+                  continue
+              release = json.loads(release_path.read_text())
+              for name, expected in release["files"].items():
+                  assert hashlib.sha256((root / name).read_bytes()).hexdigest() == expected, f"{root}/{name}"
+              found += 1
+              print(f"{root}: {release['version']} ok")
+          assert found >= 2, "expected the live snapshot and at least one archived snapshot"
           PYTHON
+      - name: Verify local references and archive containment
+        run: node tools/check-links.mjs
