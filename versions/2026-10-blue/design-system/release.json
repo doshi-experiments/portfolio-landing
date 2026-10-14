@@ -1,0 +1,19 @@
+{
+  "package": "@doshi-experiments/design-system",
+  "version": "0.5.0",
+  "files": {
+    "components.css": "ea45fb53af61c2f49c6b69ba8b2c831133bc6320a861646bdfac14b9c1b2ebb8",
+    "tokens.css": "4eec654779ec046a50ab237d4c41b8af14f795c9d86f43be748fa2483d7c6f3e",
+    "tokens.js": "0d9f1195ac0d1044a1618ac7d20dd81ddeed096a35ddda738a70d7c18294a9bb",
+    "tokens.json": "0b3dc872ec98d2e4b2957dcabafe381690268f187ffd5af5862afbb5f1974148",
+    "theme.js": "07dc3632ae1ded3c95a5f8c61974c209a657ed659000d3d730ae470cc9d8e2cd",
+    "legacy.css": "bced6ed4bc607d7643aa6dfc0629841723a3df8561880dbeb6104068ef4bf384",
+    "metadata.js": "85a8b6cf8fea9a688e74cd6a68b51ae84c51eb265b4e746621e04530bf5ba2a1",
+    "site.js": "4b99d254789f92823daf8ee915e94d22652765acfc7a7e67e54acee5a3b72377",
+    "site-contract.js": "79817b00367741f3307e86318d34889e1f450d8d5126c3143ef902942286a620",
+    "prepaint.js": "ca8efe9d5ffce5c836472ea5baff5c5c7245a7ec6878548c01b831122769e886",
+    "fonts/commissioner-variable.woff2": "9a41b2e45163615e99b220d11bcb810647b293fa4d8408611cc1a603b72f1cc2",
+    "fonts/commissioner-OFL.txt": "4a7d88c77b4bc39ff84f2e058ba8f015636c50ce33588a86d9da97defe519933",
+    "fonts/commissioner-source.txt": "66cfda55dca176600b4fef627d73391e391c16e6d5d396501b60991d7a869850"
+  }
+}

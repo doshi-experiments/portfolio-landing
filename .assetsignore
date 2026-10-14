@@ -2,5 +2,10 @@
 *
 !index.html
 !portfolio.css
+!portfolio.js
 !design-system/
 !design-system/**
+!versions/
+!versions/**
+versions/**/README.md
+versions/**/SOURCES.md

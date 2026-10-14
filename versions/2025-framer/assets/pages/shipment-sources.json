@@ -1,0 +1,185 @@
+{
+  "source": "https://orange-pentagon-065454.framer.app/shipment",
+  "assets": [
+    {
+      "path": "/assets/pages/shipment-01.png",
+      "url": "https://framerusercontent.com/images/TsuzQPkjDCHd1E9u9IKcRtoNHA8.png?scale-down-to=1024",
+      "bytes": 60445
+    },
+    {
+      "path": "/assets/pages/shipment-02.png",
+      "url": "https://framerusercontent.com/images/IuK2xbRyvihQpJsGtwE3OjfyNMQ.png?scale-down-to=1024",
+      "bytes": 117373
+    },
+    {
+      "path": "/assets/pages/shipment-03.png",
+      "url": "https://framerusercontent.com/images/yJuUs6VLspKANHJwaZIVkyJ0l3o.png?scale-down-to=1024",
+      "bytes": 48371
+    },
+    {
+      "path": "/assets/pages/shipment-04.png",
+      "url": "https://framerusercontent.com/images/H0O4QXfRVUEuHYXgTP86LrIDrE.png?scale-down-to=1024",
+      "bytes": 75812
+    },
+    {
+      "path": "/assets/pages/shipment-05.png",
+      "url": "https://framerusercontent.com/images/rQvQK47X5HRut3sAMKT85kzuGCg.png?scale-down-to=1024",
+      "bytes": 1336
+    },
+    {
+      "path": "/assets/pages/shipment-06.png",
+      "url": "https://framerusercontent.com/images/CsJfvziDW7saEuynBRrkbg6zuLI.png?scale-down-to=1024",
+      "bytes": 1256
+    },
+    {
+      "path": "/assets/pages/shipment-07.png",
+      "url": "https://framerusercontent.com/images/vcpLG4tIRLWMNjIHN3iMXfGxTzo.png?scale-down-to=1024",
+      "bytes": 1828
+    },
+    {
+      "path": "/assets/pages/shipment-08.png",
+      "url": "https://framerusercontent.com/images/wfk7mGvnkzHbZWD2KfhKfSboFz8.png?scale-down-to=2048",
+      "bytes": 346431
+    },
+    {
+      "path": "/assets/pages/shipment-09.png",
+      "url": "https://framerusercontent.com/images/0Hc8uQ33TSDlVKSMbbx7VZmko4.png?scale-down-to=1024",
+      "bytes": 107294
+    },
+    {
+      "path": "/assets/pages/shipment-10.png",
+      "url": "https://framerusercontent.com/images/GCLm82Uf1BgpVxWQDTP4gKm78.png?scale-down-to=1024",
+      "bytes": 109504
+    },
+    {
+      "path": "/assets/pages/shipment-11.png",
+      "url": "https://framerusercontent.com/images/vz1iF0tuu0QyWLwz54DpybbhnLs.png?scale-down-to=1024",
+      "bytes": 104531
+    },
+    {
+      "path": "/assets/pages/shipment-12.png",
+      "url": "https://framerusercontent.com/images/xzNzLgDq8JTz4f5LR2NqXB86E.png?scale-down-to=2048",
+      "bytes": 340903
+    },
+    {
+      "path": "/assets/pages/shipment-13.png",
+      "url": "https://framerusercontent.com/images/EFZypFMtWYQY1SnBjtFlKe3Vu8g.png?scale-down-to=1024",
+      "bytes": 187353
+    },
+    {
+      "path": "/assets/pages/shipment-14.png",
+      "url": "https://framerusercontent.com/images/soGaGqlPjdJ34Lr3M5sv270BiUo.png?scale-down-to=1024",
+      "bytes": 105679
+    },
+    {
+      "path": "/assets/pages/shipment-15.png",
+      "url": "https://framerusercontent.com/images/ffLFzA4TzExvgnVgmfQ9fWRac7c.png?scale-down-to=2048",
+      "bytes": 203894
+    },
+    {
+      "path": "/assets/pages/shipment-16.png",
+      "url": "https://framerusercontent.com/images/9TDlGa35UYfjCSYj3cpvODK3mU.png?scale-down-to=2048",
+      "bytes": 129391
+    },
+    {
+      "path": "/assets/pages/shipment-17.png",
+      "url": "https://framerusercontent.com/images/jBtND3HLPdx3a2NO8REFLkX2uE.png?scale-down-to=1024",
+      "bytes": 105266
+    },
+    {
+      "path": "/assets/pages/shipment-18.png",
+      "url": "https://framerusercontent.com/images/e0Op4qN8A2QS7avw3eBGZnNc5Gk.png?scale-down-to=2048",
+      "bytes": 213512
+    },
+    {
+      "path": "/assets/pages/shipment-19.png",
+      "url": "https://framerusercontent.com/images/BsCXNZagpH1bWGa50mLTyil6M.png?scale-down-to=2048",
+      "bytes": 423076
+    },
+    {
+      "path": "/assets/pages/shipment-20.png",
+      "url": "https://framerusercontent.com/images/J46fFUeXKWEGbqzcKxi2CrfSpno.png?scale-down-to=2048",
+      "bytes": 68242
+    },
+    {
+      "path": "/assets/pages/shipment-21.png",
+      "url": "https://framerusercontent.com/images/mnE0C2VNLVY5MI5lKmtHWGKDRgI.png?scale-down-to=2048",
+      "bytes": 180047
+    },
+    {
+      "path": "/assets/pages/shipment-22.png",
+      "url": "https://framerusercontent.com/images/SfJkKYjqqzZHvp0hwwdnwn3Cw.png?scale-down-to=2048",
+      "bytes": 156075
+    },
+    {
+      "path": "/assets/pages/shipment-23.png",
+      "url": "https://framerusercontent.com/images/ryfyv6p6nJk80F2U0uteoTVas.png?scale-down-to=2048",
+      "bytes": 95934
+    },
+    {
+      "path": "/assets/pages/shipment-24.png",
+      "url": "https://framerusercontent.com/images/maH7FvFsjaCGMAJ54kqhNOI8wyg.png?scale-down-to=2048",
+      "bytes": 215611
+    },
+    {
+      "path": "/assets/pages/shipment-25.png",
+      "url": "https://framerusercontent.com/images/045LZYLgvDN0pwb1BKLbpOCST4.png?scale-down-to=1024",
+      "bytes": 56274
+    },
+    {
+      "path": "/assets/pages/shipment-26.png",
+      "url": "https://framerusercontent.com/images/pd4VFtptXbFDAYhW7kMWP81gTQ.png?scale-down-to=1024",
+      "bytes": 62158
+    },
+    {
+      "path": "/assets/pages/shipment-27.png",
+      "url": "https://framerusercontent.com/images/VXJy3vJmdfl23p8wjAw4Hc7xABg.png?scale-down-to=1024",
+      "bytes": 62867
+    },
+    {
+      "path": "/assets/pages/shipment-28.png",
+      "url": "https://framerusercontent.com/images/r6gawWEffxPBYkphOYfpH2Lg.png?scale-down-to=1024",
+      "bytes": 60078
+    },
+    {
+      "path": "/assets/pages/shipment-29.png",
+      "url": "https://framerusercontent.com/images/xBl5ldxVBtIxwabiZkz4FTTeP68.png?scale-down-to=1024",
+      "bytes": 56490
+    },
+    {
+      "path": "/assets/pages/shipment-30.png",
+      "url": "https://framerusercontent.com/images/Oz26C4CfwuNXko82obgQq46du8.png?scale-down-to=1024",
+      "bytes": 53262
+    },
+    {
+      "path": "/assets/pages/shipment-31.png",
+      "url": "https://framerusercontent.com/images/be33jy5fw9ePK6ewuuF8t6z0.png?scale-down-to=1024",
+      "bytes": 53460
+    },
+    {
+      "path": "/assets/pages/shipment-32.png",
+      "url": "https://framerusercontent.com/images/aiv8TKclMNu9TrZQUGo6FQdJlc.png?scale-down-to=1024",
+      "bytes": 56829
+    },
+    {
+      "path": "/assets/pages/shipment-33.png",
+      "url": "https://framerusercontent.com/images/CH2QKgBUxmTDIKt97T8BTa13tWI.png?scale-down-to=1024",
+      "bytes": 52700
+    },
+    {
+      "path": "/assets/pages/shipment-34.png",
+      "url": "https://framerusercontent.com/images/Q1fOO620gZpSOWPZ0ZVQ0gtE.png?scale-down-to=1024",
+      "bytes": 57407
+    },
+    {
+      "path": "/assets/pages/shipment-35.png",
+      "url": "https://framerusercontent.com/images/qQAamIRk7pzasNlG52klDfbNk.png?scale-down-to=1024",
+      "bytes": 53032
+    },
+    {
+      "path": "/assets/pages/shipment-36.png",
+      "url": "https://framerusercontent.com/images/xcIokZIuVSL9gTd98ESlWl0O6g.png?scale-down-to=1024",
+      "bytes": 18043
+    }
+  ]
+}
