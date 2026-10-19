@@ -1,0 +1,9 @@
+/* The home hero, on both faces: the copy steps in from the left and the square narrows a little,
+   so the headline runs across the middle of the page and the line cuts through it rather than
+   past its end. The felt page loads this after portfolio.css; split.js adds it to the 2025 frame
+   at runtime (data-then-css), so the twins move together and the archive files stay as published.
+   At 1050px and below the square has no room to spare, and the headline already reaches the middle. */
+@media (min-width:1051px){
+  .h-hero,.hero{grid-template-columns:minmax(0,1fr) 31%;gap:clamp(40px,4vw,64px)}
+  .h-copy,.hero-copy{padding-inline-start:clamp(0px,14vw - 80px,130px)}
+}

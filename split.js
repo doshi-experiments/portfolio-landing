@@ -5,6 +5,7 @@
 // data-fit     "content": Face A runs its own full height; "now": Face A is cut where Face B ends
 // data-then    the archived page to show as Face A
 // data-then-map  archive paths that should open a page of the current site instead
+// data-then-css  a stylesheet added to the archived page at runtime, to move it with Face B
 
 const split = document.querySelector('[data-split]');
 if (split) init(split);
@@ -156,6 +157,33 @@ function init(split) {
     });
   }
 
+  // A link followed on either side takes the line all the way across first, so the side the reader
+  // chose fills the page, here and on the next page: a 2025 link shows 2025 in full, a felt link
+  // shows the felt face in full. Links that open a new tab, or leave for email, move nothing.
+  function choose(e, a, side, inPage) {
+    if (e.defaultPrevented && !inPage) return;
+    if (e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || a.hasAttribute('download')) return;
+    if (a.target && a.target !== '_top' && a.target !== '_self') return;
+    const url = new URL(a.href);
+    if (!/^https?:$/.test(url.protocol)) return;
+    if (!wide.matches) { keep({face: side}); return; }
+    const to = side === 'then' ? 100 : 0;
+    const moving = Math.abs(value - to) > 0.5 && !reduce.matches;
+    set(to, true);
+    keep({split: to});
+    if (!moving || inPage) return;
+    e.preventDefault();
+    setTimeout(() => location.assign(url.href), 380);
+  }
+  split.addEventListener('click', e => {
+    const a = e.target.closest('a[href]');
+    if (!a) return;
+    const side = a.closest('.then') ? 'then' : a.closest('.now') ? 'now' : null;
+    if (!side) return;
+    const url = new URL(a.href);
+    choose(e, a, side, url.origin === location.origin && url.pathname === location.pathname && !!url.hash);
+  });
+
   function mode() {
     split.dataset.mode = wide.matches ? 'divide' : 'toggle';
     size();
@@ -236,9 +264,20 @@ function init(split) {
   frame.addEventListener('load', () => {
     try { doc = frame.contentDocument; } catch { doc = null; }
     if (!doc) return;
+    if (split.dataset.thenCss) {
+      const sheet = doc.createElement('link');
+      sheet.rel = 'stylesheet';
+      sheet.href = split.dataset.thenCss;
+      doc.head.append(sheet);
+    }
     originals.clear();
     shim(true);
     route(doc);
+    doc.addEventListener('click', e => {
+      const a = e.target.closest && e.target.closest('a[href]');
+      if (!a) return;
+      choose(e, a, 'then', !a.target && new URL(a.href).pathname === thenUrl.pathname);
+    });
     doc.addEventListener('focusin', e => {
       const r = e.target.getBoundingClientRect();
       const o = frame.getBoundingClientRect();
