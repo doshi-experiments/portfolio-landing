@@ -1,9 +1,18 @@
-/* The home hero, on both faces: the copy steps in from the left and the square narrows a little,
-   so the headline runs across the middle of the page and the line cuts through it rather than
-   past its end. The felt page loads this after portfolio.css; split.js adds it to the 2025 frame
-   at runtime (data-then-css), so the twins move together and the archive files stay as published.
-   At 1050px and below the square has no room to spare, and the headline already reaches the middle. */
+/* The home hero, on both faces. The felt page loads this after portfolio.css; split.js adds it to
+   the 2025 frame at runtime (data-then-css), so the twins change together and the archive files
+   stay as published. */
+@media (min-width:701px){
+  /* Both headlines break before the typed phrase and keep the phrase on one line, and the felt
+     line is sized to run as wide as the 2025 Playfair, so wherever the split line cuts the
+     headline, the two halves are the same words on the same lines */
+  .h-tw::before,.typed-phrase::before{content:"\A";white-space:pre}
+  .h-tw,.typed-phrase{white-space:nowrap}
+  .h-h1{font-size:45.5px}
+}
 @media (min-width:1051px){
-  .h-hero,.hero{grid-template-columns:minmax(0,1fr) 31%;gap:clamp(40px,4vw,64px)}
-  .h-copy,.hero-copy{padding-inline-start:clamp(0px,14vw - 80px,130px)}
+  /* The square narrows a little and the copy moves right until its longest line (580px with
+     the caret) ends beside the square, so the headline runs across the middle of the page */
+  .h-hero,.hero{grid-template-columns:minmax(0,1fr) clamp(300px,28%,360px);gap:clamp(40px,4vw,56px)}
+  .h-copy,.hero-copy{padding-inline-start:max(0px,100% - 580px)}
+  .h-h1{font-size:52px}
 }
