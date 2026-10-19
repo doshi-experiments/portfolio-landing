@@ -16,6 +16,9 @@
   --ink:#262624;--ink2:#55524C;
   --dark:#33322F;--dark2:#3E3D39;--dark3:#2B2A27;--on:#ECE9E3;--on2:#B9B4AA;
   --sig:#FF5E7C;
+  /* Focus rings use the link coral from design system 0.6: the signal coral is a fill and
+     reaches only about 2:1 on oat, under the 3:1 a focus indicator needs. */
+  --focus:#A1263F;
   --soft:cubic-bezier(.2,.7,.2,1);--spring:cubic-bezier(.34,1.56,.64,1);
   --gut:clamp(20px,6.67vw,96px);
   --sans:"Host Grotesk",system-ui,sans-serif;
@@ -29,7 +32,7 @@ h1,h2,h3{font-weight:500}
 img,svg{display:block;max-width:100%}
 a{color:inherit;text-decoration:none}
 ::selection{background:var(--sig);color:#000}
-:focus-visible{outline:3px solid var(--sig);outline-offset:4px}
+:focus-visible{outline:3px solid var(--focus);outline-offset:4px}
 .visually-hidden{position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip-path:inset(50%);white-space:nowrap;border:0}
 .skip{position:fixed;top:12px;left:16px;z-index:50;padding:10px 18px;border-radius:999px;background:var(--g1);color:var(--ink);font-weight:600;box-shadow:var(--raised);transform:translateY(-200%)}
 .skip:focus{transform:none}
@@ -204,6 +207,7 @@ a{color:inherit;text-decoration:none}
 .h-links a::before{content:"";position:absolute;inset:0 -16px;z-index:-1;border-radius:999px;background:var(--g1);box-shadow:inset 0 1px 0 rgba(255,255,255,.85),0 0 0 1px rgba(38,38,36,.08),0 8px 14px -8px rgba(38,38,36,.5);opacity:0;transform:scale(.9);transition:opacity 220ms var(--soft),transform 320ms var(--spring)}
 .h-links a:hover::before,.h-links a:focus-visible::before{opacity:1;transform:none}
 .h-links a:focus-visible{outline:none}
+.h-links a:focus-visible::before{box-shadow:inset 0 1px 0 rgba(255,255,255,.85),0 0 0 3px var(--focus),0 8px 14px -8px rgba(38,38,36,.5)}
 .h-links i{width:6px;height:6px;border-radius:50%;background:var(--sig)}
 
 /* the square where the 2025 page keeps the portrait: a felt set that runs the experiments */
@@ -258,7 +262,7 @@ a{color:inherit;text-decoration:none}
 .lc{position:relative;display:block;width:100%;aspect-ratio:.977;padding:0;border:0;--r:26px;border-radius:26px;overflow:hidden;background:var(--dark2);color:var(--on);font:inherit;text-align:left;box-shadow:inset 0 1px 0 rgba(255,255,255,.07),0 20px 30px -22px rgba(0,0,0,.7);cursor:pointer;transition:transform 360ms var(--soft)}
 .lc::after{border-color:rgba(236,233,227,.12)}
 .lc:hover,.lc:focus-visible{transform:translateY(-3px);outline:none}
-.lc:focus-visible{box-shadow:0 0 0 3px var(--sig)}
+.lc:focus-visible{box-shadow:0 0 0 3px var(--focus)}
 .lc:hover::after,.lc:focus-visible::after{border-color:color-mix(in srgb,var(--sig) 60%,transparent)}
 .lc-win{position:absolute;inset:12px;border-radius:18px;background:var(--dark3);box-shadow:inset 0 3px 10px rgba(0,0,0,.45),inset 0 -1px 0 rgba(255,255,255,.05);overflow:hidden}
 .lc-win svg{position:absolute;inset:0;width:100%;height:100%;transition:transform 520ms var(--soft),opacity 420ms var(--soft)}
@@ -454,3 +458,8 @@ a{color:inherit;text-decoration:none}
   .pane,.pane-copy,.pane-hint,.knob,.needle{transition:none}
   .fade{animation:none}
 }
+/* Lifting a card is a hover cue, not a focus indicator. Keyboard focus also gets the ring. */
+.h-row:focus-visible,.nx:focus-visible{outline:3px solid var(--focus);outline-offset:4px}
+/* The knob sits over the black 2025 face and the oat felt face at once, so its ring carries
+   a light halo that keeps the link coral readable against both. */
+.knob:focus-visible{outline:3px solid var(--focus);outline-offset:3px;box-shadow:inset 0 1px 0 rgba(255,255,255,.85),0 0 0 1px rgba(38,38,36,.12),0 0 0 9px var(--g1),0 10px 18px -8px rgba(0,0,0,.6)}
