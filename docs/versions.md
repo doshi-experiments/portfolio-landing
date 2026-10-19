@@ -14,7 +14,7 @@ Archive rules:
 - Paths are prefixed, never relativised, so a copy keeps working wherever a page sits in it. `tools/check-links.mjs` fails if a file under `versions/<slug>/` points outside `/versions/<slug>/` (except the bar's link home or to `/versions/`), or if any local reference is missing. CI runs it.
 - The archive bar is a sticky strip at the top of each archived page. The 2025 pages link back to `/`, where the split home shows them as Face A; the others link to their stop in the version history (`/versions/#t1`, `/versions/#t3`). A one-line script hides it when the page is framed, so neither the miniature nor the viewer shows it.
 - Archived `design-system/` snapshots are byte-identical to their source commit; CI checks every `**/design-system/release.json`, not just the live one.
-- The Framer archive ships its own fonts (Playfair Display, Poppins, Amiko). The identity's "Commissioner only" rule applies to the live site; an archive keeps whatever it shipped with.
+- The Framer archive ships its own fonts (Playfair Display, Poppins, Amiko). The identity's one-font rule (Host Grotesk since 0.6.0) applies to the live site; an archive keeps whatever it shipped with.
 - The 2025 case-study pages stay indexable because they are the only case studies on the site. The two archived landing pages are `noindex` since they duplicate `/`.
 
 ## Adding a stop
