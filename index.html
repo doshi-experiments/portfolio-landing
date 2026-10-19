@@ -1,93 +1,113 @@
 <!doctype html>
-<html lang="en" data-project="portfolio" data-density="comfortable" data-appearance-storage="sheet-theme" data-appearance-default="dark">
+<html lang="en" data-project="portfolio">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Rishabh Doshi</title>
-<meta name="description" content="The portfolio is under construction. The experiments work. Every version of this page since the hand-made one from 2025.">
-<script src="/design-system/prepaint.js"></script>
-<script>document.documentElement.dataset.engine=matchMedia('(prefers-reduced-motion: reduce)').matches?'reduced':'active'</script>
-<link rel="stylesheet" href="/design-system/tokens.css">
-<link rel="stylesheet" href="/design-system/components.css">
+<meta name="description" content="Product designer. The portfolio is under construction. The experiments work. Drag the line to compare the hand-made 2025 portfolio with the one made with an AI in the room.">
+<meta name="theme-color" content="#E7E4DE">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<script>document.documentElement.classList.add('js')</script>
+<script>if(/^#(t[0-4]|hero|callout[ABC])$/.test(location.hash))location.replace('/versions/'+location.hash)</script>
+<link rel="preload" href="/fonts/host-grotesk-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="/portfolio.css">
-<script defer src="/design-system/metadata.js"></script>
+<script type="module" src="/split.js"></script>
 <script type="module" src="/portfolio.js"></script>
 </head>
 <body>
-<a class="ds-skip-link" href="#content">Skip to content</a>
-<div class="site-header-slot" id="site-header"></div>
-<main id="content" tabindex="-1">
-  <div class="column">
-    <h1 id="name">Rishabh Doshi</h1>
-    <section class="panel stop" id="t0" data-stop="2025" data-src="/versions/2025-framer/" aria-labelledby="t0-h">
-      <h2 id="t0-h">2025</h2>
-      <p>Made by hand in Framer. The last version with no AI in it, and the only one with case studies. Everything after this had an AI in the room. Judge the slop yourself.</p>
-      <a class="open" data-open href="/versions/2025-framer/">Open the 2025 version</a>
+<a class="skip" href="#content">Skip to content</a>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <defs>
+    <symbol id="arrow" viewBox="0 0 16 16"><path d="M3 8H13"></path><path d="M9 4L13 8L9 12"></path></symbol>
+  </defs>
+</svg>
+
+<div class="split" data-split="50" data-fit="content" data-face="now" data-then="/versions/2025-framer/" data-then-map='{"/versions/2025-framer/":"/","/versions/2025-framer/shipment/":"/shipment/","/versions/2025-framer/genai/":"/genai/","/versions/2025-framer/healthcare/":"/healthcare/"}'>
+  <script>try{var k=JSON.parse(localStorage.getItem('split-portfolio'))||{},e=document.currentScript.parentElement;if(isFinite(k.split))e.style.setProperty('--split',k.split);if(k.face==='then'||k.face==='now')e.dataset.face=k.face}catch(x){}</script>
+  <div class="faces">
+
+    <!-- Face B: made with an AI in the room (now), in felt, element for element on the 2025 page -->
+    <div class="now home fibre mottle">
+      <header class="h-head h-wrap">
+        <a href="/" class="h-logo" aria-label="Rishabh Doshi, home"><span class="pwr live" aria-hidden="true"></span><span lang="hi">ऋषभ</span></a>
+        <nav class="h-navl" aria-label="Main"><a href="/versions/2025-framer/about/">About</a><a href="#work">Work</a></nav>
+      </header>
+
+      <main id="content" tabindex="-1">
+        <section class="h-hero h-wrap" aria-labelledby="name">
+          <div class="h-copy">
+            <h1 id="name" class="h-h1" aria-label="Hi I'm Rishabh and I design experiences."><span aria-hidden="true">Hi I'm Rishabh and I <span class="h-tw" data-typed>design experiences.</span><span class="h-caret"></span></span></h1>
+            <div class="h-links"><a href="/versions/2025-framer/about/">About</a><i aria-hidden="true"></i><a href="#work">See my work</a></div>
+          </div>
+          <div class="h-obj fibre stitch" data-obj>
+            <div class="obj-top"><span>Now running</span><span><span class="pwr sm live" aria-hidden="true"></span>Experiments · 03</span></div>
+            <a href="#lab" class="obj-win" aria-label="Rent vs. buy, in Experiments" data-win><svg viewBox="0 0 360 220" aria-hidden="true" class="on"><path d="M36 186H324" stroke="#55524C" stroke-width="1.5"></path><path class="ln a" d="M36 166L324 44"></path><path class="ln b" d="M36 126L324 88"></path><circle class="xo" cx="168" cy="108" r="7"></circle><text x="324" y="34" text-anchor="end" fill="#B9B4AA" style="font:500 12px 'Host Grotesk',sans-serif">Rent</text><text x="324" y="110" text-anchor="end" style="fill:var(--sig);font:500 12px 'Host Grotesk',sans-serif">Buy</text></svg><svg viewBox="0 0 360 220" aria-hidden="true"><path d="M104 150A150 150 0 0 0 256 150" fill="none" stroke="#55524C" stroke-width="1.5" stroke-dasharray="2 7"></path><path d="M150 30H210" stroke="#B9B4AA" stroke-width="3" stroke-linecap="round"></path><g class="pend"><path d="M180 30V164" stroke="#ECE9E3" stroke-width="2"></path><circle cx="180" cy="176" r="13" style="fill:var(--sig)"></circle></g><circle cx="180" cy="30" r="4" fill="#ECE9E3"></circle></svg><svg viewBox="0 0 360 220" aria-hidden="true"><path class="mm" d="M128 92V128M118 100V120M232 92V128M242 100V120" stroke-width="2.5" stroke-linecap="round" style="stroke:var(--sig)"></path><g class="shk"><rect x="148" y="44" width="64" height="116" rx="14" fill="none" stroke="#ECE9E3" stroke-width="2.5"></rect><path d="M172 54H188" stroke="#ECE9E3" stroke-width="2" stroke-linecap="round"></path><circle cx="180" cy="102" r="6" style="fill:var(--sig)"></circle></g></svg></a>
+            <div class="obj-bot">
+              <div class="obj-t"><b data-exp-title>Rent vs. buy</b><span data-exp-line>Your own numbers. Six calculators.</span></div>
+              <div class="keys" role="group" aria-label="Choose an experiment"><button type="button" class="key" aria-pressed="true" aria-label="Rent vs. buy">1</button><button type="button" class="key" aria-pressed="false" aria-label="Visualizations">2</button><button type="button" class="key" aria-pressed="false" aria-label="Mr. Shake">3</button></div>
+            </div>
+          </div>
+        </section>
+
+        <section id="work" class="h-work h-wrap" aria-label="Selected work">
+          <a href="/shipment/" class="h-row fibre stitch"><figure class="h-art"><img src="/versions/2025-framer/assets/truck-management.webp" width="1024" height="1024" alt="An orange delivery truck emerging from a laptop" loading="lazy"><figcaption>Illustration made with ♥ on Midjourney</figcaption></figure><div class="h-rcopy"><h3>Truck &amp; Driver Management</h3><p>Helping managers find trucks and drivers to move equipment for a Fortune 500 logistics company</p><ul class="h-tags" aria-label="Project skills"><li>Enterprise UX</li><li>UX Research</li><li>Workshops</li><li>Complex Product</li><li>Design Sprint</li></ul><span class="h-see"><span class="rnd" aria-hidden="true"><svg><use href="#arrow"></use></svg></span>See case study</span></div></a>
+          <a href="/genai/" class="h-row fibre stitch rev"><div class="h-rcopy"><h3>GenAI Travel Claims</h3><p>Leveraging generative AI to simplify and streamline the travel claims process.</p><ul class="h-tags" aria-label="Project skills"><li>Native App</li><li>Hackathon</li><li>GenAI</li><li>User Journey Mapping</li><li>Design Sprint</li></ul><span class="h-see"><span class="rnd" aria-hidden="true"><svg><use href="#arrow"></use></svg></span>See case study</span></div><figure class="h-art"><img src="/versions/2025-framer/assets/travel-claims.webp" width="1024" height="1024" alt="A small robot holding an umbrella while standing on a phone" loading="lazy"><figcaption>Illustration made with ♥ on Midjourney</figcaption></figure></a>
+          <a href="/healthcare/" class="h-row fibre stitch"><figure class="h-art"><img src="/versions/2025-framer/assets/healthcare.webp" width="1024" height="1024" alt="Healthcare professionals connecting through a phone and laptop" loading="lazy"><figcaption>Illustration made with ♥ on Midjourney</figcaption></figure><div class="h-rcopy"><h3>Healthcare and Benefits</h3><p>Redesigning the benefits experience for 12 million Kaiser members</p><ul class="h-tags" aria-label="Project skills"><li>B2C</li><li>UX Research</li><li>Workshops</li><li>Responsive Web Design</li><li>Design Sprint</li></ul><span class="h-see"><span class="rnd" aria-hidden="true"><svg><use href="#arrow"></use></svg></span>See project overview</span></div></a>
+        </section>
+
+        <section id="lab" class="h-lab fibre mottle on-dark" aria-labelledby="lab-h">
+          <div class="h-wrap">
+            <h2 id="lab-h">Experiments</h2>
+            <p class="h-sub">Things I’ve built with an AI in the room. Hover to see details. Each one works today.</p>
+            <div class="h-grid">
+            <a class="lc fibre stitch on-dark" href="https://rent-vs-buy.rishabhdoshi.com/"><div class="lc-win"><svg viewBox="0 0 360 220" aria-hidden="true"><path d="M36 186H324" stroke="#55524C" stroke-width="1.5"></path><path class="ln a" d="M36 166L324 44"></path><path class="ln b" d="M36 126L324 88"></path><circle class="xo" cx="168" cy="108" r="7"></circle><text x="324" y="34" text-anchor="end" fill="#B9B4AA" style="font:500 12px 'Host Grotesk',sans-serif">Rent</text><text x="324" y="110" text-anchor="end" style="fill:var(--sig);font:500 12px 'Host Grotesk',sans-serif">Buy</text></svg></div><div class="lc-txt"><span class="lc-lbl">Money</span><div><h3 class="lc-ti">Rent vs. buy</h3><p class="lc-de">Compare renting and buying with your own numbers</p></div></div></a>
+            <a class="lc fibre stitch on-dark" href="https://visualizations.rishabhdoshi.com/"><div class="lc-win"><svg viewBox="0 0 360 220" aria-hidden="true"><path d="M104 150A150 150 0 0 0 256 150" fill="none" stroke="#55524C" stroke-width="1.5" stroke-dasharray="2 7"></path><path d="M150 30H210" stroke="#B9B4AA" stroke-width="3" stroke-linecap="round"></path><g class="pend"><path d="M180 30V164" stroke="#ECE9E3" stroke-width="2"></path><circle cx="180" cy="176" r="13" style="fill:var(--sig)"></circle></g><circle cx="180" cy="30" r="4" fill="#ECE9E3"></circle></svg></div><div class="lc-txt"><span class="lc-lbl">Physics</span><div><h3 class="lc-ti">Visualizations</h3><p class="lc-de">Growth, symmetry and chaos, in four exhibits</p></div></div></a>
+            <a class="lc fibre stitch on-dark" href="https://mr-shake.rishabhdoshi.com/"><div class="lc-win"><svg viewBox="0 0 360 220" aria-hidden="true"><path class="mm" d="M128 92V128M118 100V120M232 92V128M242 100V120" stroke-width="2.5" stroke-linecap="round" style="stroke:var(--sig)"></path><g class="shk"><rect x="148" y="44" width="64" height="116" rx="14" fill="none" stroke="#ECE9E3" stroke-width="2.5"></rect><path d="M172 54H188" stroke="#ECE9E3" stroke-width="2" stroke-linecap="round"></path><circle cx="180" cy="102" r="6" style="fill:var(--sig)"></circle></g></svg></div><div class="lc-txt"><span class="lc-lbl">Party game</span><div><h3 class="lc-ti">Mr. Shake</h3><p class="lc-de">One phone, a few suspicious friends, one secret</p></div></div></a>
+            <div class="lc fibre stitch on-dark" tabindex="0"><div class="lc-win"><svg viewBox="0 0 360 220" aria-hidden="true"><path d="M110 110H250" stroke="#55524C" stroke-width="1.5" stroke-dasharray="2 7"></path><circle cx="110" cy="110" r="24" fill="#3E3D39" stroke="#55524C" stroke-width="1.5"></circle><circle cx="180" cy="110" r="24" fill="#3E3D39" stroke="#55524C" stroke-width="1.5"></circle><circle cx="250" cy="110" r="24" fill="#3E3D39" stroke="#55524C" stroke-width="1.5"></circle><text x="110" y="115" text-anchor="middle" fill="#ECE9E3" style="font:600 15px 'Host Grotesk',sans-serif">1</text><text x="180" y="115" text-anchor="middle" fill="#ECE9E3" style="font:600 15px 'Host Grotesk',sans-serif">2</text><text x="250" y="115" text-anchor="middle" fill="#ECE9E3" style="font:600 15px 'Host Grotesk',sans-serif">3</text><circle class="bead3" cx="110" cy="150" r="6" style="fill:var(--sig)"></circle></svg></div><div class="lc-txt"><span class="lc-lbl">Method</span><div><h3 class="lc-ti">How I work now</h3><p class="lc-de">Understand what people need. Make something they can try. Improve it from there.</p></div></div></div>
+            <button type="button" class="lc fibre stitch on-dark" data-reveal-then aria-label="From the archives: slide the line across to show the 2025 page"><div class="lc-win"><svg viewBox="0 0 360 220" aria-hidden="true"><g class="fan f1"><rect x="146" y="62" width="68" height="96" rx="8" fill="#3E3D39" stroke="#7A766E" stroke-width="1.5"></rect></g><g class="fan f2"><rect x="146" y="62" width="68" height="96" rx="8" fill="#3E3D39" stroke="#7A766E" stroke-width="1.5"></rect></g><g class="fan f3"><rect x="146" y="62" width="68" height="96" rx="8" fill="#3E3D39" stroke="#7A766E" stroke-width="1.5"></rect></g><g class="fan f4"><rect x="146" y="62" width="68" height="96" rx="8" fill="#3E3D39" stroke="#7A766E" stroke-width="1.5"></rect></g><g class="fan f5"><rect x="146" y="62" width="68" height="96" rx="8" fill="#4A4843" stroke="#ECE9E3" stroke-width="1.5"></rect><path d="M196 62H206A8 8 0 0 1 214 70V80Z" style="fill:var(--sig)"></path></g></svg></div><div class="lc-txt"><span class="lc-lbl">2025</span><div><h3 class="lc-ti">From the archives</h3><p class="lc-de">Five older projects live on the other side of the line</p></div></div></button>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <footer class="h-foot">I hope you have a gorgeous day! · <a href="mailto:hello@rishabhdoshi.com">Email</a> · <a href="https://www.linkedin.com/in/rishabhdoshi13/" target="_blank" rel="noopener noreferrer">LinkedIn<span class="visually-hidden"> (opens in a new tab)</span></a> ↗ · <a href="https://github.com/doshi-experiments" target="_blank" rel="noopener noreferrer">GitHub<span class="visually-hidden"> (opens in a new tab)</span></a> ↗ · <a href="/versions/">Every version of this page</a></footer>
+    </div>
+
+    <!-- Face A: made without AI, the 2025 Framer site as published, live from its archive -->
+    <section class="then" aria-label="The 2025 portfolio, made without AI">
+      <iframe title="The 2025 portfolio, made by hand in Framer" scrolling="no"></iframe>
     </section>
-    <section class="panel stop" id="t1" data-stop="August 2026" data-src="/versions/2026-08-blueprint/" aria-labelledby="t1-h">
-      <h2 id="t1-h">August 2026</h2>
-      <p>The first version made with an AI in the room. It arrived with a crane, a felt model, a revision number and confetti. Nobody asked for the confetti.</p>
-      <a class="open" data-open href="/versions/2026-08-blueprint/">Open the August 2026 version</a>
-    </section>
-    <section class="panel stop" id="t2" data-stop="September 2026" data-kind="image" data-src="/versions/2026-09-astro/swiss-1280.webp" data-src-narrow="/versions/2026-09-astro/swiss-390.webp" aria-labelledby="t2-h">
-      <h2 id="t2-h">September 2026</h2>
-      <p>A detour: one portfolio rendered in twelve design movements. Three were built. None shipped, so there is nothing to open.</p>
-      <img class="archive-shot" src="/versions/2026-09-astro/swiss-1280.webp" width="1280" height="1800" loading="lazy" alt="The September 2026 draft in its Swiss direction: a cream page with the headline Outside of work, I enjoy making and breaking things, a one-pixel line plan of the HfG Ulm campus, and a Work section.">
-    </section>
-    <section class="panel stop" id="t3" data-stop="October 2026" data-src="/versions/2026-10-blue/" aria-labelledby="t3-h">
-      <h2 id="t3-h">October 2026</h2>
-      <p>One identity shared with the experiments: Commissioner, porcelain and enamel blue. It lasted eight days.</p>
-      <a class="open" data-open href="/versions/2026-10-blue/">Open the October 2026 version</a>
-    </section>
-    <section class="panel" id="hero" data-stop="Now" aria-labelledby="now-h">
-      <h2 id="now-h">Now</h2>
-      <p>The portfolio is under construction. The experiments work.</p>
-      <nav id="contacts" aria-label="Contact Rishabh">
-        <a href="mailto:hello@rishabhdoshi.com" title="Open your email app">Email<span class="visually-hidden"> (opens your email app)</span></a>
-        <a href="https://www.linkedin.com/in/rishabhdoshi13/" target="_blank" rel="noopener noreferrer" title="LinkedIn (opens in a new tab)">LinkedIn<svg viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M6 3h7v7M13 3 3 13"/></svg><span class="visually-hidden"> (opens in a new tab)</span></a>
-        <a href="https://github.com/doshi-experiments" target="_blank" rel="noopener noreferrer" title="GitHub (opens in a new tab)">GitHub<svg viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M6 3h7v7M13 3 3 13"/></svg><span class="visually-hidden"> (opens in a new tab)</span></a>
-      </nav>
-      <a class="portfolio-cta ds-button" data-variant="primary" href="https://experiments.rishabhdoshi.com">Explore experiments</a>
-      <p class="scroll-hint"><span>Scroll to build</span><svg viewBox="0 0 24 32" aria-hidden="true" focusable="false"><path d="M12 3v25m-7-7 7 7 7-7"/></svg></p>
-    </section>
-    <section class="panel process" id="calloutA" aria-labelledby="process-a">
-      <h2 id="process-a">Understand what people need.</h2>
-    </section>
-    <section class="panel process" id="calloutB" aria-labelledby="process-b">
-      <h2 id="process-b">Make something they can try.</h2>
-    </section>
-    <section class="panel process" id="calloutC" aria-labelledby="process-c">
-      <h2 id="process-c">Improve it from there.</h2>
-    </section>
-    <div class="timeline" hidden>
-      <label for="time">Version history</label>
-      <input id="time" type="range" min="0" max="4" step="any" value="0" aria-valuetext="2025">
-      <ol class="ticks" aria-hidden="true"><li><span>2025</span></li><li><span>Aug<span class="year"> 2026</span></span></li><li><span>Sep<span class="year"> 2026</span></span></li><li><span>Oct<span class="year"> 2026</span></span></li><li><span>Now</span></li></ol>
+  </div>
+
+  <!-- Glass on the line -->
+  <div class="panes" aria-hidden="true">
+    <div class="pane pane-l">
+      <span class="pane-hint">Drag right for more <svg viewBox="0 0 16 16"><path d="M3 8H13"></path><path d="M9 4L13 8L9 12"></path></svg></span>
+      <div class="pane-copy"><span class="pane-eye">2025 · Framer</span><p class="pane-word">Not AI</p><p class="pane-line">Designed and built by hand, before any AI was in the room.</p></div>
+    </div>
+    <div class="pane pane-r">
+      <span class="pane-hint"><svg viewBox="0 0 16 16"><path d="M13 8H3"></path><path d="M7 4L3 8L7 12"></path></svg> Drag left for more</span>
+      <div class="pane-copy"><span class="pane-eye"><span class="pwr sm"></span>2026 · Now</span><p class="pane-word">AI</p><p class="pane-line">Designed and built with an AI in the room. Same person, same judgment.</p></div>
     </div>
   </div>
-  <div id="stage" aria-hidden="true">
-    <div id="camera"><div id="world">
-      <div class="groundgrid"></div><div class="road"></div><div class="gshadow"></div>
-      <div id="build"></div>
-    </div></div>
+
+  <div class="divider">
+    <div class="divider-line"></div>
+    <div class="divider-strip">
+      <div class="knob" role="separator" tabindex="0" aria-orientation="vertical" aria-label="Divider between the portfolio made without AI and the one made with AI" aria-valuemin="0" aria-valuemax="100" aria-valuenow="50">
+        <span class="yr yr-then" aria-hidden="true">Without AI</span>
+        <svg viewBox="0 0 22 22" aria-hidden="true"><path d="M8 5L3 11L8 17"></path><path d="M14 5L19 11L14 17"></path></svg>
+        <span class="yr yr-now" aria-hidden="true">With AI</span>
+      </div>
+    </div>
   </div>
-  <div id="frame" aria-hidden="true" data-state="hidden">
-    <iframe tabindex="-1" title="Scale model of an earlier version of this page"></iframe>
-    <img alt="">
+
+  <div class="toggle-rail">
+    <div class="toggle fibre" role="group" aria-label="Which portfolio to show">
+      <button type="button" class="seg" data-face="then" aria-pressed="false"><i aria-hidden="true"></i>Without AI</button>
+      <button type="button" class="seg" data-face="now" aria-pressed="true"><i aria-hidden="true"></i>With AI</button>
+    </div>
   </div>
-  <div class="runway" aria-hidden="true">
-    <div class="beat" style="--len:80"></div><div class="beat" style="--len:80"></div><div class="beat" style="--len:80"></div><div class="beat" style="--len:80"></div>
-    <div class="beat" style="--len:75"></div><div class="beat" style="--len:75"></div><div class="beat" style="--len:75"></div><div class="beat" style="--len:75"></div>
-  </div>
-</main>
-<dialog id="viewer" aria-labelledby="viewer-title">
-  <div class="viewer-bar"><h2 id="viewer-title">Earlier version</h2><button class="ds-button" data-variant="ghost" type="button" id="viewer-close">Back to the timeline</button></div>
-</dialog>
-<button class="ds-button" data-variant="ghost" id="rebuild" type="button" hidden>Start over</button>
-<div id="progress" aria-hidden="true"></div>
-<script type="module">
-import { mountSiteHeader } from '/design-system/site.js';
-mountSiteHeader(document.getElementById('site-header'), {project:'portfolio',showProjectTitle:false});
-</script>
+</div>
 </body>
 </html>
