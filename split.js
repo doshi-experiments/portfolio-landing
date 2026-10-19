@@ -5,6 +5,7 @@
 // data-fit     "content": Face A runs its own full height; "now": Face A is cut where Face B ends
 // data-then    the archived page to show as Face A
 // data-then-map  archive paths that should open a page of the current site instead
+// data-then-css  a stylesheet added to the archived page at runtime, to move it with Face B
 
 const split = document.querySelector('[data-split]');
 if (split) init(split);
@@ -263,6 +264,12 @@ function init(split) {
   frame.addEventListener('load', () => {
     try { doc = frame.contentDocument; } catch { doc = null; }
     if (!doc) return;
+    if (split.dataset.thenCss) {
+      const sheet = doc.createElement('link');
+      sheet.rel = 'stylesheet';
+      sheet.href = split.dataset.thenCss;
+      doc.head.append(sheet);
+    }
     originals.clear();
     shim(true);
     route(doc);
