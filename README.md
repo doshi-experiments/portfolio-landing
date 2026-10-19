@@ -20,7 +20,7 @@ Without JavaScript the page is Face B alone, with every link working. With reduc
 
 Host Grotesk is a vendored latin variable subset in `fonts/`, under the SIL Open Font License 1.1 with its licence beside it, from Google Fonts on 18 October 2026. The glass pane's “Not AI” uses the archive’s own Playfair Display file.
 
-The home page and case study do not load `@doshi-experiments/design-system`, so they have no shared header or appearance control and have a single light appearance. The timeline at `/versions/` still uses the 0.5.2 snapshot in `design-system/`, which stays immutable and checked by CI. `design-system/docs/identity.md` still describes the charcoal-and-rust portfolio and needs a release that records Felt.
+The home page and case study do not load `@doshi-experiments/design-system`, so they have no shared header or appearance control and have a single light appearance. The timeline at `/versions/` uses the 0.6.0 (Felt) snapshot in `design-system/`, which stays immutable and checked by CI. Release 0.6.0 records Felt in `design-system/docs/identity.md`, so the timeline now matches the home page's palette and type.
 
 ## Preview and deploy
 
