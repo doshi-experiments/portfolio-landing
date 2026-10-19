@@ -15,10 +15,13 @@
   --g0:#E7E4DE;--g1:#F1EEE9;--g2:#DAD6CE;--g3:#CFCAC1;
   --ink:#262624;--ink2:#55524C;
   --dark:#33322F;--dark2:#3E3D39;--dark3:#2B2A27;--on:#ECE9E3;--on2:#B9B4AA;
-  --sig:#FF5E7C;
-  /* Focus rings use the link coral from design system 0.6: the signal coral is a fill and
-     reaches only about 2:1 on oat, under the 3:1 a focus indicator needs. */
-  --focus:#A1263F;
+  /* The signal, from design system 0.7: a raspberry-to-brick gradient under white text, its solid
+     midpoint for dots and lines, the link red for focus, and a pale tint for selection. */
+  --sig:#CD354D;
+  --sig-grad:linear-gradient(120deg,#D2386B 0%,#C8312F 100%);
+  --on-sig:#FFFFFF;
+  --sig-tint:#EAC9CA;
+  --focus:#A22826;
   --soft:cubic-bezier(.2,.7,.2,1);--spring:cubic-bezier(.34,1.56,.64,1);
   --gut:clamp(20px,6.67vw,96px);
   --sans:"Host Grotesk",system-ui,sans-serif;
@@ -31,7 +34,7 @@ h1,h2,h3,p,ul,ol,dl,dd,figure,blockquote{margin:0}
 h1,h2,h3{font-weight:500}
 img,svg{display:block;max-width:100%}
 a{color:inherit;text-decoration:none}
-::selection{background:var(--sig);color:#000}
+::selection{background:var(--sig-tint);color:var(--ink)}
 :focus-visible{outline:3px solid var(--focus);outline-offset:4px}
 .visually-hidden{position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip-path:inset(50%);white-space:nowrap;border:0}
 .skip{position:fixed;top:12px;left:16px;z-index:50;padding:10px 18px;border-radius:999px;background:var(--g1);color:var(--ink);font-weight:600;box-shadow:var(--raised);transform:translateY(-200%)}
@@ -159,7 +162,7 @@ a{color:inherit;text-decoration:none}
 
 .rnd{display:flex;align-items:center;justify-content:center;flex-shrink:0;width:40px;height:40px;border-radius:50%;background:var(--g1);box-shadow:inset 0 1px 0 rgba(255,255,255,.85),0 0 0 1px rgba(38,38,36,.08),0 6px 10px -6px rgba(38,38,36,.5);transition:background-color 260ms var(--soft),box-shadow 260ms var(--soft),transform 260ms var(--soft)}
 .rnd svg{width:16px;height:16px;fill:none;stroke:var(--ink);stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
-.nx:hover .rnd,.nx:focus-visible .rnd{background:var(--sig);transform:translateY(1px);box-shadow:inset 0 2px 4px rgba(38,38,36,.3)}
+.nx:hover .rnd,.nx:focus-visible .rnd{background:var(--sig-grad);color:var(--on-sig);transform:translateY(1px);box-shadow:inset 0 2px 4px rgba(38,38,36,.3)}
 
 /* The lab: a charcoal band of felt modules */
 .band{position:relative;margin-top:120px;padding-block:110px 120px;background:var(--dark);color:var(--on)}
@@ -225,7 +228,7 @@ a{color:inherit;text-decoration:none}
 .keys{display:flex;flex-shrink:0;gap:8px}
 .key{display:flex;align-items:center;justify-content:center;width:30px;height:30px;padding:0;border:0;border-radius:50%;background:var(--g1);font:600 12px/1 var(--sans);color:var(--ink2);box-shadow:inset 0 1px 0 rgba(255,255,255,.85),0 0 0 1px rgba(38,38,36,.08),0 8px 14px -8px rgba(38,38,36,.5);cursor:pointer;transition:transform 200ms var(--soft),box-shadow 200ms var(--soft),background-color 200ms var(--soft)}
 .key:hover{transform:translateY(1px)}
-.key[aria-pressed="true"]{transform:translateY(1px);background:var(--sig);color:var(--ink);box-shadow:inset 0 2px 4px rgba(38,38,36,.32),0 0 0 1px rgba(38,38,36,.06)}
+.key[aria-pressed="true"]{transform:translateY(1px);background:var(--sig-grad);color:var(--on-sig);box-shadow:inset 0 2px 4px rgba(38,38,36,.32),0 0 0 1px rgba(38,38,36,.06)}
 /* a 44px target around each 30px key */
 .key{position:relative}
 .key::before{content:"";position:absolute;inset:-7px}
@@ -251,7 +254,7 @@ a{color:inherit;text-decoration:none}
 .h-see{display:inline-flex;align-items:center;gap:12px;min-height:44px;font-size:18px}
 .h-see .rnd{width:30px;height:30px}
 .h-see .rnd svg{transition:transform 320ms cubic-bezier(.22,1,.36,1)}
-.h-row:hover .h-see .rnd,.h-row:focus-visible .h-see .rnd{background:var(--sig);transform:translateY(1px);box-shadow:inset 0 2px 4px rgba(38,38,36,.3)}
+.h-row:hover .h-see .rnd,.h-row:focus-visible .h-see .rnd{background:var(--sig-grad);color:var(--on-sig);transform:translateY(1px);box-shadow:inset 0 2px 4px rgba(38,38,36,.3)}
 .h-row:hover .h-see .rnd svg,.h-row:focus-visible .h-see .rnd svg{transform:rotate(-30deg)}
 
 /* the 2025 archive grid becomes the experiments, on a charcoal band, with the same reveal */
@@ -267,7 +270,7 @@ a{color:inherit;text-decoration:none}
 .lc-win{position:absolute;inset:12px;border-radius:18px;background:var(--dark3);box-shadow:inset 0 3px 10px rgba(0,0,0,.45),inset 0 -1px 0 rgba(255,255,255,.05);overflow:hidden}
 .lc-win svg{position:absolute;inset:0;width:100%;height:100%;transition:transform 520ms var(--soft),opacity 420ms var(--soft)}
 .lc-txt{position:absolute;inset:12px;display:flex;flex-direction:column;justify-content:flex-end;align-items:flex-start;gap:10px;padding:24px;border-radius:18px;transition:background-color 260ms ease}
-.lc-lbl{padding:4px 10px;border-radius:999px;background:var(--sig);color:var(--ink);font-size:12px;font-weight:600;line-height:14.4px}
+.lc-lbl{padding:4px 10px;border-radius:999px;background:var(--sig-grad);color:var(--on-sig);font-size:12px;font-weight:600;line-height:14.4px}
 .lc-ti{font-size:34px;line-height:1.2;letter-spacing:-.02em}
 .lc-de{font-size:16px;line-height:1.2;color:var(--on2)}
 .lc-lbl,.lc-ti,.lc-de{opacity:0;transform:translateY(12px);transition:opacity .25s,transform .3s cubic-bezier(.2,.8,.2,1)}
@@ -361,7 +364,7 @@ a{color:inherit;text-decoration:none}
 .c-sh p{grid-column:7 / span 6;font-size:18px;line-height:1.55;color:var(--ink2)}
 .tile{display:flex;flex-direction:column;gap:14px;padding:30px 30px 32px;transition:transform 360ms var(--soft)}
 .tile:hover{transform:translateY(-3px)}
-.tile:hover .num{background:var(--sig);box-shadow:inset 0 2px 4px rgba(38,38,36,.3)}
+.tile:hover .num{background:var(--sig-grad);color:var(--on-sig);box-shadow:inset 0 2px 4px rgba(38,38,36,.3)}
 .tile h3{font-size:23px;line-height:1.2;letter-spacing:-.02em}
 .tile p{font-size:16px;line-height:1.55;color:var(--ink2)}
 .tile ul{display:flex;flex-direction:column;gap:12px;padding:0;list-style:none}
@@ -380,7 +383,7 @@ a{color:inherit;text-decoration:none}
 .q{font-size:21px !important;line-height:1.4 !important;letter-spacing:-.01em;color:var(--ink) !important}
 .stat b{font-size:68px;line-height:1;letter-spacing:-.045em;font-weight:500}
 .meter{margin-top:4px;height:8px;overflow:hidden;border-radius:999px;background:var(--g2);box-shadow:inset 0 1px 3px rgba(38,38,36,.25)}
-.meter i{display:block;height:100%;border-radius:999px;background:var(--sig);animation:fill 1.6s var(--soft) .4s both}
+.meter i{display:block;height:100%;border-radius:999px;background:var(--sig-grad);animation:fill 1.6s var(--soft) .4s both}
 @keyframes fill{from{width:0}}
 .note{display:inline-flex;align-items:center;gap:10px;font-size:15px;color:var(--ink2)}
 /* The process, as a felt rail with stations and a bead that travels it */
@@ -463,3 +466,8 @@ a{color:inherit;text-decoration:none}
 /* The knob sits over the black 2025 face and the oat felt face at once, so its ring carries
    a light halo that keeps the link coral readable against both. */
 .knob:focus-visible{outline:3px solid var(--focus);outline-offset:3px;box-shadow:inset 0 1px 0 rgba(255,255,255,.85),0 0 0 1px rgba(38,38,36,.12),0 0 0 9px var(--g1),0 10px 18px -8px rgba(0,0,0,.6)}
+/* On the charcoal preview screens the deep signal sinks, so lines, dots and labels drawn there use
+   the dark-mode signal red (design system action-link, dark). */
+.lc-win,.obj-win{--sig:#E89D9C}
+
+.nx:is(:hover,:focus-visible) .rnd svg,.h-row:is(:hover,:focus-visible) .h-see .rnd svg{stroke:var(--on-sig)}
