@@ -1,12 +1,12 @@
 #!/usr/bin/env node
 // Checks the files that deploy: every local reference resolves to a file, and each archived
-// version under versions/<slug>/ only points inside itself or back to the current site.
+// version under versions/<slug>/ only points inside itself, back home, or to the version history.
 // Run from anywhere: node tools/check-links.mjs
 import {existsSync, readFileSync, readdirSync, statSync} from 'node:fs';
 import {dirname, join, relative, resolve, sep} from 'node:path';
 
 const root = resolve(dirname(new URL(import.meta.url).pathname), '..');
-const roots = ['index.html', 'portfolio.css', 'portfolio.js', 'design-system', 'versions'];
+const roots = ['index.html', 'portfolio.css', 'portfolio.js', 'split.js', 'favicon.svg', 'fonts', 'felt', 'shipment', 'genai', 'healthcare', 'design-system', 'versions'];
 const failures = [];
 let files = 0, refs = 0;
 
@@ -31,7 +31,7 @@ function check(file, ref) {
   refs++;
   const clean = ref.split('#')[0].split('?')[0];
   const archive = rel(file).match(/^versions\/([^/]+)\//);
-  if (archive && clean.startsWith('/') && clean !== '/' && !clean.startsWith(`/versions/${archive[1]}/`)) {
+  if (archive && clean.startsWith('/') && clean !== '/' && clean !== '/versions/' && !clean.startsWith(`/versions/${archive[1]}/`)) {
     failures.push(`${rel(file)}: "${ref}" escapes its archive`);
   }
   if (clean === '') return;
