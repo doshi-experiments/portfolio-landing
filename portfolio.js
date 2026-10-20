@@ -38,16 +38,25 @@ function mirror(typed, frame) {
 
   // Each felt word starts where its 2025 twin starts and is as wide, by letter-spacing, and the
   // felt line sits on the 2025 baseline. Letters are left to the felt face: spaced one by one they
-  // read as gaps. The two lines break in the same places (home-hero.css), so the words pair up one
-  // for one; if they ever do not, the felt line keeps its own spacing.
+  // read as gaps. The 2025 headline wraps on its own as the phrase types; the felt line does not
+  // wrap, and breaks only before the words that start a new 2025 line, so the words pair up one
+  // for one on the same lines. If they ever do not, the felt line keeps its own spacing.
   function align() {
     const words = wrap(line);
     for (const w of words) w.style.cssText = '';
-    line.style.position = line.style.top = '';
+    for (const br of line.querySelectorAll('br[data-br]')) br.remove();
+    line.style.position = line.style.top = line.style.whiteSpace = '';
     if (!wide.matches || !source || !source.isConnected) return;
     const twin = source.parentElement;
     const boxes = wordBoxes(twin);
     if (boxes.length !== words.length || boxes.some((b, i) => b.text !== words[i].textContent)) return;
+    line.style.whiteSpace = 'nowrap';
+    boxes.forEach((b, i) => {
+      if (!i || b.top < boxes[i - 1].top + b.height / 2) return;
+      const br = document.createElement('br');
+      br.setAttribute('data-br', '');
+      words[i].before(br);
+    });
     const dx = frame.getBoundingClientRect().left;
     const base = parseFloat(getComputedStyle(line).letterSpacing) || 0;
     words.forEach((w, i) => {
@@ -104,7 +113,7 @@ function wordBoxes(el) {
       r.setStart(node, m.index);
       r.setEnd(node, m.index + m[0].length);
       const b = r.getBoundingClientRect();
-      boxes.push({text: m[0], left: b.left, width: b.width});
+      boxes.push({text: m[0], left: b.left, width: b.width, top: b.top, height: b.height});
     }
   }
   return boxes;
