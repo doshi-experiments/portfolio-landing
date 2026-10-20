@@ -70,7 +70,7 @@
 .shipment-story.walkthrough-enhanced{display:grid;grid-template-columns:minmax(0,2fr) minmax(0,1fr);gap:64px;align-items:start}
 .shipment-stage{position:sticky;top:18vh;margin:0;display:none;align-items:center;min-height:60vh}
 .walkthrough-enhanced .shipment-stage{display:flex}
-.shipment-stage img{width:100%;height:auto;border:1px solid #ddd;border-radius:8px;box-shadow:0 16px 36px #0002}
+.shipment-stage img{width:auto;max-width:100%;height:auto;max-height:calc(82vh - 48px);border:1px solid #ddd;border-radius:8px;box-shadow:0 16px 36px #0002}
 .shipment-story-step{display:flex;flex-direction:column;justify-content:center;min-height:80vh;padding-block:64px}
 .shipment-story-step h3{font-family:var(--font-body);font-size:18px;margin-bottom:16px}
 .shipment-story-step .story-mobile-image{display:block;margin-top:24px}
@@ -78,6 +78,14 @@
 .shipment-extra-screens{margin:40px 0 64px;border-top:1px solid var(--case-rule);border-bottom:1px solid var(--case-rule);padding:18px 0}
 .shipment-extra-screens summary{cursor:pointer;font-size:14px;min-height:30px}
 .shipment-extra-screens .case-grid{margin-top:24px}
+/* The study's body runs the width of the window, as the Framer page does: 32px margins, 64px
+   from 1200px and 128px from 1920px, with the chapter rail taking about an eighth of it. */
+.shipment-page .case-body>.container{width:auto;margin-inline:var(--case-margin,32px)}
+@media(min-width:701px){.shipment-page .case-chapter{grid-template-columns:max(112px,12%) minmax(0,1fr);gap:12px}}
+/* Framer showed the walkthrough screens at 570px in a wide margin; here they take three quarters. */
+@media(min-width:1051px){.shipment-page .shipment-story.walkthrough-enhanced{grid-template-columns:minmax(0,3fr) minmax(240px,1fr);gap:56px}}
+@media(min-width:1200px){.shipment-page{--case-margin:64px}}
+@media(min-width:1920px){.shipment-page{--case-margin:128px}}
 .genai-page .case-hero{padding-block:104px 180px}
 .genai-page .case-section{padding-block:100px}
 .genai-page .case-body h2{font-size:44px}
