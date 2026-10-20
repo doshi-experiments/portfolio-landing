@@ -6,7 +6,7 @@ import {existsSync, readFileSync, readdirSync, statSync} from 'node:fs';
 import {dirname, join, relative, resolve, sep} from 'node:path';
 
 const root = resolve(dirname(new URL(import.meta.url).pathname), '..');
-const roots = ['index.html', 'portfolio.css', 'portfolio.js', 'split.js', 'favicon.svg', 'fonts', 'felt', 'shipment', 'genai', 'healthcare', 'design-system', 'versions'];
+const roots = ['index.html', 'portfolio.css', 'portfolio.js', 'split.js', 'favicon.svg', 'fonts', 'felt', 'shipment', 'genai', 'healthcare', 'household', 'design-system', 'versions'];
 const failures = [];
 let files = 0, refs = 0;
 
