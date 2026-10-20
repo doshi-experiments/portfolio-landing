@@ -1,0 +1,294 @@
+<!doctype html>
+<html lang="en" data-project="portfolio" class="no-js">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Household Apps · Rishabh Doshi</title>
+<meta name="description" content="How much should a house decide for itself? A family chat, a bear lookout, chores that nag, two LED panels and a budget, built for two people and two dogs.">
+<meta name="theme-color" content="#E7E4DE">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<script>document.documentElement.classList.add('js')</script>
+<link rel="preload" href="/fonts/host-grotesk-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/portfolio.css">
+<link rel="stylesheet" href="/household/household.css">
+<script type="module" src="/household/household.js"></script>
+</head>
+<body>
+<a class="skip" href="#content">Skip to content</a>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <defs>
+    <symbol id="arrow" viewBox="0 0 16 16"><path d="M3 8H13"></path><path d="M9 4L13 8L9 12"></path></symbol>
+    <symbol id="back" viewBox="0 0 16 16"><path d="M13 8H3"></path><path d="M7 4L3 8L7 12"></path></symbol>
+    <symbol id="out" viewBox="0 0 16 16"><path d="M6 3h7v7M13 3 3 13"></path></symbol>
+    <symbol id="chev" viewBox="0 0 16 16"><path d="M6 3l5 5-5 5"></path></symbol>
+    <symbol id="grow" viewBox="0 0 16 16"><path d="M9.5 2.5h4v4M6.5 13.5h-4v-4M13.5 2.5 9 7M2.5 13.5 7 9"></path></symbol>
+  </defs>
+</svg>
+
+<div class="hh fibre mottle">
+  <header class="f-head wrap">
+    <a href="/" class="f-name"><span class="pwr live" aria-hidden="true"></span>Rishabh Doshi</a>
+    <nav class="f-nav keep" aria-label="Main"><a href="/#work">Work</a><a href="/#lab" class="wide">Experiments</a><a href="mailto:hello@rishabhdoshi.com">Email</a></nav>
+  </header>
+
+  <main id="content" tabindex="-1">
+    <nav class="spy" aria-label="Chapters">
+      <span class="spy-now" aria-live="polite"><b data-num>Intro</b><span data-title>The setup and the goal</span></span>
+      <span class="spy-dots"><a href="#ch-intro" class="dot" aria-current="true" aria-label="Intro: the setup and the goal"></a><a href="#ch-question" class="dot" aria-current="false" aria-label="The question: who gets the last word?"></a><a href="#ch-chat" class="dot" aria-current="false" aria-label="Chapter 1 of 5: the chat"></a><a href="#ch-bears" class="dot" aria-current="false" aria-label="Chapter 2 of 5: bears"></a><a href="#ch-tasks" class="dot" aria-current="false" aria-label="Chapter 3 of 5: tasks"></a><a href="#ch-finance" class="dot" aria-current="false" aria-label="Chapter 4 of 5: finance"></a><a href="#ch-led" class="dot" aria-current="false" aria-label="Interlude: the LED panels"></a><a href="#ch-build" class="dot" aria-current="false" aria-label="Chapter 5 of 5: how it gets built"></a><a href="#ch-broke" class="dot" aria-current="false" aria-label="Living with it: what broke, and what’s next"></a></span>
+    </nav>
+
+    <div class="wrap">
+      <section class="c-hero" id="ch-intro" data-ch data-num="Intro" data-title="The setup and the goal">
+        <div class="c-title">
+          <a href="/#work" class="crumb f-link rise" style="animation-delay:100ms"><svg aria-hidden="true"><use href="#back"></use></svg>Work · Case 04 of 04</a>
+          <h1 class="rise" style="animation-delay:180ms">How much should a house decide for itself?</h1>
+          <p class="c-lede rise" style="animation-delay:260ms">My house runs on software I designed and had built: a family chat, a bear lookout, chores that nag, two LED panels, a budget, and one design system under all of it. Each answers that question differently, on purpose.</p>
+        </div>
+        <div class="spec felt fibre stitch rise" style="animation-delay:340ms">
+          <div class="spec-top"><span>Spec</span><span class="pwr sm" aria-hidden="true"></span></div>
+          <dl><dt>Role</dt><dd>Designer, product owner and the person who reviews every plan</dd><dt>Users</dt><dd>Two people and two dogs: one genius, one shared brain cell</dd><dt>Built</dt><dd>July to October 2026, mostly after dinner</dd><dt>AI in the room</dt><dd>Claude Code builds. I decide what gets built, and what to borrow instead.</dd></dl>
+        </div>
+      </section>
+
+      <div class="what">
+        <div><b>THE SETUP</b><p>A small server in the house runs about fifteen self-hosted apps. <strong>Home Assistant</strong> keeps track of nearly 1,900 things it can read or switch: lights, sensors, switches, cameras. Two LED panels light up our offices.</p></div>
+        <div><b>THE GOAL</b><p>Make a busy house easier to run. <strong>One place to ask for things,</strong> reminders that actually work, and money tracked without retyping a single transaction.</p></div>
+        <div><b>THE RULES</b><p><strong>Nothing is open to the internet;</strong> we reach it over a private network. Anything new can be rolled back. And every app has to look like it belongs to the same house.</p></div>
+      </div>
+
+      <p class="toc-h"><span class="pwr sm" aria-hidden="true"></span>IN THIS CASE STUDY</p>
+      <nav class="toc" aria-label="Contents">
+        <a href="#ch-question"><small>THE QUESTION</small><b>Who gets the last word?</b><span>When software should act, ask, or only suggest.</span></a>
+        <a href="#ch-chat"><small>CHAPTER 1 · THE CHAT</small><b>Just tell it</b><span>One family chat in front of every app.</span></a>
+        <a href="#ch-bears"><small>CHAPTER 2 · BEARS</small><b>Better a false alarm</b><span>A camera, a vision model and a loud house.</span></a>
+        <a href="#ch-tasks"><small>CHAPTER 3 · TASKS</small><b>A reminder that lets you breathe</b><span>Chores that repeat properly, and snooze.</span></a>
+        <a href="#ch-finance"><small>CHAPTER 4 · FINANCE</small><b>Never guesses alone</b><span>A budget where a person approves every import.</span></a>
+        <a href="#ch-led"><small>INTERLUDE</small><b>The LED panels</b><span>Fireworks on demand. No questions asked.</span></a>
+        <a href="#ch-build"><small>CHAPTER 5 · HOW IT GETS BUILT</small><b>I direct, Claude Code builds</b><span>Briefs, plan reviews, build or borrow.</span></a>
+        <a href="#ch-broke"><small>LIVING WITH IT</small><b>What broke, and what’s next</b><span>Two incidents, and the next three things.</span></a>
+      </nav>
+
+      <div class="lead">
+        <figure class="vmap" data-map data-captions='{"outside":"Valley Map, the Home Assistant dashboard, drawn like a farm game in original pixel art. Outside: the yards, the cameras, and what the cameras saw today.","home":"The main and upper floors. Lights glow where they’re on, a villager appears in any room that’s occupied, and speakers show notes while they play.","basement":"The basement. Every light has its own fixture you can tap, and only the area it reaches gets lit."}'>
+          <div class="maptools">
+            <div class="seg" role="group" aria-label="Map view">
+              <button type="button" data-view="outside" aria-pressed="true">Outside</button>
+              <button type="button" data-view="home" aria-pressed="false">Home</button>
+              <button type="button" data-view="basement" aria-pressed="false">Basement</button>
+            </div>
+            <button type="button" class="flip" data-bear aria-pressed="true"><i aria-hidden="true"></i>Bear in the yard</button>
+          </div>
+          <div class="mapbox"><img src="/household/map-outside-bear.webp" width="1027" height="800" alt="Valley Map, outside view, with a bear alert and a red frame"></div>
+          <figcaption><span class="pwr sm" aria-hidden="true"></span><span data-caption>Valley Map, the Home Assistant dashboard, drawn like a farm game in original pixel art. Outside: the yards, the cameras, and what the cameras saw today. The red frame means a bear. Shown with preview states.</span></figcaption>
+        </figure>
+        <div class="nums" aria-label="By the numbers">
+          <div class="n"><b>1,158</b><span>bank transactions imported, none written without a person’s OK</span></div>
+          <div class="n"><b>703</b><span>documents filed and searchable in Paperless</span></div>
+          <div class="n"><b>95</b><span>meals logged by typing what you ate</span></div>
+          <div class="n"><b>64 → 49</b><span>Home Assistant automations after one review</span></div>
+          <div class="n"><b class="red">0</b><span>people who went outside while the house said there was a bear</span></div>
+        </div>
+      </div>
+
+      <section class="sec" id="ch-question" data-ch data-num="The question" data-title="Who gets the last word?">
+        <div class="ttl"><span class="eye"><span class="pwr sm" aria-hidden="true"></span>The question</span><h2>Who gets the last word?</h2></div>
+        <div class="dial felt fibre stitch" role="img" aria-label="A scale from the software decides to a person decides, with five apps placed along it">
+          <div class="ends"><span>The software decides</span><span>A person decides</span></div>
+          <div class="track"><i style="left:6%"></i><i style="left:28%"></i><i class="hot" style="left:50%"></i><i style="left:72%"></i><i style="left:94%"></i></div>
+          <div class="stops">
+            <div class="stop"><em>Just does it</em><b>LED panels</b><span>Plays the GIF, then puts back what was there.</span></div>
+            <div class="stop"><em>Does it, within limits</em><b>The chat</b><span>Acts on plain words. Doors and the garage ask first.</span></div>
+            <div class="stop"><em>Warns loudly</em><b>Bear check</b><span>Alerts even when unsure. You decide whether to go out.</span></div>
+            <div class="stop"><em>Nags until done</em><b>Tasks</b><span>Won’t let a chore slip, but snoozes and goes quiet at night.</span></div>
+            <div class="stop"><em>Only suggests</em><b>Finance</b><span>Proposes categories. Nothing is written until a person approves.</span></div>
+          </div>
+        </div>
+        <p class="intro" style="max-width:62ch">The interesting design work wasn’t any one screen. It was deciding, app by app, when software should just act, when it should ask first, and when it should only ever suggest. The rest of this page is those five decisions.</p>
+      </section>
+
+      <section class="sec" id="ch-chat" data-ch data-num="Chapter 1 of 5" data-title="The chat: just tell it">
+        <div class="ttl"><span class="eye"><span class="pwr sm" aria-hidden="true"></span>Chapter 1 of 5 · The chat · Does it, within limits</span><h2>Just tell it</h2></div>
+        <div class="stage">
+          <div class="phone" role="img" aria-label="A phone playing a scripted family chat: a shopping request, a breakfast log, a garage alert answered with a button, and a chore marked done">
+            <div class="scr">
+              <div class="chat-top"><span class="av" aria-hidden="true"><svg viewBox="0 0 16 16"><path d="M2.5 7.5 8 3l5.5 4.5V13a1 1 0 0 1-1 1h-9a1 1 0 0 1-1-1Z"></path><path d="M6.5 14v-4h3v4"></path></svg></span><div><b>Household</b><span>Sam, Rishabh and the bot</span></div></div>
+              <div class="feed">
+                <div class="m m1"><p class="b me"><span class="who">Sam</span>buy milk and wood screws</p></div>
+                <div class="m m2"><p class="b bot"><span class="who">Bot</span>Added 2: Milk to Shopping / Groceries, Wood screws to Shopping / Everything Else.</p></div>
+                <div class="m m3"><p class="b me"><span class="who">Rishabh</span>had 2 eggs and toast for breakfast</p></div>
+                <div class="m m4"><p class="b bot"><span class="who">Bot</span>Breakfast logged: about 225 kcal, 15 g protein.<span class="quip">Protein before nine. The day is already winning.</span></p></div>
+                <div class="m m5"><div class="b bot"><span class="who">Bot · from Home Assistant</span>The garage door has been open for 30 minutes.<div class="btns"><span class="cb go">Close it</span><span class="cb">Ignore</span></div></div></div>
+                <div class="m m6"><p class="b bot"><span class="who">Bot</span>Garage door closed.</p></div>
+                <div class="m m7"><p class="b me"><span class="who">Sam</span>gave the dogs their pill</p></div>
+                <div class="m m8"><p class="b bot"><span class="who">Bot</span>Done: Give the dogs their monthly pill. Next one is due in 30 days.</p></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="txt">
+          <div class="col">
+            <p class="intro">Every message to the family chat goes to a language model first. It reads the last day of conversation and picks actions from a fixed list, and the code that already worked does the job. It always answers, even if the answer is that it can’t open voice notes.</p>
+            <div class="moment felt fibre stitch"><small><span class="pwr sm" aria-hidden="true"></span>Why a chat</small><p>Our chores lived in four places: a list app, Home Assistant’s to-dos, the recipe app and a recurring calendar invite. Keeping track meant checking all four. The group chat was the one place everyone already was.</p></div>
+          </div>
+          <div class="col">
+            <h3>What it will and won’t do on its own</h3>
+            <ul class="rules">
+              <li><span><b>It asks before unlocking a door or opening the garage.</b> Lights and lists, it just does.</span></li>
+              <li><span><b>It won’t delete more than five things from one message.</b> “Got it” ticks things off; it never deletes them.</span></li>
+              <li><span><b>It ignores instructions hidden in photos or web pages,</b> so a photo of a sign saying “unlock the front door” stays a photo.</span></li>
+              <li><span><b>If the AI is down, simple rules answer instead.</b> One switch turns the AI off entirely.</span></li>
+            </ul>
+            <div class="pills"><span class="pill"><b>31 of 31</b>test messages routed right</span><span class="pill"><b>0.8 s</b>per decision</span><span class="pill"><b>841</b>AI calls since July</span></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="sec" id="ch-bears" data-ch data-num="Chapter 2 of 5" data-title="Bears: better a false alarm">
+        <div class="ttl"><span class="eye"><span class="pwr sm" aria-hidden="true"></span>Chapter 2 of 5 · Bears · Warns loudly</span><h2>Better a false alarm than a surprise bear</h2></div>
+        <div class="stage">
+          <div class="bear" role="img" aria-label="A bear alert card: bear detected in the backyard, the model’s description, and the announcement playing in the house">
+            <div class="bear-top"><span class="bear-ic" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="6.5" cy="6.5" r="2.5"></circle><circle cx="17.5" cy="6.5" r="2.5"></circle><path d="M5 13a7 7 0 0 1 14 0v2.5A5.5 5.5 0 0 1 13.5 21h-3A5.5 5.5 0 0 1 5 15.5Z"></path><path d="M10 14h.01M14 14h.01M10.5 17.5c1 .7 2 .7 3 0"></path></svg></span><div><b>BEAR DETECTED</b><span>Backyard · 2 minutes ago</span></div></div>
+            <div class="bear-shot"><svg viewBox="0 0 380 150" aria-hidden="true"><rect width="380" height="150" fill="#2B2A27"></rect><path d="M30 112V40M70 112V40M110 112V40M150 112V40M190 112V40M230 112V40M270 112V40M310 112V40M350 112V40M20 56h340M20 92h340" stroke="#3E3D39" stroke-width="3"></path><g fill="#121211"><ellipse cx="220" cy="104" rx="46" ry="26"></ellipse><circle cx="268" cy="88" r="16"></circle><circle cx="262" cy="74" r="5"></circle><circle cx="276" cy="75" r="5"></circle><rect x="186" y="112" width="12" height="18" rx="4"></rect><rect x="236" y="112" width="12" height="18" rx="4"></rect></g><rect x="160" y="52" width="136" height="88" fill="none" stroke="#E89D9C" stroke-width="2" stroke-dasharray="6 5"></rect><text x="164" y="46" fill="#E89D9C" font-size="12" font-family="Host Grotesk, system-ui, sans-serif">bear 95%</text></svg></div>
+            <div class="bear-ai"><b>AI ANALYSIS</b>Large dark animal near the back fence, moving along it. Confidence 95%.</div>
+            <div class="bear-say"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9Z"></path><path d="M16 9a4 4 0 0 1 0 6M18.5 6.5a7.5 7.5 0 0 1 0 11"></path></svg>Also announced out loud on the house speakers.</div>
+          </div>
+          <div class="outs">
+            <div class="out"><em class="hi">55% or more</em><b>Bear</b><span>Full alert, picture and announcement.</span></div>
+            <div class="out"><em class="mid">Under 55%</em><b>Possible bear</b><span>Alert with the picture, at most every 10 minutes.</span></div>
+            <div class="out"><em class="low">No answer</em><b>Check failed</b><span>A second AI tries, then it alerts anyway. Never “no bear”.</span></div>
+          </div>
+        </div>
+        <div class="txt">
+          <div class="col">
+            <p class="intro">Bears wander through the yards where we live. The yard cameras flag every person or animal they see, and a vision model looks at the snapshot to answer one question: is that a bear, and how sure are you? Most smart-home alerts are tuned to stay quiet. This one is tuned the other way, because a missed bear means someone, or a dog, walks straight out into it.</p>
+            <p class="note"><b>At night,</b> uncertain checks are written down and reported when night mode ends, or the moment someone opens a yard door.</p>
+          </div>
+          <div class="col">
+            <div class="moment felt fibre stitch"><small><span class="pwr sm" aria-hidden="true"></span>What actually happened</small><p>We’ve seen a bear a few times now. Each time the house said so out loud, and nobody went outside until it had gone.</p></div>
+            <p class="pull"><span class="pwr" aria-hidden="true"></span><span>“Bear detection should lean toward false positives.”<small>A standing rule in the house’s automation notes. When the yard is quiet, the tablet says: “Nothing but squirrels gossiping out front.”</small></span></p>
+          </div>
+        </div>
+      </section>
+
+      <section class="sec" id="ch-tasks" data-ch data-num="Chapter 3 of 5" data-title="Tasks: a reminder that lets you breathe">
+        <div class="ttl"><span class="eye"><span class="pwr sm" aria-hidden="true"></span>Chapter 3 of 5 · Tasks · Nags until done</span><h2>A reminder that lets you breathe</h2></div>
+        <figure class="shot felt fibre stitch">
+          <video src="/household/tasks-board.mp4" poster="/household/tasks-board.jpg" width="1280" height="620" autoplay muted loop playsinline data-recording="tasks" aria-label="A task card dragged from Low to High, then marked Done, and a cartoon dog pops up"></video>
+          <figcaption><span>Drag to reprioritise. Done earns a small dog moment. Invented tasks, real app.</span><button type="button" class="big" data-enlarge="tasks"><svg aria-hidden="true"><use href="#grow"></use></svg>Enlarge</button></figcaption>
+        </figure>
+        <div class="txt">
+          <div class="col">
+            <p class="intro">We tried two list apps side by side for a week. Neither did repeats or reminders the way a house needs, so the lists moved into an app built for this one. The chat and the web app are two doors to the same lists.</p>
+            <div class="moment felt fibre stitch"><small><span class="pwr sm" aria-hidden="true"></span>What actually happened</small><p>The dog-food alarm had no snooze, so people turned it off, and then forgot. Snooze is a temporary no: the reminder comes back. Whiskey, a husky and Great Pyrenees mix, has a single brain cell she usually loans out. It is always back in time for dinner.</p></div>
+          </div>
+          <div class="col">
+            <h3>How the reminders behave</h3>
+            <ul class="rules">
+              <li><span><b>Alarm until done:</b> a critical push, the chat and the speakers, every day until someone taps Done.</span></li>
+              <li><span><b>Snooze, never skip:</b> tomorrow, three days, this weekend. It never counts as done.</span></li>
+              <li><span><b>Quiet at night:</b> nothing is sent, pushed or spoken while the house is in night mode.</span></li>
+              <li><span><b>One tap, one chore:</b> a second tap on another phone gets “already done”, not next week’s.</span></li>
+            </ul>
+            <div class="pills"><span class="pill"><b>74</b>items moved in from four apps, in one evening</span><span class="pill"><b>24</b>chores on repeat</span></div>
+          </div>
+        </div>
+        <div class="meds felt fibre stitch" role="img" aria-label="Before: a calendar invite on the 1st of every month, so doses drift and two land 22 days apart. After: Tasks counts 30 days from the last dose, so every gap is 30 days.">
+          <h3>Monthly dog meds, before and after</h3>
+          <div class="months"><span></span><span>August</span><span>September</span><span>October</span><span>November</span></div>
+          <div class="mrow"><div class="mlab"><span class="tag before">BEFORE</span>The 1st of every month<small>A recurring calendar invite</small></div>
+            <div class="line"><span class="tick" style="left:0%"></span><span class="tick" style="left:25%"></span><span class="tick" style="left:50%"></span><span class="tick" style="left:75%"></span><span class="dose" style="left:7%"></span><span class="dose" style="left:29.1%"></span><span class="gap good" style="left:18%">27 days</span><span class="dose" style="left:47.1%"></span><span class="gap bad" style="left:38.1%">22 days</span><span class="dose" style="left:70.9%"></span><span class="gap good" style="left:59%">29 days</span></div></div>
+          <div class="mrow"><div class="mlab"><span class="tag after">AFTER</span>30 days after the last dose<small>Tasks</small></div>
+            <div class="line"><span class="tick" style="left:0%"></span><span class="tick" style="left:25%"></span><span class="tick" style="left:50%"></span><span class="tick" style="left:75%"></span><span class="dose ok" style="left:7%"></span><span class="dose ok" style="left:31.6%"></span><span class="gap good" style="left:19.3%">30 days</span><span class="dose ok" style="left:56.2%"></span><span class="gap good" style="left:43.9%">30 days</span><span class="dose ok" style="left:80.8%"></span><span class="gap good" style="left:68.5%">30 days</span></div></div>
+          <p class="note" style="position:relative;font-size:14px">Before is an example of the old pattern: whenever someone was late, the next dose still landed on the 1st, too close to the last. After is today’s real schedule: last dose on 7 October, next due 6 November. Mr Frodo Baggins, who is extremely smart, takes it with the look of a dog mildly disappointed in our life choices. On the old calendar, he had a point.</p>
+        </div>
+      </section>
+
+      <section class="sec" id="ch-finance" data-ch data-num="Chapter 4 of 5" data-title="Finance: never guesses alone">
+        <div class="ttl"><span class="eye"><span class="pwr sm" aria-hidden="true"></span>Chapter 4 of 5 · Finance · Only suggests</span><h2>A budget that never guesses alone</h2></div>
+        <figure class="shot felt fibre stitch">
+          <video src="/household/finance-review.mp4" poster="/household/finance-review.jpg" width="1440" height="900" autoplay muted loop playsinline data-recording="finance" aria-label="Choosing categories for four transactions, reviewing a changed transaction, confirming a transfer between accounts, then the confirm screen"></video>
+          <figcaption><span>Categories, then changes, then transfers. Confirm stays locked until everything has been looked at. Synthetic data.</span><button type="button" class="big" data-enlarge="finance"><svg aria-hidden="true"><use href="#grow"></use></svg>Enlarge</button></figcaption>
+        </figure>
+        <div class="txt one">
+          <div class="col">
+            <p class="intro">Bank CSV exports go into Actual Budget, an open-source budgeting app. It’s the one app here that never talks to the chat, and the one with no jokes in it: it writes money records, so a person approves every import. The AI only suggests categories, from descriptions alone: it never sees an amount, a date or an account. It knows you went to the bookshop, not how badly.</p>
+            <div class="pills"><span class="pill"><b>313</b>duplicate rows caught</span><span class="pill"><b>25 of 25</b>imports committed cleanly</span><span class="pill"><b>227</b>Amazon charges split by item</span></div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <section class="band fibre mottle on-dark" id="ch-led" data-ch data-num="Interlude" data-title="The LED panels" aria-label="The LED panels">
+      <div class="wrap led">
+        <img src="/household/fireworks.webp" width="384" height="384" alt="Fireworks on a 64 by 64 LED panel" loading="lazy">
+        <div><span class="eye"><span class="pwr sm" aria-hidden="true"></span>Interlude · Just does it</span><h2>And then there are the LED panels</h2><p>Two 64 × 64 panels at home. Ask the chat for “fireworks on my matrix” and a small service has an AI pick a GIF, shrinks it to 64 pixels, plays it, and puts back whatever was there before. No confirmation, no review. Some things should just happen. They are also the only fireworks Mr Frodo Baggins approves of.</p></div>
+      </div>
+    </section>
+
+    <div class="wrap">
+      <section class="sec" id="ch-build" data-ch data-num="Chapter 5 of 5" data-title="How it gets built">
+        <div class="ttl"><span class="eye"><span class="pwr sm" aria-hidden="true"></span>Chapter 5 of 5 · How it gets built</span><h2>I direct, Claude Code builds</h2></div>
+        <div class="loop">
+          <div class="step"><b>An idea</b><span>From the chat or the house. “The morning briefing didn’t fire.”</span></div>
+          <span class="chev" aria-hidden="true"><svg><use href="#chev"></use></svg></span>
+          <div class="step"><b>The Homelab board</b><span>Filed and prioritised by impact: broken first, ideas last.</span></div>
+          <span class="chev" aria-hidden="true"><svg><use href="#chev"></use></svg></span>
+          <div class="step me"><small>ME</small><b>A brief</b><span>What it should do, for whom, and what it must never do.</span></div>
+          <span class="chev" aria-hidden="true"><svg><use href="#chev"></use></svg></span>
+          <div class="step me"><small>ME</small><b>Review the plan</b><span>How it fits the other apps, and whether to build or borrow.</span></div>
+          <span class="chev" aria-hidden="true"><svg><use href="#chev"></use></svg></span>
+          <div class="step"><b>Built behind a switch</b><span>Bot features ship behind a setting that turns them off.</span></div>
+          <span class="chev" aria-hidden="true"><svg><use href="#chev"></use></svg></span>
+          <div class="step me"><small>ME</small><b>Review what changed</b><span>Two rounds on the automation cleanup caught seven changes nobody meant.</span></div>
+        </div>
+        <div class="txt one">
+          <div class="col">
+            <p class="intro">None of this is typed by hand. The work is deciding what’s worth building and what’s worth borrowing (Home Assistant, Mealie, Paperless and Actual Budget are all other people’s software), how the pieces fit across apps, and reviewing every plan before a line of it runs.</p>
+            <p class="pull"><span class="pwr" aria-hidden="true"></span><span>“Rule from now on: UI changes go into the design system first.”<small>The Tasks change log, the day it deleted its own pickers, menus and toasts. One design system, eleven releases in three weeks, seven apps.</small></span></p>
+          </div>
+        </div>
+      </section>
+
+      <section class="sec" id="ch-broke" data-ch data-num="Living with it" data-title="What broke, and what’s next">
+        <div class="ttl"><span class="eye"><span class="pwr sm" aria-hidden="true"></span>Living with it · What broke, and what’s next</span><h2>What broke</h2></div>
+        <div class="bt">
+          <div class="dk fibre stitch on-dark"><small>A PASTED CHECKLIST</small><h3>Eight bullets, two jobs lost</h3><p>Two lines lost their second job and every schedule was dropped. <b>Now</b> every bullet is checked against what was added, and anything missed is named in the reply.</p></div>
+          <div class="dk fibre stitch on-dark"><small>A LATE SUMMARY</small><h3>An evening summary at 23:03</h3><p>A catch-up window was still open. <b>Now</b> quiet follows night mode, every send is logged, and a missed slot is skipped after three hours.</p></div>
+        </div>
+        <p class="note">Software for your own house gets reviewed by its users at breakfast.</p>
+        <div class="txt" style="padding-top:24px">
+          <div class="col">
+            <h3>What’s next</h3>
+            <p class="note">The house still can’t tell <b>who</b> is in a room, only that someone is. Bluetooth beacons in each room would fix that, and then lights and music could follow a person around. The speakers get connected next, so announcements go to the room you’re in.</p>
+          </div>
+          <div class="col">
+            <h3>On the Homelab board</h3>
+            <p class="note">Instrumental music during the day. A tablet by the kitchen sink that says which bin something goes in. The bot learning to open voice notes. Mr Frodo Baggins remains unconvinced.</p>
+          </div>
+        </div>
+      </section>
+
+      <nav class="c-next" aria-label="More case studies"><a href="/healthcare/" class="nx felt fibre stitch"><span><small>Previous · Case 03</small>Healthcare and Benefits</span><span class="rnd" aria-hidden="true"><svg aria-hidden="true"><use href="#back"></use></svg></span></a><a href="/shipment/" class="nx felt fibre stitch"><span><small>Back to the start · Case 01</small>Truck &amp; Driver Management</span><span class="rnd" aria-hidden="true"><svg aria-hidden="true"><use href="#arrow"></use></svg></span></a></nav>
+    </div>
+  </main>
+
+  <footer class="f-foot wrap c-foot">
+    <span class="f-name" style="font-size:15px"><span class="pwr" aria-hidden="true"></span>Made with an AI in the room · 2026</span>
+    <nav class="f-nav" aria-label="Contact Rishabh">
+      <a href="mailto:hello@rishabhdoshi.com">Email</a>
+      <a href="https://www.linkedin.com/in/rishabhdoshi13/" target="_blank" rel="noopener noreferrer">LinkedIn<svg aria-hidden="true"><use href="#out"></use></svg><span class="visually-hidden"> (opens in a new tab)</span></a>
+      <a href="https://github.com/doshi-experiments" target="_blank" rel="noopener noreferrer">GitHub<svg aria-hidden="true"><use href="#out"></use></svg><span class="visually-hidden"> (opens in a new tab)</span></a>
+    </nav>
+    <a href="/#work" class="f-link" style="color:var(--ink2)">Back to the work</a>
+  </footer>
+</div>
+
+<dialog id="viewer" class="viewer" aria-label="A recording, enlarged">
+  <div class="viewer-in">
+    <video muted loop playsinline controls></video>
+    <button type="button" class="big" data-close>Back to the case study</button>
+    <p>Esc closes this too.</p>
+  </div>
+</dialog>
+</body>
+</html>
