@@ -185,11 +185,14 @@ a{color:inherit;text-decoration:none}
 
 
 /* ---------- Home, Face B: the 2025 page, element for element, in felt ----------
-   Every block takes the archive's own geometry (its 1184px container, the full-height hero grid
-   with a 35% square, the 40% work rows, the grid of five, the footer), and both faces switch
-   layout at the same widths, measured on the page itself, so the line always cuts between twins. */
+   Every block takes the archive's own geometry (Framer's margins, 32px, 64px from 810px and 128px
+   from 1200px, the full-height hero grid with a 35% square, the 40% work rows, the grid of five,
+   the footer), and both faces switch layout at the same widths, measured on the page itself, so
+   the line always cuts between twins. */
 .now.home{container-type:inline-size;container-name:page}
-.h-wrap{width:min(1184px,calc(100% - 64px));margin-inline:auto}
+.h-wrap{margin-inline:32px}
+@container page (min-width:810px){.h-wrap{margin-inline:64px}}
+@container page (min-width:1200px){.h-wrap{margin-inline:128px}}
 .h-head{position:absolute;inset:0 0 auto;z-index:5;display:flex;align-items:center;justify-content:space-between;gap:24px;min-height:64px;padding-block:4px}
 .h-logo{position:relative;display:inline-flex;align-items:center;min-width:44px;min-height:44px;font:600 17px/1 Amiko,var(--sans);color:var(--ink)}
 .h-logo .pwr{position:absolute;left:-18px;top:50%;width:8px;height:8px;margin-top:-4px}
@@ -198,11 +201,11 @@ a{color:inherit;text-decoration:none}
 .h-navl a::after{content:"";position:absolute;left:50%;bottom:4px;width:5px;height:5px;margin-left:-2.5px;border-radius:50%;background:var(--sig);transform:scale(0);transition:transform 320ms var(--spring)}
 .h-navl a:hover::after,.h-navl a:focus-visible::after{transform:scale(1)}
 
-.h-hero{display:grid;grid-template-columns:minmax(0,1fr) 35%;align-items:center;gap:clamp(48px,8vw,120px);min-height:100svh;padding-block:120px 40px}
+.h-hero{display:grid;grid-template-columns:minmax(0,1fr) 35%;align-items:center;gap:48px;min-height:100svh;padding-block:120px 40px}
 .h-copy{min-width:0}
-/* Host Grotesk runs wider than Playfair, so the line is a touch smaller and tighter and keeps the
-   2025 line height and box, so both typed lines break alike and the links sit level */
-.h-h1{max-width:650px;min-height:180px;font-size:45px;line-height:60px;letter-spacing:-.035em}
+/* The felt line keeps the 2025 line height and box, so the links sit level, and is sized to run
+   about as wide as the 2025 Playfair; portfolio.js then fits each word to its twin */
+.h-h1{min-height:180px;font-size:52px;line-height:60px;letter-spacing:-.035em}
 .h-tw{text-decoration:underline dashed var(--sig) 3px;text-underline-offset:.24em;text-decoration-skip-ink:none}
 .h-caret{display:inline-block;width:5px;height:1.05em;margin-left:4px;border-radius:3px;background:var(--sig);vertical-align:-.12em;box-shadow:inset 0 1px 0 rgba(255,255,255,.4),0 1px 2px rgba(38,38,36,.3)}
 .h-links{display:flex;align-items:center;gap:16px;margin-top:20px;font-size:16px;font-weight:500}
@@ -294,8 +297,7 @@ a{color:inherit;text-decoration:none}
 .h-foot a:hover,.h-foot a:focus-visible{text-decoration-color:var(--sig)}
 
 @container page (max-width:1050px){
-  .h-hero{gap:48px}
-  .h-h1{min-height:157.5px;font-size:40px;line-height:52.5px}
+  .h-h1{min-height:157.5px;font-size:45.5px;line-height:52.5px}
   .h-row,.h-row.rev{gap:32px}
   .h-rcopy,.h-row.rev .h-rcopy{padding:0 24px 0 0}
   .h-row.rev .h-rcopy{padding:0 0 0 24px}
