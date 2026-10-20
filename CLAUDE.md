@@ -30,7 +30,8 @@ CI also re-verifies the SHA-256 hashes of every `design-system/release.json` (th
 
 ## Architecture
 
-- The home page and the three case studies (`/shipment/`, `/genai/`, `/healthcare/`) are a **split**: Face A is a same-origin iframe of the frozen 2025 Framer archive (`versions/2025-framer/`), Face B is the same page re-made in Felt, clipped by `clip-path` from a registered `--split` property. `split.js` runs it: the draggable `role="separator"` knob, the viewport-unit shim for the archive, link rerouting to the top window, and the position saved in `localStorage` under `split-portfolio` (applied before first paint by an inline script). `portfolio.js` runs the Felt face of the home page.
+- The home page and the first three case studies (`/shipment/`, `/genai/`, `/healthcare/`) are a **split**: Face A is a same-origin iframe of the frozen 2025 Framer archive (`versions/2025-framer/`), Face B is the same page re-made in Felt, clipped by `clip-path` from a registered `--split` property. `split.js` runs it: the draggable `role="separator"` knob, the viewport-unit shim for the archive, link rerouting to the top window, and the position saved in `localStorage` under `split-portfolio` (applied before first paint by an inline script). `portfolio.js` runs the Felt face of the home page.
+- `/household/` (Case 04, the household apps) is felt only, with no split and no 2025 twin. `household/household.css` and `household.js` hold its own pieces: the sticky chapter bar (`[data-ch]` sections with `data-num` and `data-title`), the contents, the map views and bear switch, the `<dialog>` viewer for the two recordings, and the reduced-motion handling. Its assets live beside it and total about 3 MB; keep them there, not at the root.
 - `portfolio.css` styles the Felt faces. These pages do **not** load the design system; they mirror its signal tokens: `--sig`, `--sig-grad`, `--on-sig`, `--sig-tint`, `--focus`. Change them together with any design-system signal change. Inside the charcoal preview screens `--sig` is the dark-mode red `#E89D9C`.
 - `/versions/` is the version timeline and the only page here that loads the design system, from the committed snapshot in `design-system/`. Each `versions/<release>/` is a frozen archive with its own snapshot.
 
@@ -41,4 +42,5 @@ CI also re-verifies the SHA-256 hashes of every `design-system/release.json` (th
 - The 2025 face keeps its own coral `#FF5E7C`; only the Felt face follows the design system's signal.
 - Focus rings use `--focus` (`#A22826`, at least 3:1 on oat), never the bright signal.
 - Site-owned content opens in the same tab. Only external profiles open new tabs, and say so.
-- Copy follows the design system's `docs/identity.md`. Every claim on the case studies must trace to the 2025 originals; never invent clients, outcomes or numbers.
+- Copy follows the design system's `docs/identity.md`. Every claim on the first three case studies must trace to the 2025 originals; every number on `/household/` traces to those apps' READMEs, change logs or databases (counts only, never amounts or real records). Never invent clients, outcomes or numbers.
+- `/household/` names the two dogs and shows the house's floor plan with Rishabh's approval. Any new personal detail there needs his approval again. The people in its chat and recordings are invented; keep them that way.

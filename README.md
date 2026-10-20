@@ -4,6 +4,8 @@ The home page is one portfolio with two faces and a line you drag between them. 
 
 All three case studies use the same split to mean then and now: the 2025 study on the left, and the same project re-cut in felt on the right. They live at `/shipment/`, `/genai/` and `/healthcare/`. The 2025 face is cut where the re-cut ends and links to the full archived study.
 
+The fourth case study, `/household/`, is the software built for Rishabh's own house in 2026: the family Telegram bot, the bear lookout in Home Assistant, the Tasks app, the Finance importer, the LED panels and the design system under them. It has no 2025 original, so it is a felt-only page with no split. `household/household.css` and `household.js` add what only this page has: a sticky chapter bar that tracks the reader, a contents block, a Valley Map with three views and a bear switch, two screen recordings with an in-place viewer, and a chat scripted in CSS alone. The page reuses the case-study patterns in `portfolio.css`. Every person, task, message and transaction on it is invented, the Finance recording comes from that repo's synthetic preview, and the dashboard captures use preview states. The home page's fourth work row leads to it; because the 2025 site has three rows, the felt face is one row taller than its twin from there down.
+
 The version history that opened the site until October 2026 now lives at `/versions/`, linked from the footer as “Every version of this page since 2025”. Old links to `/#t0` and the other stops redirect there.
 
 ## How the split works
@@ -32,4 +34,4 @@ Serve the repository root with a local HTTP server, for example `python3 -m http
 
 `node tools/check-links.mjs` verifies that every local reference resolves and that each archive only points inside itself, home, or to the version history. CI runs it alongside an integrity check of every `design-system/release.json`.
 
-Cloudflare deploys pushes to `main`. `wrangler.jsonc` serves the root asset directory, and `.assetsignore` includes only the site, the fonts, the shared design assets and `versions/`. There is no build command.
+Cloudflare deploys pushes to `main`. `wrangler.jsonc` serves the root asset directory, and `.assetsignore` includes only the site, the four case directories, the fonts, the shared design assets and `versions/`. There is no build command.
