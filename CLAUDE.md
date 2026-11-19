@@ -39,7 +39,7 @@ CI also re-verifies the SHA-256 hashes of every `design-system/release.json` (th
 ## Invariants that are easy to break
 
 - Never edit archive files under `versions/` or any `design-system/` snapshot by hand; CI checks the hashes and `check-links` checks archive links.
-- `shipment/2025/`, `genai/2025/` and `healthcare/2025/` are generated copies of the archived studies with their wordmark, Work and next-study links pointing at this site and a footer note that AI rebuilt them. Every full-study link on the live pages goes to them, never to the archive. Never edit them by hand; rerun `tools/copy-2025-studies.mjs` after any archive edit.
+- `shipment/2025/`, `genai/2025/`, `healthcare/2025/` and `2025/` (About, Wells Fargo, Rural ANM) are generated copies of archived 2025 pages with their wordmark, Work and next-study links pointing at this site and a footer note that AI rebuilt them. Every link from the live pages into a 2025 page goes to them, never to the archive; the split's `data-then-map` lists them too. Never edit them by hand; rerun `tools/copy-2025-studies.mjs` after any archive edit.
 - `.assetsignore` is an allow-list. New top-level files are not deployed unless listed; repository files such as `README.md` and this file stay private.
 - The 2025 face keeps its own coral `#FF5E7C`; only the Felt face follows the design system's signal.
 - Focus rings use `--focus` (`#A22826`, at least 3:1 on oat), never the bright signal.

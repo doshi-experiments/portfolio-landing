@@ -244,12 +244,13 @@ function init(split) {
   function route(doc) {
     for (const a of doc.querySelectorAll('a[href]')) {
       const url = new URL(a.href);
-      if (url.origin !== location.origin || a.target === '_blank') continue;
+      if (url.origin !== location.origin) continue;
       const samePage = url.pathname === thenUrl.pathname;
       if (samePage && url.hash && fit === 'content') continue;
       // A cut-off study's own section links go through the map too: they open the full study there.
       if (map[url.pathname] !== undefined) a.href = map[url.pathname] + url.search + url.hash;
-      a.target = '_top';
+      // A link that opens a new tab keeps doing so; the rest open in this window.
+      if (a.target !== '_blank') a.target = '_top';
     }
     // Links within the archive's own page scroll this page to the matching spot.
     doc.addEventListener('click', e => {

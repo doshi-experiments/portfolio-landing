@@ -6,7 +6,8 @@
 // split line cuts one headline in two typefaces rather than two headlines.
 //
 // The square where the 2025 page keeps the portrait runs the three experiments, one at a time,
-// moving on every 5.5s unless a hand or the keyboard is on it. Keys 1, 2 and 3 pick one.
+// moving on every 5.5s unless a hand or the keyboard is on it. Keys 1, 2 and 3 pick one. Its window
+// opens whichever experiment it is showing.
 
 const typed = document.querySelector('[data-typed]');
 const frame = document.querySelector('.then iframe');
@@ -131,9 +132,9 @@ function baseline(el) {
 
 function square(obj) {
   const exps = [
-    {title: 'Rent vs. buy', line: 'Your own numbers. Six calculators.'},
-    {title: 'Visualizations', line: 'Growth, symmetry and chaos.'},
-    {title: 'Mr. Shake', line: 'One phone, a few suspicious friends.'},
+    {title: 'Rent vs. buy', line: 'Your own numbers. Six calculators.', url: 'https://rent-vs-buy.rishabhdoshi.com/'},
+    {title: 'Visualizations', line: 'Growth, symmetry and chaos.', url: 'https://visualizations.rishabhdoshi.com/'},
+    {title: 'Mr. Shake', line: 'One phone, a few suspicious friends.', url: 'https://mr-shake.rishabhdoshi.com/'},
   ];
   const win = obj.querySelector('[data-win]');
   const drawings = [...win.querySelectorAll('svg')];
@@ -150,7 +151,8 @@ function square(obj) {
     keys.forEach((k, j) => k.setAttribute('aria-pressed', String(j === i)));
     title.textContent = exps[i].title;
     line.textContent = exps[i].line;
-    win.setAttribute('aria-label', exps[i].title + ', in Experiments');
+    win.href = exps[i].url;
+    win.setAttribute('aria-label', 'Open ' + exps[i].title);
   }
   keys.forEach((k, i) => k.addEventListener('click', () => show(i)));
   obj.addEventListener('pointerenter', () => { held = true; });
