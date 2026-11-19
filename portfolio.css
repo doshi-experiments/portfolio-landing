@@ -104,6 +104,10 @@ a{color:inherit;text-decoration:none}
 .pane-line{max-width:30ch;font:400 18px/1.45 var(--sans)}
 .pane-l .pane-line{color:rgba(244,244,242,.9)}
 .pane-r .pane-line{color:var(--ink2)}
+/* The quieter footnote under each line: how that side was actually made. */
+.pane-note{max-width:34ch;margin-top:-4px;font:400 13px/1.5 var(--sans)}
+.pane-l .pane-note{color:rgba(244,244,242,.66)}
+.pane-r .pane-note{color:var(--ink2)}
 
 /* Phone: a felt toggle in a recessed track */
 .toggle-rail{display:none;position:absolute;top:72px;bottom:0;left:16px;right:16px;z-index:6;pointer-events:none}
@@ -115,6 +119,10 @@ a{color:inherit;text-decoration:none}
 .seg:focus-visible{outline-offset:-3px}
 .toggle-space{display:none}
 .split[data-fit="content"] .toggle-rail{top:50px}
+/* After a tap, a caption under the toggle says how the chosen side was made, then fades. */
+.toggle-note{position:sticky;top:76px;width:max-content;max-width:100%;margin:8px auto 0;padding:6px 12px;border-radius:999px;background:var(--g2);box-shadow:0 6px 14px -8px rgba(0,0,0,.5);font:500 12px/1.3 var(--sans);color:var(--ink2);opacity:0;transform:translateY(-4px);transition:opacity 240ms var(--soft),transform 240ms var(--soft)}
+.noting .toggle-note{opacity:1;transform:none}
+.split[data-face="then"] .toggle-note [data-face="now"],.split[data-face="now"] .toggle-note [data-face="then"]{display:none}
 
 /* Wide screens divide; phones toggle. Both need the script, which sets .js before first paint. */
 @media (min-width:720px){
@@ -462,7 +470,7 @@ a{color:inherit;text-decoration:none}
 @media (prefers-reduced-motion:reduce){
   .now *,.knob{animation:none !important}
   .split.easing{transition:none}
-  .pane,.pane-copy,.pane-hint,.knob,.needle{transition:none}
+  .pane,.pane-copy,.pane-hint,.knob,.needle,.toggle-note{transition:none}
   .fade{animation:none}
 }
 /* Lifting a card is a hover cue, not a focus indicator. Keyboard focus also gets the ring. */
