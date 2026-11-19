@@ -39,10 +39,11 @@ CI also re-verifies the SHA-256 hashes of every `design-system/release.json` (th
 ## Invariants that are easy to break
 
 - Never edit archive files under `versions/` or any `design-system/` snapshot by hand; CI checks the hashes and `check-links` checks archive links.
-- `shipment/2025/`, `genai/2025/` and `healthcare/2025/` are generated copies of the archived studies with their wordmark, Work and next-study links pointing at this site. Every full-study link on the live pages goes to them, never to the archive. Never edit them by hand; rerun `tools/copy-2025-studies.mjs` after any archive edit.
+- `shipment/2025/`, `genai/2025/` and `healthcare/2025/` are generated copies of the archived studies with their wordmark, Work and next-study links pointing at this site and a footer note that AI rebuilt them. Every full-study link on the live pages goes to them, never to the archive. Never edit them by hand; rerun `tools/copy-2025-studies.mjs` after any archive edit.
 - `.assetsignore` is an allow-list. New top-level files are not deployed unless listed; repository files such as `README.md` and this file stay private.
 - The 2025 face keeps its own coral `#FF5E7C`; only the Felt face follows the design system's signal.
 - Focus rings use `--focus` (`#A22826`, at least 3:1 on oat), never the bright signal.
 - Site-owned content opens in the same tab. Only external profiles open new tabs, and say so.
+- How each side was made: the 2025 side is a replica AI rebuilt from a site Rishabh designed by hand in Framer; the felt side is UI that AI generated from the design system, without each element specified, over words and work carried over from the hand-made site. "Without AI / With AI" names who designed each side. Copy must not claim the 2025 side was built by hand or that AI wrote the case studies.
 - Copy follows the design system's `docs/identity.md`. Every claim on the first three case studies must trace to the 2025 originals; every number on `/household/` traces to those apps' READMEs, change logs or databases (counts only, never amounts or real records). Never invent clients, outcomes or numbers.
 - `/household/` names the two dogs and shows the house's floor plan with Rishabh's approval. Any new personal detail there needs his approval again. The people in its chat and recordings are invented; keep them that way.

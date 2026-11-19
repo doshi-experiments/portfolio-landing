@@ -44,7 +44,7 @@ function init(split) {
     split.style.setProperty('--split', value.toFixed(2));
     const n = Math.round(value);
     knob.setAttribute('aria-valuenow', n);
-    knob.setAttribute('aria-valuetext', `${n}% shows 2025, made without AI. ${100 - n}% shows 2026, made with AI.`);
+    knob.setAttribute('aria-valuetext', `${n}% shows 2025, designed without AI. ${100 - n}% shows 2026, generated with AI.`);
   }
   split.addEventListener('transitionend', e => { if (e.propertyName === '--split') split.classList.remove('easing'); });
 
@@ -142,7 +142,14 @@ function init(split) {
     incoming.classList.add('fade');
     size();
   }
-  for (const seg of segs) seg.addEventListener('click', () => { face(seg.dataset.face); keep({face: seg.dataset.face}); });
+  // A tap on the toggle says, for a moment, how the chosen side was made.
+  let noting;
+  function note() {
+    split.classList.add('noting');
+    clearTimeout(noting);
+    noting = setTimeout(() => split.classList.remove('noting'), 4000);
+  }
+  for (const seg of segs) seg.addEventListener('click', () => { face(seg.dataset.face); keep({face: seg.dataset.face}); note(); });
   if (remembered.face === 'then' || remembered.face === 'now') {
     split.dataset.face = remembered.face;
     for (const seg of segs) seg.setAttribute('aria-pressed', String(seg.dataset.face === remembered.face));
