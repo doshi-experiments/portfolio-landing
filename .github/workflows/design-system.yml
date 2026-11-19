@@ -25,3 +25,5 @@ jobs:
           PYTHON
       - name: Verify local references and archive containment
         run: node tools/check-links.mjs
+      - name: Verify the 2025 study copies match the archive
+        run: node tools/copy-2025-studies.mjs --check

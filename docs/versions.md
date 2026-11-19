@@ -15,7 +15,7 @@ Archive rules:
 - The archive bar is a sticky strip at the top of each archived page except the 2025 ones, which show as the site itself. The others link to their stop in the version history (`/versions/#t1`, `/versions/#t3`). A one-line script hides it when the page is framed, so neither the miniature nor the viewer shows it.
 - Archived `design-system/` snapshots are byte-identical to their source commit; CI checks every `**/design-system/release.json`, not just the live one.
 - The Framer archive ships its own fonts (Playfair Display, Poppins, Amiko). The identity's one-font rule (Host Grotesk since 0.6.0) applies to the live site; an archive keeps whatever it shipped with.
-- The 2025 case-study pages stay indexable: the live `/shipment/`, `/genai/` and `/healthcare/` are re-cuts that link to them as the full studies, and `/household/` has no archived original. The two archived landing pages are `noindex` since they duplicate `/`.
+- The 2025 case-study pages stay indexable, and `/household/` has no archived original. The live site links to copies of them at `/<study>/2025/`, made by `tools/copy-2025-studies.mjs`, which changes only the wordmark, Work and next-study links. After editing an archived study, rerun it; CI fails when a copy is stale. The two archived landing pages are `noindex` since they duplicate `/`.
 
 ## Adding a stop
 

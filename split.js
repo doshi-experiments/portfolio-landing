@@ -240,8 +240,7 @@ function init(split) {
       if (url.origin !== location.origin || a.target === '_blank') continue;
       const samePage = url.pathname === thenUrl.pathname;
       if (samePage && url.hash && fit === 'content') continue;
-      // A cut-off study keeps its own section links: they open the full archived page there.
-      if (samePage && fit === 'now') { a.target = '_top'; continue; }
+      // A cut-off study's own section links go through the map too: they open the full study there.
       if (map[url.pathname] !== undefined) a.href = map[url.pathname] + url.search + url.hash;
       a.target = '_top';
     }

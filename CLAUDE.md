@@ -24,6 +24,7 @@ Use synthetic fixtures instead. Before every commit and push, check the staged d
 ```sh
 python3 -m http.server 8788        # ES modules and the iframe need HTTP, not file://
 node tools/check-links.mjs         # every local reference resolves; archives stay self-contained
+node tools/copy-2025-studies.mjs   # regenerate /<study>/2025/ from the archive; CI runs it with --check
 ```
 
 CI also re-verifies the SHA-256 hashes of every `design-system/release.json` (the live snapshot and each archive's).
@@ -38,6 +39,7 @@ CI also re-verifies the SHA-256 hashes of every `design-system/release.json` (th
 ## Invariants that are easy to break
 
 - Never edit archive files under `versions/` or any `design-system/` snapshot by hand; CI checks the hashes and `check-links` checks archive links.
+- `shipment/2025/`, `genai/2025/` and `healthcare/2025/` are generated copies of the archived studies with their wordmark, Work and next-study links pointing at this site. Every full-study link on the live pages goes to them, never to the archive. Never edit them by hand; rerun `tools/copy-2025-studies.mjs` after any archive edit.
 - `.assetsignore` is an allow-list. New top-level files are not deployed unless listed; repository files such as `README.md` and this file stay private.
 - The 2025 face keeps its own coral `#FF5E7C`; only the Felt face follows the design system's signal.
 - Focus rings use `--focus` (`#A22826`, at least 3:1 on oat), never the bright signal.
