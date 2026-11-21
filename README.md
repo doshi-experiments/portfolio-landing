@@ -26,7 +26,7 @@ The home page and case studies do not load `@doshi-experiments/design-system`, s
 
 Focus rings use `--focus`, which reaches at least 3:1 on oat; the bright signal does not. Cards and next links draw the ring as well as lifting, and the split knob's ring sits on a light halo so it reads over the black 2025 face and the oat face alike.
 
-The timeline at `/versions/` loads the 0.7.0 snapshot in `design-system/`, which stays immutable and checked by CI. It follows the System appearance like the other sites, and its version slider's thumb is the signal with a white rim. Each archived version under `versions/` keeps the snapshot it shipped with.
+The timeline at `/versions/` loads the 0.8.1 snapshot in `design-system/`, which stays immutable and checked by CI. It follows the System appearance like the other sites, and its version slider's thumb is the signal with a white rim. Each archived version under `versions/` keeps the snapshot it shipped with.
 
 ## Preview and deploy
 
@@ -34,4 +34,4 @@ Serve the repository root with a local HTTP server, for example `python3 -m http
 
 `node tools/check-links.mjs` verifies that every local reference resolves and that each archive only points inside itself, home, or to the version history. CI runs it alongside an integrity check of every `design-system/release.json`.
 
-Cloudflare deploys pushes to `main`. `wrangler.jsonc` serves the root asset directory, and `.assetsignore` includes only the site, the four case directories, the fonts, the shared design assets and `versions/`. There is no build command.
+Cloudflare deploys pushes to `main`. `wrangler.jsonc` serves the root asset directory, and `.assetsignore` includes only the site, the four case directories, the 2025 copies in `2025/`, the fonts, the shared design assets and `versions/`. There is no build command.
