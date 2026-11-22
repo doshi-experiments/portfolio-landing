@@ -122,7 +122,8 @@ body{--home-margin:32px}
 .home-page .container{width:auto;margin-inline:var(--home-margin)}
 @media(min-width:701px){.home-page .hero{gap:48px}.home-page .hero h1{max-width:none}}
 @media(min-width:810px){body{--home-margin:64px}}
-@media(min-width:1200px){body{--home-margin:128px}}
-/* Every other page's header sits on the same margins, so it holds still from page to page */
-.site-header.container{width:auto;margin-inline:var(--home-margin)}
+@media(min-width:1200px){body{--home-margin:max(128px,10vw)}}
+/* Every other page's header sits on the same margins, so it holds still from page to page, and
+   the three case studies run their bodies on them too, so the header lines up with the text */
+.site-header.container,:is(.shipment-page,.genai-page,.healthcare-page) .container{width:auto;margin-inline:var(--home-margin)}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*::before,*::after{animation:none!important;transition:none!important}.typing-cursor{display:none}}
