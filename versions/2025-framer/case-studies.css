@@ -72,19 +72,23 @@
 .case-card{border:1px solid var(--case-rule);border-radius:12px;padding:24px}
 .case-card h3,.case-card h4{font-family:var(--font-body);font-size:16px;font-weight:500;line-height:1.5}
 .case-icon{width:136px;height:136px;object-fit:contain;margin:0 auto 20px}
-.shipment-hero{padding-block:60px 72px;min-height:360px}
-.shipment-hero-art{position:relative;min-height:310px;perspective:1200px}
-.shipment-hero-art img{position:absolute;top:6%;width:74%;transform:rotateY(-27deg) rotateX(7deg) rotateZ(-9deg);filter:drop-shadow(0 4px 2px #0005)}
-.shipment-hero-art img:nth-child(1){left:0;top:0}
-.shipment-hero-art img:nth-child(2){left:17%;top:12%}
-.shipment-hero-art img:nth-child(3){left:34%;top:24%}
+.shipment-hero{padding-block:60px 24px;min-height:360px}
+/* The three screens stand in one stack, as on the Framer page: parallel planes tilted back 30° and turned
+   40° under a perspective so weak that they stay flat instead of warping, each a fifth of the column to
+   the right of the last and a little lower. The stack sits low in its box and hangs over the top of the
+   white body below, which starts its text lower to make room. */
+.shipment-hero-art{--lift:13cqi;position:relative;z-index:1;aspect-ratio:2/1;container-type:inline-size}
+.shipment-hero-art img{position:absolute;left:11cqi;top:50%;width:78cqi;height:auto;margin-top:-25.2cqi;border-radius:8px;box-shadow:0 0 0 1px #ccc,0 28px 48px -20px rgba(0,0,0,.5);transform:translate(calc(var(--i) * 19.7cqi),calc(var(--lift) + var(--i) * 4.4cqi)) perspective(5000px) rotateX(-30deg) rotateY(40deg)}
+.shipment-hero-art img:nth-child(1){--i:-1}
+.shipment-hero-art img:nth-child(2){--i:0}
+.shipment-hero-art img:nth-child(3){--i:1}
+@media(min-width:701px){.shipment-page .case-overview{padding-top:calc(9.2vw + 16px)}}
 /* The fanned screens reach past their column, so the gap beside the title is wider than other heroes'. */
 .shipment-page .shipment-hero{column-gap:clamp(64px,9vw,180px)}
-/* On arrival the three screens lie flat on one another, then fan out into place, one after another. */
-@keyframes shipment-fan{from{left:17%;top:12%;transform:none}}
-.shipment-hero-art img{animation:shipment-fan 1100ms cubic-bezier(.2,0,0,1) 200ms backwards}
-.shipment-hero-art img:nth-child(2){animation-delay:280ms}
-.shipment-hero-art img:nth-child(3){animation-delay:360ms}
+/* On arrival the screens lie flat on one another, facing the reader, then turn and come apart into the
+   stack, out over the edge of the black band. */
+@keyframes shipment-stack{from{transform:translate(0px,0px) perspective(5000px) rotateX(0deg) rotateY(0deg)}}
+.shipment-hero-art img{animation:shipment-stack 1400ms cubic-bezier(.2,0,0,1) 300ms backwards}
 .shipment-story{padding-block:24px 64px}
 .shipment-story.walkthrough-enhanced{display:grid;grid-template-columns:minmax(0,2fr) minmax(0,1fr);gap:64px;align-items:start}
 .shipment-stage{position:sticky;top:18vh;margin:0;display:none;align-items:center;min-height:60vh}
@@ -136,7 +140,7 @@
   .case-overview{gap:40px;grid-template-columns:minmax(0,1fr) 240px}
   .case-chapter{grid-template-columns:100px minmax(0,1fr);gap:28px}
   .case-persona{gap:48px}.case-grid--four{grid-template-columns:repeat(2,minmax(0,1fr))}
-  .shipment-story{gap:32px}.shipment-hero-art{min-height:270px}
+  .shipment-story{gap:32px}
   .case-inspiration{grid-template-columns:180px minmax(0,1fr)}
 }
 @media(max-width:700px){
@@ -150,7 +154,7 @@
   .case-media{margin-block:24px}.case-quote{font-size:26px}.case-stats{flex-wrap:wrap;gap:28px}.case-stat strong{font-size:32px}
   .case-chapter{grid-template-columns:1fr;gap:24px;padding-block:32px}.case-chapter>h2{position:static;font-size:14px}
   .case-card{padding:20px}.case-card h3,.case-flow h3{font-size:17px}
-  .shipment-hero-art{min-height:235px;max-width:410px;width:100%;margin:0 auto;order:1}.shipment-hero .case-title{order:0}
+  .shipment-hero-art{--lift:0px;aspect-ratio:5/4;max-width:410px;width:100%;margin:0 auto;order:1}.shipment-hero .case-title{order:0}
   .shipment-story,.shipment-story.walkthrough-enhanced{display:block;padding-block:0}.shipment-stage,.walkthrough-enhanced .shipment-stage{display:none}.shipment-story-step{min-height:0;padding-block:32px}
   .shipment-story-step .story-mobile-image,.walkthrough-enhanced .shipment-story-step .story-mobile-image{display:block;margin:24px 0 0;width:100%;border:1px solid #ddd;border-radius:5px}
   .shipment-story-step h3{font-size:18px}.shipment-extra-screens{margin:24px 0 40px}
